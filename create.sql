@@ -402,3 +402,26 @@ CREATE TRIGGER tr_ensure_owner_is_member
 AFTER INSERT ON owns
 FOR EACH ROW
 EXECUTE FUNCTION ensure_owner_is_member();
+
+
+
+
+
+CREATE OR REPLACE FUNCTION check_user_group_membership()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.group_id IS NOT NULL AND 
+       NOT EXISTS (SELECT 1 
+                   FROM is_member 
+                   WHERE user_id = NEW.user_id AND group_id = NEW.group_id) THEN
+        RAISE EXCEPTION 'User does not belong to the group!';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trigger_check_user_group_membership
+BEFORE INSERT ON posts
+FOR EACH ROW
+EXECUTE FUNCTION check_user_group_membership();
