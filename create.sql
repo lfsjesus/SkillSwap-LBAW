@@ -242,9 +242,6 @@ CREATE TRIGGER check_comment_date
 
 
 
-
-
-
 CREATE OR REPLACE FUNCTION check_like_date() RETURNS TRIGGER AS $$
     BEGIN
         IF (NEW.post_id IS NULL) THEN
@@ -301,8 +298,6 @@ CREATE TRIGGER check_comment_validity
 
 
 
-
-
 CREATE OR REPLACE FUNCTION add_friend() RETURNS TRIGGER AS $$
 BEGIN
     IF (NEW.user_id <> NEW.friend_id) THEN
@@ -328,15 +323,204 @@ CREATE TRIGGER add_friend
 
 
 
+CREATE OR REPLACE FUNCTION check_file_format()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF RIGHT(NEW.title, 4) NOT IN ('.jpg', '.png', '.wav', '.mp4', '.mov') AND RIGHT(NEW.title, 5) NOT IN ('.jpeg', '.pdf') THEN
+        RAISE EXCEPTION 'File format not allowed. Only .jpg, .jpeg, .png, .mp4, .mov, .wav and .pdf are allowed.';
+        RETURN NULL;
+    ELSE
+        RETURN NEW;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
 
 
+CREATE TRIGGER trigger_check_file_format
+BEFORE INSERT ON files
+FOR EACH ROW
+EXECUTE FUNCTION check_file_format();
+
+
+
+CREATE OR REPLACE FUNCTION ensure_owner_is_member() RETURNS TRIGGER AS $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM is_member WHERE user_id = NEW.user_id AND group_id = NEW.group_id) THEN
+        INSERT INTO is_member(user_id, group_id, date) VALUES (NEW.user_id, NEW.group_id, CURRENT_TIMESTAMP);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tr_ensure_owner_is_member
+AFTER INSERT ON owns
+FOR EACH ROW
+EXECUTE FUNCTION ensure_owner_is_member();
+
+
+
+
+
+CREATE OR REPLACE FUNCTION check_user_group_membership_to_post()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.group_id IS NOT NULL AND 
+       NOT EXISTS (SELECT 1 
+                   FROM is_member 
+                   WHERE user_id = NEW.user_id AND group_id = NEW.group_id) THEN
+        RAISE EXCEPTION 'User does not belong to the group!';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trigger_check_user_group_membership_to_post
+BEFORE INSERT ON posts
+FOR EACH ROW
+EXECUTE FUNCTION check_user_group_membership_to_post();
+
+
+-- Blocked users stop being friends (TO BE TESTED)
+CREATE OR REPLACE FUNCTION delete_friendship()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM is_friend WHERE user_id = NEW.blocked_by AND friend_id = NEW.blocked_user) THEN
+        DELETE FROM is_friend WHERE user_id = NEW.blocked_by AND friend_id = NEW.blocked_user;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_delete_friendship
+AFTER INSERT ON user_blocks
+FOR EACH ROW
+EXECUTE FUNCTION delete_friendship();
+
+
+-- User cant send a friend request to some user which he is already friends with
+
+CREATE OR REPLACE FUNCTION prevent_duplicate_friend_requests()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (
+            SELECT 1
+            FROM is_friend
+            WHERE user_id = NEW.user_id
+            AND friend_id = NEW.friend_id
+        ) THEN
+        RAISE EXCEPTION 'Users are already friends!';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_prevent_duplicate_friend_requests
+BEFORE INSERT ON is_friend
+FOR EACH ROW
+EXECUTE FUNCTION prevent_duplicate_friend_requests();
+
+
+-- User cant send a join group request to a group which he is already member or he has notifcation where he was banned
+
+CREATE OR REPLACE FUNCTION prevent_duplicate_join_requests()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (
+            SELECT 1
+            FROM is_member
+            WHERE user_id = NEW.user_id
+            AND group_id = NEW.group_id)
+
+            THEN
+            RAISE EXCEPTION 'User is already a member of the group!';
+    END IF;
+           
+    IF EXISTS(
+            SELECT 1
+            FROM group_notifications
+            JOIN notifications ON group_notifications.notification_id = notifications.id
+            WHERE notification_type = 'ban'
+            AND group_id = NEW.group_id
+            AND receiver_id = NEW.user_id)
+
+            THEN
+            RAISE EXCEPTION 'User is already a member of the group!';
+
+    END IF;
+
+    RETURN NEW;
+END;
+
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_prevent_duplicate_join_requests
+BEFORE INSERT ON is_member
+FOR EACH ROW
+EXECUTE FUNCTION prevent_duplicate_join_requests();
+
+
+/*
+
+-- Delete notification if user accepted friend request
+CREATE OR REPLACE FUNCTION delete_friendship_notification()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM user_notifications JOIN notifications 
+                ON user_notifications.notification_id = notifications.id WHERE notification_type = 'friend_request' 
+                AND sender_id = NEW.user_id AND receiver_id = NEW.friend_id) THEN
+        DELETE FROM notifications WHERE id = (SELECT notification_id FROM user_notifications JOIN notifications 
+                                                ON user_notifications.notification_id = notifications.id 
+                                                WHERE notification_type = 'friend_request' 
+                                                AND sender_id = NEW.user_id 
+                                                AND receiver_id = NEW.friend_id);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_delete_friendship_notification
+AFTER INSERT ON is_friend
+FOR EACH ROW
+EXECUTE FUNCTION delete_friendship_notification();
+
+*/
+
+
+/*
+-- Delete notification if user accepted join request
+CREATE OR REPLACE FUNCTION delete_join_request_notification()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM group_notifications JOIN notifications 
+                ON group_notifications.notification_id = notifications.id WHERE notification_type = 'join_request' 
+                AND group_id = NEW.group_id AND sender_id = NEW.user_id) THEN
+        DELETE FROM notifications WHERE id = (SELECT notification_id FROM group_notifications JOIN notifications 
+                                                ON group_notifications.notification_id = notifications.id 
+                                                WHERE notification_type = 'join_request' 
+                                                AND group_id = NEW.group_id 
+                                                AND sender_id = NEW.user_id);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_delete_join_request_notification
+AFTER INSERT ON is_member
+FOR EACH ROW
+EXECUTE FUNCTION delete_join_request_notification();
+
+*/
+
+
+/*
 CREATE OR REPLACE FUNCTION prevent_duplicate_friend_requests()
 RETURNS TRIGGER AS $$
 BEGIN
         
     IF (NEW.notification_type) = 'friend_request' THEN
 
-        /* if the users are already friends, delete the notification */
+        --if the users are already friends, delete the notification
 
         IF EXISTS (SELECT 1 
                    FROM is_friend 
@@ -354,7 +538,7 @@ BEGIN
             
         END IF;
 
-        /* if some user has already sent a friend request to the other user, delete the notification */
+        -- if some user has already sent a friend request to the other user, delete the notification
 
         IF EXISTS (
             SELECT 1
@@ -393,131 +577,8 @@ BEFORE INSERT OR UPDATE ON user_notifications
 FOR EACH ROW
 EXECUTE FUNCTION prevent_duplicate_friend_requests();
 
+*/
 
-
-
-CREATE OR REPLACE FUNCTION check_file_format()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF RIGHT(NEW.title, 4) NOT IN ('.jpg', '.png', '.wav', '.mp4', '.mov') AND RIGHT(NEW.title, 5) NOT IN ('.jpeg', '.pdf') THEN
-        RAISE EXCEPTION 'File format not allowed. Only .jpg, .jpeg, .png, .mp4, .mov, .wav and .pdf are allowed.';
-        RETURN NULL;
-    ELSE
-        RETURN NEW;
-    END IF;
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE TRIGGER trigger_check_file_format
-BEFORE INSERT ON files
-FOR EACH ROW
-EXECUTE FUNCTION check_file_format();
-
-
-
-
-
-
-CREATE OR REPLACE FUNCTION ensure_owner_is_member() RETURNS TRIGGER AS $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM is_member WHERE user_id = NEW.user_id AND group_id = NEW.group_id) THEN
-        INSERT INTO is_member(user_id, group_id, date) VALUES (NEW.user_id, NEW.group_id, CURRENT_TIMESTAMP);
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER tr_ensure_owner_is_member
-AFTER INSERT ON owns
-FOR EACH ROW
-EXECUTE FUNCTION ensure_owner_is_member();
-
-
-
-
-
-CREATE OR REPLACE FUNCTION check_user_group_membership()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF NEW.group_id IS NOT NULL AND 
-       NOT EXISTS (SELECT 1 
-                   FROM is_member 
-                   WHERE user_id = NEW.user_id AND group_id = NEW.group_id) THEN
-        RAISE EXCEPTION 'User does not belong to the group!';
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE TRIGGER trigger_check_user_group_membership
-BEFORE INSERT ON posts
-FOR EACH ROW
-EXECUTE FUNCTION check_user_group_membership();
-
-
--- Delete notification if user accepted friend request
-CREATE OR REPLACE FUNCTION delete_friendship_notification()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF EXISTS (SELECT 1 FROM user_notifications JOIN notifications 
-                ON user_notifications.notification_id = notifications.id WHERE notification_type = 'friend_request' 
-                AND sender_id = NEW.user_id AND receiver_id = NEW.friend_id) THEN
-        DELETE FROM notifications WHERE id = (SELECT notification_id FROM user_notifications JOIN notifications 
-                                                ON user_notifications.notification_id = notifications.id 
-                                                WHERE notification_type = 'friend_request' 
-                                                AND sender_id = NEW.user_id 
-                                                AND receiver_id = NEW.friend_id);
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_delete_friendship_notification
-AFTER INSERT ON is_friend
-FOR EACH ROW
-EXECUTE FUNCTION delete_friendship_notification();
-
-
--- Delete notification if user accepted join request
-CREATE OR REPLACE FUNCTION delete_join_request_notification()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF EXISTS (SELECT 1 FROM group_notifications JOIN notifications 
-                ON group_notifications.notification_id = notifications.id WHERE notification_type = 'join_request' 
-                AND group_id = NEW.group_id AND sender_id = NEW.user_id) THEN
-        DELETE FROM notifications WHERE id = (SELECT notification_id FROM group_notifications JOIN notifications 
-                                                ON group_notifications.notification_id = notifications.id 
-                                                WHERE notification_type = 'join_request' 
-                                                AND group_id = NEW.group_id 
-                                                AND sender_id = NEW.user_id);
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_delete_join_request_notification
-AFTER INSERT ON is_member
-FOR EACH ROW
-EXECUTE FUNCTION delete_join_request_notification();
-
-
--- Blocked users stop being friends (TO BE TESTED)
-CREATE OR REPLACE FUNCTION delete_friendship()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF EXISTS (SELECT 1 FROM is_friend WHERE user_id = NEW.blocked_by AND friend_id = NEW.blocked_user) THEN
-        DELETE FROM is_friend WHERE user_id = NEW.blocked_by AND friend_id = NEW.blocked_user;
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_delete_friendship
-AFTER INSERT ON user_blocks
-FOR EACH ROW
-EXECUTE FUNCTION delete_friendship();
 
 
 /* Transactions */
@@ -528,8 +589,13 @@ BEGIN TRANSACTION;
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 DECLARE
-notification_id INT;
+notification_id INTEGER;
 BEGIN
+      
+    -- Creating the like.
+    INSERT INTO likes(user_id, post_id, date)
+    VALUES ($user_id, $post_id, CURRENT_TIMESTAMP);
+
     -- Creating a notification.
     INSERT INTO notifications(sender_id, receiver_id, date) 
     VALUES ($user_id, $post_owner_user_id, CURRENT_TIMESTAMP);
@@ -547,3 +613,290 @@ BEGIN
 
 COMMIT;
 
+
+-- Removing a like on a post
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DECLARE
+id_notification INTEGER;
+
+BEGIN
+      
+    -- Delete the like.
+    DELETE FROM likes
+    WHERE (user_id = $user_id AND post_id = $post_id);
+
+    -- assign the notification id
+    SELECT notification_id INTO id_notification
+ 	FROM post_notifications JOIN notifications ON post_notifications.notification_id = notifications.id
+    WHERE (post_id = $post_id AND sender_id = $user_id AND notification_type = 'like_post');
+
+    --delete notification and post_notification because of on delete cascade
+    DELETE FROM notifications
+    WHERE (id = id_notification);
+    
+
+COMMIT;
+
+
+
+
+-- Liking a comment
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DECLARE
+notification_id INTEGER;
+BEGIN
+      
+    -- Creating the like.
+    INSERT INTO likes(user_id, comment_id, date)
+    VALUES ($user_id, $comment_id, CURRENT_TIMESTAMP);
+
+    -- Creating a notification.
+    INSERT INTO notifications(sender_id, receiver_id, date) 
+    VALUES ($user_id, $comment_owner_user_id, CURRENT_TIMESTAMP);
+    
+    -- Assign the most recent notification ID to the declared variable
+    SELECT id INTO notification_id
+ 	FROM notifications
+    ORDER BY date DESC
+    LIMIT 1;
+
+    -- Creating a comment notification.
+    INSERT INTO comment_notifications(notification_id, comment_id, notification_type) 
+    VALUES (notification_id, $comment_id, 'like_comment'); -- Using the comment ID passed from PHP directly
+    
+
+COMMIT;
+
+
+-- Removing a like on a comment
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DECLARE
+id_notification INTEGER;
+
+BEGIN
+      
+    -- Delete the like.
+    DELETE FROM likes
+    WHERE (user_id = $user_id AND comment_id = $comment_id);
+
+    -- assign the notification id
+    SELECT notification_id INTO id_notification
+ 	FROM comment_notifications JOIN notifications ON comment_notifications.notification_id = notifications.id
+    WHERE (comment_id = $comment_id AND sender_id = $user_id AND notification_type = 'like_comment');
+
+    --delete notification and comment_notification because of on delete cascade
+    DELETE FROM notifications
+    WHERE (id = id_notification);
+    
+
+COMMIT;
+
+
+-- Send Add friend request
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DECLARE
+notification_id INTEGER;
+BEGIN
+
+    -- Creating a notification.
+    INSERT INTO notifications(sender_id, receiver_id, date) 
+    VALUES ($user_id, $friend_id, CURRENT_TIMESTAMP);
+    
+    -- Assign the most recent notification ID to the declared variable
+    SELECT id INTO notification_id
+ 	FROM notifications
+    ORDER BY date DESC
+    LIMIT 1;
+
+    -- Creating a post notification.
+    INSERT INTO user_notifications(notification_id, post_id, notification_type) 
+    VALUES (notification_id, 'friend_request');
+    
+COMMIT;
+
+
+-- Accept friend request
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DECLARE
+notification_id INTEGER;
+BEGIN
+
+    -- Creating is_member relationship.
+    INSERT INTO is_friend(user_id, friend_id, date)
+    VALUES ($user_id, $friend_id, CURRENT_TIMESTAMP);
+
+    -- Creating a notification.
+    INSERT INTO notifications(sender_id, receiver_id, date) 
+    VALUES ($user_id, $friend_id, CURRENT_TIMESTAMP);
+    
+    -- Assign the most recent notification ID to the declared variable
+    SELECT id INTO notification_id
+ 	FROM notifications
+    ORDER BY date DESC
+    LIMIT 1;
+
+    -- Creating a post notification.
+    INSERT INTO user_notifications(notification_id, post_id, notification_type) 
+    VALUES (notification_id, 'accepted_request');
+
+    --Deletes the notification which was a friend_request from the friend_id to this user_id
+
+    DELETE FROM notifications
+    WHERE (id = SELECT(notification_id) 
+                FROM user_notifications JOIN notifications ON user_notifications.notification_id = notifications.id
+                WHERE (notification_type = 'friend_request' AND sender_id = $friend_id AND receiver_id = $user_id));
+
+COMMIT;
+
+-- Reject friend request
+
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DECLARE
+BEGIN
+
+    --Deletes the notification which was a friend_request from the friend_id to this user_id
+
+    DELETE FROM notifications
+    WHERE (id = SELECT(notification_id) 
+                FROM user_notifications JOIN notifications ON user_notifications.notification_id = notifications.id
+                WHERE (notification_type = 'friend_request' AND sender_id = $friend_id AND receiver_id = $user_id));
+
+COMMIT;
+
+
+-- Send join group request (php whill make a for each for each group owner and calls the transaction)
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DECLARE
+notification_id INTEGER;
+BEGIN
+
+    -- Creating a notification.
+    INSERT INTO notifications(sender_id, receiver_id, date) 
+    VALUES ($user_id, $group_owner_id, CURRENT_TIMESTAMP);
+    
+    -- Assign the most recent notification ID to the declared variable
+    SELECT id INTO notification_id
+ 	FROM notifications
+    ORDER BY date DESC
+    LIMIT 1;
+
+    -- Creating a group notification.
+    INSERT INTO group_notifications(notification_id, group_id, notification_type) 
+    VALUES (notification_id, $group_id, 'join_request');
+
+COMMIT;
+
+
+-- Accept join group request
+
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DECLARE
+notification_id INTEGER;
+BEGIN
+
+    -- Creating is_member relationship.
+    INSERT INTO is_member(user_id, group_id, date)
+    VALUES ($user_id, $group_id, CURRENT_TIMESTAMP);
+
+    -- Creating a notification.
+    INSERT INTO notifications(sender_id, receiver_id, date) 
+    VALUES ($user_id, $group_owner_id, CURRENT_TIMESTAMP);
+    
+    -- Assign the most recent notification ID to the declared variable
+    SELECT id INTO notification_id
+ 	FROM notifications
+    ORDER BY date DESC
+    LIMIT 1;
+
+    -- Creating a group notification.
+    INSERT INTO group_notifications(notification_id, group_id, notification_type) 
+    VALUES (notification_id, $group_id, 'join_accept');
+
+    --Deletes the notification which was a join_request from the user_id to the group_owner_id
+
+    DELETE FROM notifications
+    WHERE (id = SELECT(notification_id) 
+                FROM group_notifications JOIN notifications ON group_notifications.notification_id = notifications.id
+                WHERE (notification_type = 'join_request' AND group_id = $group_id AND sender_id = $user_id));
+
+COMMIT;
+
+
+-- Reject join group request
+
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DECLARE
+
+BEGIN
+    
+        --Deletes the notification which was a join_request from the user_id to the group_owner_id
+    
+        DELETE FROM notifications
+        WHERE (id = SELECT(notification_id) 
+                    FROM group_notifications JOIN notifications ON group_notifications.notification_id = notifications.id
+                    WHERE (notification_type = 'join_request' AND group_id = $group_id AND sender_id = $user_id));
+
+
+COMMIT;
+
+
+-- Ban user from group
+
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DECLARE
+notification_id INTEGER;
+BEGIN
+
+    -- Creating a notification.
+    INSERT INTO notifications(sender_id, receiver_id, date) 
+    VALUES ($user_id, $group_owner_id, CURRENT_TIMESTAMP);
+    
+    -- Assign the most recent notification ID to the declared variable
+    SELECT id INTO notification_id
+ 	FROM notifications
+    ORDER BY date DESC
+    LIMIT 1;
+
+    -- Creating a group notification.
+    INSERT INTO group_notifications(notification_id, group_id, notification_type) 
+    VALUES (notification_id, $group_id, 'ban');
+
+    -- Remove user from is_member
+
+    DELETE FROM is_member
+    WHERE (user_id = $user_id AND group_id = $group_id);
+
+COMMIT;
+
+
+-- Kick user from group
