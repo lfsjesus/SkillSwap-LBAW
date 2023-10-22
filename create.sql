@@ -457,6 +457,7 @@ FOR EACH ROW
 EXECUTE FUNCTION check_user_group_membership();
 
 
+-- Delete notification if user accepted friend request
 CREATE OR REPLACE FUNCTION delete_friendship_notification()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -477,5 +478,45 @@ CREATE TRIGGER trigger_delete_friendship_notification
 AFTER INSERT ON is_friend
 FOR EACH ROW
 EXECUTE FUNCTION delete_friendship_notification();
+
+
+-- Delete notification if user accepted join request
+CREATE OR REPLACE FUNCTION delete_join_request_notification()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM group_notifications JOIN notifications 
+                ON group_notifications.notification_id = notifications.id WHERE notification_type = 'join_request' 
+                AND group_id = NEW.group_id AND receiver_id = NEW.user_id) THEN
+        DELETE FROM notifications WHERE id = (SELECT notification_id FROM group_notifications JOIN notifications 
+                                                ON group_notifications.notification_id = notifications.id 
+                                                WHERE notification_type = 'join_request' 
+                                                AND group_id = NEW.group_id 
+                                                AND receiver_id = NEW.user_id);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_delete_join_request_notification
+AFTER INSERT ON is_member
+FOR EACH ROW
+EXECUTE FUNCTION delete_join_request_notification();
+
+
+-- Blocked users stop being friends (TO BE TESTED)
+CREATE OR REPLACE FUNCTION delete_friendship()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM is_friend WHERE user_id = NEW.blocked_by AND friend_id = NEW.blocked_user) THEN
+        DELETE FROM is_friend WHERE user_id = NEW.blocked_by AND friend_id = NEW.blocked_user;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_delete_friendship
+AFTER INSERT ON user_blocks
+FOR EACH ROW
+EXECUTE FUNCTION delete_friendship();
 
 
