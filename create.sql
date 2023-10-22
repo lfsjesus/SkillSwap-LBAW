@@ -54,7 +54,8 @@ CREATE TABLE groups (
     name VARCHAR(50) NOT NULL,
     description VARCHAR(300),
     public_group BOOLEAN DEFAULT false,
-    date DATE NOT NULL
+    date DATE NOT NULL,
+    CHECK (date >= CURRENT_DATE)
 );
 
 CREATE TABLE posts (
@@ -62,6 +63,7 @@ CREATE TABLE posts (
     user_id INTEGER NOT NULL REFERENCES users(id) ,
     group_id INTEGER REFERENCES groups(id)  ON DELETE CASCADE,
     date TIMESTAMP NOT NULL,
+    CHECK (date >= CURRENT_TIMESTAMP),
     description TEXT,
     public_post BOOLEAN DEFAULT true
 );
@@ -72,7 +74,9 @@ CREATE TABLE comments (
     post_id INTEGER NOT NULL REFERENCES posts(id)  ON DELETE CASCADE,
     comment_id INTEGER REFERENCES comments(id)  ON DELETE CASCADE,
     content TEXT,
-    date TIMESTAMP NOT NULL
+    date TIMESTAMP NOT NULL,
+    CHECK (date >= CURRENT_TIMESTAMP)
+
 );
 
 CREATE TABLE files (
@@ -82,7 +86,8 @@ CREATE TABLE files (
     CHECK (post_id IS NULL AND comment_id IS NOT NULL OR post_id IS NOT NULL AND comment_id IS NULL),
     title VARCHAR(50) NOT NULL,
     files BYTEA NOT NULL,
-    date TIMESTAMP NOT NULL
+    date TIMESTAMP NOT NULL,
+    CHECK (date >= CURRENT_TIMESTAMP)
 );
 
 CREATE TABLE likes (
@@ -92,38 +97,47 @@ CREATE TABLE likes (
     comment_id INTEGER REFERENCES comments(id)  ON DELETE CASCADE,
     CONSTRAINT unique_like UNIQUE (user_id, post_id, comment_id),
     CHECK (post_id IS NULL AND comment_id IS NOT NULL OR post_id IS NOT NULL AND comment_id IS NULL),
-    date TIMESTAMP NOT NULL
+    date TIMESTAMP NOT NULL,
+    CHECK (date >= CURRENT_TIMESTAMP)
 );
 
 CREATE TABLE is_friend (
     user_id INTEGER NOT NULL REFERENCES users(id)  ON DELETE CASCADE,
     friend_id INTEGER NOT NULL REFERENCES users(id)  ON DELETE CASCADE,
+    PRIMARY KEY (user_id, friend_id),
     CHECK (user_id <> friend_id),
-    date TIMESTAMP NOT NULL 
+    date TIMESTAMP NOT NULL,
+    CHECK (date >= CURRENT_TIMESTAMP) 
 );
 
 CREATE TABLE user_blocks (
-    blocked_by INTEGER NOT NULL REFERENCES users(id) ,
-    blocked_user INTEGER REFERENCES users(id) ,
+    blocked_by INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    blocked_user INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    PRIMARY KEY (blocked_by, blocked_user),
     CONSTRAINT same_user CHECK (blocked_by <> blocked_user)
 );
 
 CREATE TABLE is_member (
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     group_id INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
-    date TIMESTAMP NOT NULL
+    PRIMARY KEY (user_id, group_id),
+    date TIMESTAMP NOT NULL,
+    CHECK (date >= CURRENT_TIMESTAMP)
 );
 
 CREATE TABLE owns (
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     group_id INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
-    date TIMESTAMP NOT NULL
+    date TIMESTAMP NOT NULL,
+    CHECK (date >= CURRENT_TIMESTAMP)
 );
 
 CREATE TABLE group_blocks (
     group_id INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
     blocked_user INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    blocked_by INTEGER REFERENCES users(id) ON DELETE SET NULL
+    blocked_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    PRIMARY KEY (group_id, blocked_user),
+    CONSTRAINT same_user CHECK (blocked_by <> blocked_user) /* check on uml and relational model */
 );
 
 CREATE TABLE administrators (
@@ -140,7 +154,8 @@ CREATE TABLE user_ban (
     administrator_id INTEGER NOT NULL REFERENCES administrators(id),
     days INTEGER NOT NULL,
     CHECK (days > 0),
-    date TIMESTAMP NOT NULL
+    date TIMESTAMP NOT NULL,
+    CHECK (date >= CURRENT_TIMESTAMP)
 );
 
 CREATE TABLE user_create (
@@ -153,6 +168,7 @@ CREATE TABLE user_create (
     email VARCHAR(50) NOT NULL,
     password TEXT NOT NULL,
     birth_date DATE NOT NULL,
+    CHECK (birth_date <= CURRENT_DATE - INTERVAL '18' YEAR),
     public_profile BOOLEAN DEFAULT true
 );
 
@@ -160,33 +176,35 @@ CREATE TABLE user_edit (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id),
     administrator_id INTEGER NOT NULL REFERENCES administrators(id),
-    date DATE NOT NULL,
+    date TIMESTAMP NOT NULL,
+    CHECK (date >= CURRENT_TIMESTAMP),
     field_type field_types NOT NULL
 );
 
 CREATE TABLE notifications (
     id SERIAL PRIMARY KEY,
-    sender_id INTEGER NOT NULL REFERENCES users(id),
-    receiver_id INTEGER NOT NULL REFERENCES users(id),
+    sender_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    receiver_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     date TIMESTAMP NOT NULL,
+    CHECK (date >= CURRENT_TIMESTAMP),
     viewed BOOLEAN DEFAULT false
 );
 
 CREATE TABLE comment_notifications (
     notification_id INTEGER REFERENCES notifications(id) PRIMARY KEY,
-    comment_id INTEGER NOT NULL REFERENCES comments(id),
+    comment_id INTEGER NOT NULL REFERENCES comments(id) ON DELETE CASCADE,
     notification_type comment_notification_types NOT NULL
 );
 
 CREATE TABLE post_notifications (
     notification_id INTEGER REFERENCES notifications(id) PRIMARY KEY,
-    post_id INTEGER NOT NULL REFERENCES posts(id),
+    post_id INTEGER NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
     notification_type post_notification_types NOT NULL
 );
 
 CREATE TABLE group_notifications (
     notification_id INTEGER REFERENCES notifications(id) PRIMARY KEY,
-    group_id INTEGER NOT NULL REFERENCES groups(id),
+    group_id INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
     notification_type group_notification_types NOT NULL
 );
 
@@ -317,7 +335,7 @@ RETURNS TRIGGER AS $$
 BEGIN
         
     IF (NEW.notification_type) = 'friend_request' THEN
-    
+
         /* if the users are already friends, delete the notification */
 
         IF EXISTS (SELECT 1 
