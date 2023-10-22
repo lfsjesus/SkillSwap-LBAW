@@ -191,25 +191,25 @@ CREATE TABLE notifications (
 );
 
 CREATE TABLE comment_notifications (
-    notification_id INTEGER REFERENCES notifications(id) PRIMARY KEY,
+    notification_id INTEGER REFERENCES notifications(id) ON DELETE CASCADE PRIMARY KEY,
     comment_id INTEGER NOT NULL REFERENCES comments(id) ON DELETE CASCADE,
     notification_type comment_notification_types NOT NULL
 );
 
 CREATE TABLE post_notifications (
-    notification_id INTEGER REFERENCES notifications(id) PRIMARY KEY,
+    notification_id INTEGER REFERENCES notifications(id) ON DELETE CASCADE PRIMARY KEY,
     post_id INTEGER NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
     notification_type post_notification_types NOT NULL
 );
 
 CREATE TABLE group_notifications (
-    notification_id INTEGER REFERENCES notifications(id) PRIMARY KEY,
+    notification_id INTEGER REFERENCES notifications(id) ON DELETE CASCADE PRIMARY KEY,
     group_id INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
     notification_type group_notification_types NOT NULL
 );
 
 CREATE TABLE user_notifications (
-    notification_id INTEGER REFERENCES notifications(id) PRIMARY KEY,
+    notification_id INTEGER REFERENCES notifications(id) ON DELETE CASCADE PRIMARY KEY,
     notification_type user_notification_types NOT NULL
 );
 
@@ -455,3 +455,27 @@ CREATE TRIGGER trigger_check_user_group_membership
 BEFORE INSERT ON posts
 FOR EACH ROW
 EXECUTE FUNCTION check_user_group_membership();
+
+
+CREATE OR REPLACE FUNCTION delete_friendship_notification()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM user_notifications JOIN notifications 
+                ON user_notifications.notification_id = notifications.id WHERE notification_type = 'friend_request' 
+                AND sender_id = NEW.user_id AND receiver_id = NEW.friend_id) THEN
+        DELETE FROM notifications WHERE id = (SELECT notification_id FROM user_notifications JOIN notifications 
+                                                ON user_notifications.notification_id = notifications.id 
+                                                WHERE notification_type = 'friend_request' 
+                                                AND sender_id = NEW.user_id 
+                                                AND receiver_id = NEW.friend_id);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_delete_friendship_notification
+AFTER INSERT ON is_friend
+FOR EACH ROW
+EXECUTE FUNCTION delete_friendship_notification();
+
+
