@@ -192,7 +192,6 @@ CREATE TABLE group_notifications (
 
 CREATE TABLE user_notifications (
     notification_id INTEGER REFERENCES notifications(id) PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id),
     notification_type user_notification_types NOT NULL
 );
 
@@ -316,52 +315,65 @@ CREATE TRIGGER add_friend
 CREATE OR REPLACE FUNCTION prevent_duplicate_friend_requests()
 RETURNS TRIGGER AS $$
 BEGIN
+        
     IF (NEW.notification_type) = 'friend_request' THEN
+    
+        /* if the users are already friends, delete the notification */
+
         IF EXISTS (SELECT 1 
-               FROM is_friend 
-               WHERE (user_id = (SELECT sender_id 
-                                 FROM notifications 
-                                 WHERE id = NEW.notification_id) AND 
-                      friend_id = (SELECT receiver_id 
-                                   FROM notifications 
-                                   WHERE id = NEW.notification_id)) OR 
-                     (user_id = (SELECT receiver_id 
-                                 FROM notifications 
-                                 WHERE id = NEW.notification_id) AND 
-                      friend_id = (SELECT sender_id 
-                                   FROM notifications 
-                                   WHERE id = NEW.notification_id))) THEN
-        RAISE EXCEPTION 'Users are already friends!';
+                   FROM is_friend 
+                   WHERE (user_id = (SELECT sender_id 
+                                     FROM notifications 
+                                     WHERE id = NEW.notification_id) AND 
+                          friend_id = (SELECT receiver_id 
+                                       FROM notifications 
+                                       WHERE id = NEW.notification_id))) THEN
+                           
+            DELETE FROM notifications
+            WHERE id = NEW.notification_id;
+                           
+            RAISE EXCEPTION 'Users are already friends! Notification deleted.';
+            
         END IF;
-        /* CHECK IF THERE IS ALREADY A NOTIFICATION OF THE SAME TYPE BETWEEN THE SAME USERS. THIS IMPLIES DELETING
-        THE NOTIFICATION WHEN THE FRIEND REQUEST IS ACCEPTED */
-        IF EXISTS (SELECT 1 
-                   FROM notifications 
-                   WHERE (sender_id = (SELECT sender_id 
-                                       FROM notifications 
-                                       WHERE id = NEW.notification_id) AND 
-                          receiver_id = (SELECT receiver_id 
-                                         FROM notifications 
-                                         WHERE id = NEW.notification_id)) OR 
-                         (sender_id = (SELECT receiver_id 
-                                       FROM notifications 
-                                       WHERE id = NEW.notification_id) AND 
-                          receiver_id = (SELECT sender_id 
-                                         FROM notifications 
-                                         WHERE id = NEW.notification_id))) THEN
-            RAISE EXCEPTION 'There is already a notification of the same type between the same users!';
+
+        /* if some user has already sent a friend request to the other user, delete the notification */
+
+        IF EXISTS (
+            SELECT 1
+            FROM user_notifications
+            JOIN notifications ON user_notifications.notification_id = notifications.id
+            WHERE notification_type = 'friend_request'
+            AND (
+                (sender_id = (SELECT sender_id 
+                            FROM notifications 
+                            WHERE id = NEW.notification_id) 
+                AND receiver_id = (SELECT receiver_id 
+                                FROM notifications 
+                                WHERE id = NEW.notification_id))
+                OR
+                (sender_id = (SELECT receiver_id 
+                            FROM notifications 
+                            WHERE id = NEW.notification_id) 
+                AND receiver_id = (SELECT sender_id 
+                                FROM notifications 
+                                WHERE id = NEW.notification_id))
+            )
+        ) THEN
+            DELETE FROM notifications
+            WHERE id = NEW.notification_id;
+            RAISE EXCEPTION 'Friend request already exists! Notification deleted.';
         END IF;
     END IF;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER prevent_duplicate_friend_requests
-    BEFORE INSERT ON user_notifications
-    FOR EACH ROW
-    EXECUTE PROCEDURE prevent_duplicate_friend_requests();
 
 
+CREATE TRIGGER trigger_prevent_duplicate_friend_requests
+BEFORE INSERT OR UPDATE ON user_notifications
+FOR EACH ROW
+EXECUTE FUNCTION prevent_duplicate_friend_requests();
 
 
 
