@@ -520,3 +520,30 @@ FOR EACH ROW
 EXECUTE FUNCTION delete_friendship();
 
 
+/* Transactions */
+
+-- Liking a post
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+DECLARE
+notification_id INT;
+BEGIN
+    -- Creating a notification.
+    INSERT INTO notifications(sender_id, receiver_id, date) 
+    VALUES ($user_id, $post_owner_user_id, CURRENT_TIMESTAMP);
+    
+    -- Assign the most recent notification ID to the declared variable
+    SELECT id INTO notification_id
+ 	FROM notifications
+    ORDER BY date DESC
+    LIMIT 1;
+
+    -- Creating a post notification.
+    INSERT INTO post_notifications(notification_id, post_id, notification_type) 
+    VALUES (notification_id, $post_id, 'like_post'); -- Using the post ID passed from PHP directly
+    
+
+COMMIT;
+
