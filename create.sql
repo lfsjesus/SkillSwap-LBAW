@@ -486,12 +486,12 @@ RETURNS TRIGGER AS $$
 BEGIN
     IF EXISTS (SELECT 1 FROM group_notifications JOIN notifications 
                 ON group_notifications.notification_id = notifications.id WHERE notification_type = 'join_request' 
-                AND group_id = NEW.group_id AND receiver_id = NEW.user_id) THEN
+                AND group_id = NEW.group_id AND sender_id = NEW.user_id) THEN
         DELETE FROM notifications WHERE id = (SELECT notification_id FROM group_notifications JOIN notifications 
                                                 ON group_notifications.notification_id = notifications.id 
                                                 WHERE notification_type = 'join_request' 
                                                 AND group_id = NEW.group_id 
-                                                AND receiver_id = NEW.user_id);
+                                                AND sender_id = NEW.user_id);
     END IF;
     RETURN NEW;
 END;
