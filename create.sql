@@ -26,7 +26,7 @@ DROP TYPE IF EXISTS group_notification_types CASCADE;
 DROP TYPE IF EXISTS user_notification_types CASCADE;
 
 /*
-Types' definition
+DOMAINS/TYPES
 */
 
 CREATE TYPE field_types AS ENUM('name', 'username', 'e-mail', 'password', 'description');
@@ -52,6 +52,7 @@ CREATE TABLE users (
 CREATE TABLE groups (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
+    banner BYTEA,
     description VARCHAR(300),
     public_group BOOLEAN DEFAULT false,
     date DATE NOT NULL,
@@ -136,6 +137,8 @@ CREATE TABLE group_blocks (
     group_id INTEGER NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
     blocked_user INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     blocked_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    date TIMESTAMP NOT NULL,
+    CHECK (date >= CURRENT_TIMESTAMP),
     PRIMARY KEY (group_id, blocked_user),
     CONSTRAINT same_user CHECK (blocked_by <> blocked_user) /* check on uml and relational model */
 );
@@ -215,7 +218,7 @@ CREATE TABLE user_notifications (
 
 
 /**
- * Triggers
+ * TRIGGERS
  */
 
 
@@ -461,522 +464,24 @@ EXECUTE FUNCTION prevent_duplicate_join_requests();
 
 
 
-/* Transactions */
 
--- Liking a post
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-notification_id INTEGER;
-BEGIN
-      
-    -- Creating the like.
-    INSERT INTO likes(user_id, post_id, date)
-    VALUES ($user_id, $post_id, CURRENT_TIMESTAMP);
-
-    -- Creating a notification.
-    INSERT INTO notifications(sender_id, receiver_id, date) 
-    VALUES ($user_id, $post_owner_user_id, CURRENT_TIMESTAMP)
-    RETURNING id INTO notification_id;
-
-    -- Creating a post notification.
-    INSERT INTO post_notifications(notification_id, post_id, notification_type) 
-    VALUES (notification_id, $post_id, 'like_post'); -- Using the post ID passed from PHP directly
-    
-
-COMMIT;
-
-
--- Removing a like on a post
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-id_notification INTEGER;
-
-BEGIN
-      
-    -- Delete the like.
-    DELETE FROM likes
-    WHERE (user_id = $user_id AND post_id = $post_id);
-
-    -- assign the notification id
-    SELECT notification_id INTO id_notification
- 	FROM post_notifications JOIN notifications ON post_notifications.notification_id = notifications.id
-    WHERE (post_id = $post_id AND sender_id = $user_id AND notification_type = 'like_post');
-
-    --delete notification and post_notification because of on delete cascade
-    DELETE FROM notifications
-    WHERE (id = id_notification);
-    
-
-COMMIT;
-
-
-
-
--- Liking a comment
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-notification_id INTEGER;
-BEGIN
-      
-    -- Creating the like.
-    INSERT INTO likes(user_id, comment_id, date)
-    VALUES ($user_id, $comment_id, CURRENT_TIMESTAMP);
-
-    -- Creating a notification.
-    INSERT INTO notifications(sender_id, receiver_id, date) 
-    VALUES ($user_id, $comment_owner_user_id, CURRENT_TIMESTAMP)
-    RETURNING id INTO notification_id;
-
-    -- Creating a comment notification.
-    INSERT INTO comment_notifications(notification_id, comment_id, notification_type) 
-    VALUES (notification_id, $comment_id, 'like_comment'); -- Using the comment ID passed from PHP directly
-    
-
-COMMIT;
-
-
--- Removing a like on a comment
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-id_notification INTEGER;
-
-BEGIN
-      
-    -- Delete the like.
-    DELETE FROM likes
-    WHERE (user_id = $user_id AND comment_id = $comment_id);
-
-    -- assign the notification id
-    SELECT notification_id INTO id_notification
- 	FROM comment_notifications JOIN notifications ON comment_notifications.notification_id = notifications.id
-    WHERE (comment_id = $comment_id AND sender_id = $user_id AND notification_type = 'like_comment');
-
-    --delete notification and comment_notification because of on delete cascade
-    DELETE FROM notifications
-    WHERE (id = id_notification);
-    
-
-COMMIT;
-
-
--- Send Add friend request
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-notification_id INTEGER;
-BEGIN
-
-    -- Creating a notification.
-    INSERT INTO notifications(sender_id, receiver_id, date) 
-    VALUES ($user_id, $friend_id, CURRENT_TIMESTAMP)
-    RETURNING id INTO notification_id;
-
-    -- Creating a post notification.
-    INSERT INTO user_notifications(notification_id, post_id, notification_type) 
-    VALUES (notification_id, 'friend_request');
-    
-COMMIT;
-
-
--- Accept friend request
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-notification_id INTEGER;
-BEGIN
-
-    -- Creating is_member relationship.
-    INSERT INTO is_friend(user_id, friend_id, date)
-    VALUES ($user_id, $friend_id, CURRENT_TIMESTAMP);
-
-    -- Creating a notification.
-    INSERT INTO notifications(sender_id, receiver_id, date) 
-    VALUES ($user_id, $friend_id, CURRENT_TIMESTAMP)
-    RETURNING id INTO notification_id;
-
-    -- Creating a post notification.
-    INSERT INTO user_notifications(notification_id, post_id, notification_type) 
-    VALUES (notification_id, 'accepted_request');
-
-    --Deletes the notification which was a friend_request from the friend_id to this user_id
-
-    DELETE FROM notifications
-    WHERE (id = SELECT(notification_id) 
-                FROM user_notifications JOIN notifications ON user_notifications.notification_id = notifications.id
-                WHERE (notification_type = 'friend_request' AND sender_id = $friend_id AND receiver_id = $user_id));
-
-COMMIT;
-
--- Reject friend request
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-BEGIN
-
-    --Deletes the notification which was a friend_request from the friend_id to this user_id
-
-    DELETE FROM notifications
-    WHERE (id = SELECT(notification_id) 
-                FROM user_notifications JOIN notifications ON user_notifications.notification_id = notifications.id
-                WHERE (notification_type = 'friend_request' AND sender_id = $friend_id AND receiver_id = $user_id));
-
-COMMIT;
-
-
--- Send join group request (php whill make a for each for each group owner and calls the transaction)
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-notification_id INTEGER;
-BEGIN
-
-    -- Creating a notification.
-    INSERT INTO notifications(sender_id, receiver_id, date) 
-    VALUES ($user_id, $group_owner_id, CURRENT_TIMESTAMP)
-    RETURNING id INTO notification_id;
-
-    -- Creating a group notification.
-    INSERT INTO group_notifications(notification_id, group_id, notification_type) 
-    VALUES (notification_id, $group_id, 'join_request');
-
-COMMIT;
-
-
--- Accept join group request
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-notification_id INTEGER;
-BEGIN
-
-    -- Creating is_member relationship.
-    INSERT INTO is_member(user_id, group_id, date)
-    VALUES ($user_id, $group_id, CURRENT_TIMESTAMP);
-
-    -- Creating a notification.
-    INSERT INTO notifications(sender_id, receiver_id, date) 
-    VALUES ($group_owner_id, $user_id, CURRENT_TIMESTAMP)
-    RETURNING id INTO notification_id;
-
-    -- Creating a group notification.
-    INSERT INTO group_notifications(notification_id, group_id, notification_type) 
-    VALUES (notification_id, $group_id, 'join_accept');
-
-    --Deletes the notification which was a join_request from the user_id to the group_owner_id
-
-    DELETE FROM notifications
-    WHERE (id = SELECT(notification_id) 
-                FROM group_notifications JOIN notifications ON group_notifications.notification_id = notifications.id
-                WHERE (notification_type = 'join_request' AND group_id = $group_id AND sender_id = $user_id AND receiver_id = $group_owner_id));
-
-COMMIT;
-
-
--- Reject join group request
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-
-BEGIN
-    
-        --Deletes the notification which was a join_request from the user_id to the group_owner_id
-    
-        DELETE FROM notifications
-        WHERE (id = SELECT(notification_id) 
-                    FROM group_notifications JOIN notifications ON group_notifications.notification_id = notifications.id
-                    WHERE (notification_type = 'join_request' AND group_id = $group_id AND receiver_id = $group_owner_id AND sender_id = $user_id));
-
-
-COMMIT;
-
-
--- Ban user from group
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-notification_id INTEGER;
-BEGIN
-
-    -- Creating a notification.
-    INSERT INTO notifications(sender_id, receiver_id, date) 
-    VALUES ($group_owner_id, $user_id, CURRENT_TIMESTAMP)
-    RETURNING id INTO notification_id;
-
-    -- Creating a group notification.
-    INSERT INTO group_notifications(notification_id, group_id, notification_type) 
-    VALUES (notification_id, $group_id, 'ban');
-
-    -- Remove user from is_member
-
-    DELETE FROM is_member
-    WHERE (user_id = $user_id AND group_id = $group_id);
-
-COMMIT;
-
-
--- Kick user from group
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-notification_id INTEGER;
-BEGIN
-    
-        -- Creating a notification.
-        INSERT INTO notifications(sender_id, receiver_id, date) 
-        VALUES ($group_owner_id, $user_id, CURRENT_TIMESTAMP)
-        RETURNING id INTO notification_id;
-    
-        -- Creating a group notification.
-        INSERT INTO group_notifications(notification_id, group_id, notification_type) 
-        VALUES (notification_id, $group_id, 'kick');
-    
-        -- Remove user from is_member
-    
-        DELETE FROM is_member
-        WHERE (user_id = $user_id AND group_id = $group_id);
-
-COMMIT;
-
-
--- Invite user to group
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-notification_id INTEGER;
-BEGIN
-
-    -- Creating a notification.
-    INSERT INTO notifications(sender_id, receiver_id, date) 
-    VALUES ($user_id, $friend_id, CURRENT_TIMESTAMP)
-    RETURNING id INTO notification_id;
-
-    -- Creating a group notification.
-    INSERT INTO group_notifications(notification_id, group_id, notification_type) 
-    VALUES (notification_id, $group_id, 'invite');
-
-COMMIT;
-
-
--- Accept group invitation (deletes the invite notification from the friend and add the user_id to the is_member list)
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-BEGIN
-    
-        --Deletes the notification which was a invite from the group_owner_id to the user_id
-    
-        DELETE FROM notifications
-        WHERE (id = SELECT(notification_id) 
-                    FROM group_notifications JOIN notifications ON group_notifications.notification_id = notifications.id
-                    WHERE (notification_type = 'invite' AND group_id = $group_id AND sender_id = $group_owner_id AND receiver_id = $user_id));
-
-        -- Creating is_member relationship.
-        INSERT INTO is_member(user_id, group_id, date)
-        VALUES ($user_id, $group_id, CURRENT_TIMESTAMP);
-
-COMMIT;
-
-
--- Reject group invitation (deletes the invite notification from the friend)
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-BEGIN
-    
-        --Deletes the notification which was a invite from the group_owner_id to the user_id
-    
-        DELETE FROM notifications
-        WHERE (id = SELECT(notification_id) 
-                    FROM group_notifications JOIN notifications ON group_notifications.notification_id = notifications.id
-                    WHERE (notification_type = 'invite' AND group_id = $group_id AND sender_id = $group_owner_id AND receiver_id = $user_id));
-
-COMMIT;
-
-
--- New comment notification (it should create a comment on a post and send a notification to the owner of the post)
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-notification_id INTEGER;
-BEGIN
-
-    -- Creating the comment.
-    INSERT INTO comments(user_id, post_id, comment_id, content, date)
-    VALUES ($user_id, $post_id, $comment_id, $content, CURRENT_TIMESTAMP);
-
-    -- Creating a notification.
-    INSERT INTO notifications(sender_id, receiver_id, date) 
-    VALUES ($user_id, $post_owner_user_id, CURRENT_TIMESTAMP)
-    RETURNING id INTO notification_id;
-
-    -- Creating a post notification.
-    INSERT INTO post_notifications(notification_id, post_id, notification_type) 
-    VALUES (notification_id, $post_id, 'new_comment');
-
-    IF $comment_id IS NOT NULL 
-    THEN
-
-        -- Creating a notification.
-        INSERT INTO notifications(sender_id, receiver_id, date)
-        VALUES ($user_id, $comment_owner_user_id, CURRENT_TIMESTAMP)
-        RETURNING id INTO notification_id;
-
-        -- Creating a post notification.
-        INSERT INTO comment_notifications(notification_id, post_id, notification_type) 
-        VALUES (notification_id, $comment_id, 'reply_comment');
-
-    END IF;
-
-COMMIT;
-
-
--- Tag comment notification (it should send a notification to the tagged user by the owner of the comment)
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-
-notification_id INTEGER;
-
-BEGIN
-
-    -- Creating a notification.
-    INSERT INTO notifications(sender_id, receiver_id, date) 
-    VALUES ($user_id, $tagged_user_id, CURRENT_TIMESTAMP)
-    RETURNING id INTO notification_id;
-
-    -- Creating a post notification.
-    INSERT INTO comment_notifications(notification_id, comment_id, notification_type) 
-    VALUES (notification_id, $comment_id, 'tag_comment');
-
-COMMIT;
-
--- Delete Comment
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-
-BEGIN
-
-    --Deletes the notification
-
-    DELETE FROM notifications
-    WHERE (id = SELECT(notification_id) 
-                FROM comment_notifications JOIN notifications ON comment_notifications.notification_id = notifications.id
-                WHERE comment_id = $comment_id);
-
-    --Deletes the comment
-
-    DELETE FROM comments
-    WHERE (id = $comment_id);
-
-COMMIT;
-
-
--- Tag Post
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-
-notification_id INTEGER;
-
-BEGIN
-
-    -- Creating a notification.
-    INSERT INTO notifications(sender_id, receiver_id, date) 
-    VALUES ($user_id, $tagged_user_id, CURRENT_TIMESTAMP)
-    RETURNING id INTO notification_id;
-
-    -- Creating a post notification.
-    INSERT INTO post_notifications(notification_id, post_id, notification_type) 
-    VALUES (notification_id, $post_id, 'tag_post');
-
-COMMIT;
-
-
--- Delete Post
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-DECLARE
-
-
-BEGIN
-
-    --Deletes any notification related to that post id
-
-    DELETE FROM notifications
-    WHERE (id = SELECT(notification_id) 
-                FROM post_notifications JOIN notifications ON post_notifications.notification_id = notifications.id
-                WHERE (post_id = $post_id));
-
-    --Deletes the post
-
-    DELETE FROM posts
-    WHERE (id = $post_id);
-
-COMMIT;
+/**
+* INDEXES
+*/
 
 
 CREATE INDEX idx_receiver_notification ON notifications USING btree (receiver_id);
 CLUSTER notifications USING idx_receiver_notification;
 
+
 CREATE INDEX idx_notifications_sender ON notifications USING btree (sender_id);
 CLUSTER notifications USING idx_notifications_sender;
 
+
 CREATE INDEX user_id_comment ON comments USING hash (user_id);
+
+
+
 
 -- Adding a column to store computed ts_vectors
 ALTER TABLE users ADD COLUMN tsvectors TSVECTOR;
@@ -984,7 +489,7 @@ ALTER TABLE users ADD COLUMN tsvectors TSVECTOR;
 CREATE OR REPLACE FUNCTION user_search_update() RETURNS TRIGGER AS $$
 BEGIN
 -- Check if the operation is INSERT or if relevant fields are updated in case of an UPDATE
- operationIF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND (NEW.name IS DISTINCT FROM OLD.name OR NEW.username IS DISTINCT FROM OLD.username)) THEN
+ IF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND (NEW.name IS DISTINCT FROM OLD.name OR NEW.username IS DISTINCT FROM OLD.username)) THEN
 
  -- Update the tsvectors column by concatenating weighted tsvectors of name and username columns
  NEW.tsvectors := (
@@ -1001,18 +506,22 @@ LANGUAGE plpgsql;
 CREATE TRIGGER user_search_update BEFORE INSERT OR UPDATE ON users
 FOR EACH ROW EXECUTE PROCEDURE user_search_update();
 
+
+
+
+
 -- Creating a GIN index to optimize text search on the tsvectors column
 CREATE INDEX search_user ON users USING GIN (tsvectors);
 
 ALTER TABLE groups ADD COLUMN tsvectors TSVECTOR;
 
-\-- Create a function to automatically update ts_vectors
+-- Create a function to automatically update ts_vectors
 
 CREATE OR REPLACE FUNCTION g_search_update() RETURNS TRIGGER AS $$
 
 BEGIN
 
-IF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND (NEW.name \<\> OLD.name OR NEW.description \<\> OLD.description)) THEN
+IF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND (NEW.name <> OLD.name OR NEW.description <> OLD.description)) THEN
 
 NEW.tsvectors := ( 
                   setweight(to_tsvector('portuguese', NEW.name), 'A') || 
@@ -1026,7 +535,7 @@ RETURN NEW;
 
 END $$ LANGUAGE plpgsql;
 
-\-- Create a trigger before insert or update on groups
+-- Create a trigger before insert or update on groups
 
 CREATE TRIGGER g_search_update
 
@@ -1036,6 +545,6 @@ FOR EACH ROW
 
 EXECUTE FUNCTION g_search_update();
 
-\-- Create a GIN index for ts_vectors
+-- Create a GIN index for ts_vectors
 
 CREATE INDEX search_g ON groups USING GIN (tsvectors);
