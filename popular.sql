@@ -669,7 +669,7 @@ INSERT INTO comments (user_id, post_id, content, date) VALUES (159, 10, 'Comment
 
 
 /* Likes */
-/*
+
 INSERT INTO likes (user_id, post_id, comment_id, date) VALUES (89, 1, NULL, CURRENT_TIMESTAMP);
 INSERT INTO likes (user_id, post_id, comment_id, date) VALUES (367, 2, NULL, CURRENT_TIMESTAMP);
 INSERT INTO likes (user_id, post_id, comment_id, date) VALUES (15, 3, NULL, CURRENT_TIMESTAMP);
@@ -680,4 +680,3 @@ INSERT INTO likes (user_id, post_id, comment_id, date) VALUES (97, 7, NULL, CURR
 INSERT INTO likes (user_id, post_id, comment_id, date) VALUES (49, 8, NULL, CURRENT_TIMESTAMP);
 INSERT INTO likes (user_id, post_id, comment_id, date) VALUES (330, 9, NULL, CURRENT_TIMESTAMP);
 INSERT INTO likes (user_id, post_id, comment_id, date) VALUES (159, 10, NULL, CURRENT_TIMESTAMP);
-*/
