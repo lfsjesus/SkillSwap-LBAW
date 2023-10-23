@@ -268,7 +268,7 @@ CREATE TRIGGER check_like_date
 
 
 
-CREATE OR REPLACE FUNCTION check_like_comment_validity() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION check_like_validity() RETURNS TRIGGER AS $$
 BEGIN
     IF (NEW.group_id IS NOT NULL) THEN
         -- Check if the user is a member of the group
@@ -291,12 +291,33 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER check_like_validity
     BEFORE INSERT OR UPDATE ON likes
     FOR EACH ROW
-    EXECUTE PROCEDURE check_like_comment_validity();
+    EXECUTE PROCEDURE check_like_validity();
+
+
+
+CREATE OR REPLACE FUNCTION check_comment_validity() RETURNS TRIGGER AS $$
+BEGIN 
+    /* group_id of the post that comment is being made on */
+    IF (SELECT group_id FROM posts WHERE id = NEW.post_id) IS NOT NULL THEN
+        IF (NEW.user_id NOT IN (SELECT user_id FROM is_member WHERE group_id = (SELECT group_id FROM posts WHERE id = NEW.post_id))) THEN
+            RAISE EXCEPTION 'User must be a member of the group to comment on a post';
+        END IF;
+    ELSE
+        IF (NEW.post_id NOT IN (SELECT id FROM posts WHERE public_post = true) 
+                                AND NEW.user_id NOT IN 
+                                (SELECT friend_id FROM is_friend WHERE user_id = (SELECT user_id FROM posts WHERE id = NEW.post_id))) THEN
+            RAISE EXCEPTION 'User can only comment on public posts or posts of friends';
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 
 CREATE TRIGGER check_comment_validity
     BEFORE INSERT OR UPDATE ON comments
     FOR EACH ROW
-    EXECUTE PROCEDURE check_like_comment_validity();
+    EXECUTE PROCEDURE check_comment_validity();
 
 
 
