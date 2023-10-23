@@ -968,3 +968,74 @@ BEGIN
     WHERE (id = $post_id);
 
 COMMIT;
+
+
+CREATE INDEX idx_receiver_notification ON notifications USING btree (receiver_id);
+CLUSTER notifications USING idx_receiver_notification;
+
+CREATE INDEX idx_notifications_sender ON notifications USING btree (sender_id);
+CLUSTER notifications USING idx_notifications_sender;
+
+CREATE INDEX user_id_comment ON comments USING hash (user_id);
+
+-- Adding a column to store computed ts_vectors
+ALTER TABLE users ADD COLUMN tsvectors TSVECTOR;
+-- Creating a function to automatically update ts_vectors
+CREATE OR REPLACE FUNCTION user_search_update() RETURNS TRIGGER AS $$
+BEGIN
+-- Check if the operation is INSERT or if relevant fields are updated in case of an UPDATE
+ operationIF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND (NEW.name IS DISTINCT FROM OLD.name OR NEW.username IS DISTINCT FROM OLD.username)) THEN
+
+ -- Update the tsvectors column by concatenating weighted tsvectors of name and username columns
+ NEW.tsvectors := (
+                    setweight(to_tsvector('english', COALESCE(NEW.name, '')), 'A') ||
+                    setweight(to_tsvector('english', COALESCE(NEW.username, '')), 'B')
+                    );
+END IF;
+-- Return the NEW record for the operation to proceed
+RETURN NEW;
+END;$$ 
+LANGUAGE plpgsql;
+
+-- Creating a trigger to call the function before INSERT or UPDATE operations on users table
+CREATE TRIGGER user_search_update BEFORE INSERT OR UPDATE ON users
+FOR EACH ROW EXECUTE PROCEDURE user_search_update();
+
+-- Creating a GIN index to optimize text search on the tsvectors column
+CREATE INDEX search_user ON users USING GIN (tsvectors);
+
+ALTER TABLE groups ADD COLUMN tsvectors TSVECTOR;
+
+\-- Create a function to automatically update ts_vectors
+
+CREATE OR REPLACE FUNCTION g_search_update() RETURNS TRIGGER AS $$
+
+BEGIN
+
+IF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND (NEW.name \<\> OLD.name OR NEW.description \<\> OLD.description)) THEN
+
+NEW.tsvectors := ( 
+                  setweight(to_tsvector('portuguese', NEW.name), 'A') || 
+                  setweight(to_tsvector('portuguese', COALESCE(NEW.description, '')), 'B')
+
+);
+
+END IF;
+
+RETURN NEW;
+
+END $$ LANGUAGE plpgsql;
+
+\-- Create a trigger before insert or update on groups
+
+CREATE TRIGGER g_search_update
+
+BEFORE INSERT OR UPDATE ON groups
+
+FOR EACH ROW
+
+EXECUTE FUNCTION g_search_update();
+
+\-- Create a GIN index for ts_vectors
+
+CREATE INDEX search_g ON groups USING GIN (tsvectors);
