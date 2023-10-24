@@ -1,0 +1,26 @@
+openapi: 3.0.0
+
+info:
+ version: '2.0'
+ title: 'SkillSwap Web API'
+ description: 'Web Resources Specification for SkillSwap'
+
+servers:
+- url: https://lbaw23111.fe.up.pt
+  description: Production server
+
+externalDocs:
+ description: Find more info here.
+ url: https://git.fe.up.pt/lbaw/lbaw2324/lbaw23111/-/wikis/eap
+
+tags:
+ - name: 'M01: Users'
+ - name: 'M02: Posts'
+ - name: 'M03: Comments'
+ - name: 'M04: Groups'
+ - name: 'M05: Search'
+ - name: 'M06: Administration'
+ - name: 'M07: Authentication'
+
+paths:
+
