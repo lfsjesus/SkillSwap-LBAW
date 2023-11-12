@@ -4,7 +4,6 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -20,10 +19,17 @@
         <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
     </head>
+    
     <body>
+        
         <main>
             <header>
-                <h1><a href="{{ url('/cards') }}">Thingy!</a></h1>
+                <div class="logo">
+                    <!-- image is one public/assets/skillswap_white_grey.svg -->
+                    <a href="{{ url('/') }}">
+                            <img src="{{ url('assets/skillswap_white_grey.png') }}"/>
+                    </a>
+                </div>
                 @if (Auth::check())
                     <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
                 @endif
@@ -32,5 +38,6 @@
                 @yield('content')
             </section>
         </main>
+        @include('partials.footer')
     </body>
 </html>
