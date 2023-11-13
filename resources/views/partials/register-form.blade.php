@@ -9,6 +9,12 @@
       </span>
     @endif
 
+    <label for="username">Username</label>
+    <input id="username" type="text" name="username" value="{{ old('username') }}" required>
+
+    <label for="birth_date">Birth Date</label>
+    <input id="birth_date" type="date" name="birth_date" value="{{ old('birthdate') }}" required>
+
     <label for="email">E-Mail Address</label>
     <input id="email" type="email" name="email" value="{{ old('email') }}" required>
     @if ($errors->has('email'))
