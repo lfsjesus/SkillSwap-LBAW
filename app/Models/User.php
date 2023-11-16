@@ -18,6 +18,9 @@ class User extends Authenticatable
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
 
+    protected $table = 'users';
+
+
     /**
      * The attributes that are mass assignable.
      *
@@ -41,7 +44,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**
@@ -50,15 +52,15 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'birth_date' => 'datetime'
     ];
 
     /**
-     * Get the cards for a user.
+     * Get the posts for a user.
      */
-    public function cards(): HasMany
+    public function posts()
     {
-        return $this->hasMany(Card::class);
+        return $this->hasMany('App\Models\Post');
     }
 }

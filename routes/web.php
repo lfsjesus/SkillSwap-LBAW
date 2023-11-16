@@ -7,6 +7,7 @@ use App\Http\Controllers\ItemController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,13 +22,14 @@ use App\Http\Controllers\Auth\RegisterController;
 
 // Home
 Route::redirect('/', '/login');
+Route::get('/home', [PostController::class, 'list'])->name('home');
 
-// Cards
-Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
+
+
+Route::controller(PostController::class)->group(function () {
+    Route::get('/posts', 'list')->name('posts');
+    Route::get('/posts/{id}', 'show');
 });
-
 
 // API
 Route::controller(CardController::class)->group(function () {

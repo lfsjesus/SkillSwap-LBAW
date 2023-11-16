@@ -546,26 +546,26 @@ insert into users (name, username, email, password, phone_number, profile_pictur
 
 /* Groups */
 
-insert into groups (name, description, public_group, date) values ('Hauck-Bailey', 'Exclusive disintermediate database', false, '2023-12-07');
-insert into groups (name, description, public_group, date) values ('Wehner Inc', 'Programmable 4th generation project', true, '2023-10-30');
-insert into groups (name, description, public_group, date) values ('Harris-Kihn', 'Reverse-engineered incremental open architecture', true, '2023-12-12');
-insert into groups (name, description, public_group, date) values ('Hermiston-Schmitt', 'Cloned fresh-thinking moratorium', true, '2023-11-20');
-insert into groups (name, description, public_group, date) values ('Botsford Group', 'Progressive web-enabled installation', false, '2023-11-28');
-insert into groups (name, description, public_group, date) values ('Cassin-McGlynn', 'Re-engineered coherent initiative', false, '2023-12-19');
-insert into groups (name, description, public_group, date) values ('Smitham, Reilly and Borer', 'Visionary incremental local area network', false, '2023-11-11');
-insert into groups (name, description, public_group, date) values ('Bechtelar, Schneider and Greenholt', 'Adaptive real-time encryption', true, '2023-11-24');
-insert into groups (name, description, public_group, date) values ('Weissnat-Hyatt', 'Adaptive asynchronous throughput', false, '2023-10-23');
-insert into groups (name, description, public_group, date) values ('Medhurst, Sporer and Labadie', 'Advanced cohesive circuit', false, '2023-11-08');
-insert into groups (name, description, public_group, date) values ('Cassin Inc', 'Extended bi-directional access', true, '2023-12-07');
-insert into groups (name, description, public_group, date) values ('Kreiger Group', 'Organized 3rd generation secured line', false, '2023-11-28');
-insert into groups (name, description, public_group, date) values ('Purdy Inc', 'Re-contextualized didactic project', false, '2023-12-10');
-insert into groups (name, description, public_group, date) values ('Schimmel-Barton', 'Cloned background open architecture', false, '2023-12-07');
-insert into groups (name, description, public_group, date) values ('Pacocha Group', 'Organized multi-state hub', true, '2023-12-11');
-insert into groups (name, description, public_group, date) values ('Christiansen and Sons', 'Centralized user-facing migration', false, '2023-10-25');
-insert into groups (name, description, public_group, date) values ('Ebert-Kirlin', 'Customizable well-modulated implementation', true, '2023-11-17');
-insert into groups (name, description, public_group, date) values ('Simonis, Swift and Johns', 'Sharable system-worthy website', true, '2023-12-04');
-insert into groups (name, description, public_group, date) values ('Nolan LLC', 'Intuitive 24/7 parallelism', true, '2023-10-31');
-insert into groups (name, description, public_group, date) values ('Reinger-Lakin', 'Cross-platform dedicated throughput', false, '2023-11-02');
+insert into groups (name, description, public_group, date) values ('Hauck-Bailey', 'Exclusive disintermediate database', false, '2024-12-07');
+insert into groups (name, description, public_group, date) values ('Wehner Inc', 'Programmable 4th generation project', true, '2024-10-30');
+insert into groups (name, description, public_group, date) values ('Harris-Kihn', 'Reverse-engineered incremental open architecture', true, '2024-12-12');
+insert into groups (name, description, public_group, date) values ('Hermiston-Schmitt', 'Cloned fresh-thinking moratorium', true, '2024-11-20');
+insert into groups (name, description, public_group, date) values ('Botsford Group', 'Progressive web-enabled installation', false, '2024-11-28');
+insert into groups (name, description, public_group, date) values ('Cassin-McGlynn', 'Re-engineered coherent initiative', false, '2024-12-19');
+insert into groups (name, description, public_group, date) values ('Smitham, Reilly and Borer', 'Visionary incremental local area network', false, '2024-11-11');
+insert into groups (name, description, public_group, date) values ('Bechtelar, Schneider and Greenholt', 'Adaptive real-time encryption', true, '2024-11-24');
+insert into groups (name, description, public_group, date) values ('Weissnat-Hyatt', 'Adaptive asynchronous throughput', false, '2024-10-23');
+insert into groups (name, description, public_group, date) values ('Medhurst, Sporer and Labadie', 'Advanced cohesive circuit', false, '2024-11-08');
+insert into groups (name, description, public_group, date) values ('Cassin Inc', 'Extended bi-directional access', true, '2024-12-07');
+insert into groups (name, description, public_group, date) values ('Kreiger Group', 'Organized 3rd generation secured line', false, '2024-11-28');
+insert into groups (name, description, public_group, date) values ('Purdy Inc', 'Re-contextualized didactic project', false, '2024-12-10');
+insert into groups (name, description, public_group, date) values ('Schimmel-Barton', 'Cloned background open architecture', false, '2024-12-07');
+insert into groups (name, description, public_group, date) values ('Pacocha Group', 'Organized multi-state hub', true, '2024-12-11');
+insert into groups (name, description, public_group, date) values ('Christiansen and Sons', 'Centralized user-facing migration', false, '2024-10-25');
+insert into groups (name, description, public_group, date) values ('Ebert-Kirlin', 'Customizable well-modulated implementation', true, '2024-11-17');
+insert into groups (name, description, public_group, date) values ('Simonis, Swift and Johns', 'Sharable system-worthy website', true, '2024-12-04');
+insert into groups (name, description, public_group, date) values ('Nolan LLC', 'Intuitive 24/7 parallelism', true, '2024-10-31');
+insert into groups (name, description, public_group, date) values ('Reinger-Lakin', 'Cross-platform dedicated throughput', false, '2024-11-02');
 
 
 /* Owns */
@@ -625,21 +625,21 @@ INSERT INTO posts (user_id, group_id, date, description, public_post) VALUES (22
 INSERT INTO posts (user_id, group_id, date, description, public_post) VALUES (66, NULL, CURRENT_TIMESTAMP, 'Post by user 66.', true);
 INSERT INTO posts (user_id, group_id, date, description, public_post) VALUES (489, NULL, CURRENT_TIMESTAMP, 'Post by user 489.', true);
 
-insert into posts (user_id, group_id, date, description, public_post) values (329, null, '2023-11-03', 'Quisque ut erat. Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem. Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.', false);
-insert into posts (user_id, group_id, date, description, public_post) values (332, null, '2023-11-01', 'Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.', false);
-insert into posts (user_id, group_id, date, description, public_post) values (313, null, '2023-12-12', 'Vivamus tortor. Duis mattis egestas metus. Aenean fermentum.', false);
-insert into posts (user_id, group_id, date, description, public_post) values (445, null, '2023-11-05', 'Aliquam quis turpis eget elit sodales scelerisque.', true);
-insert into posts (user_id, group_id, date, description, public_post) values (191, null, '2023-11-26', 'Integer non velit. Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue.', true);
-insert into posts (user_id, group_id, date, description, public_post) values (391, null, '2023-12-28', 'Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est. Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.', false);
-insert into posts (user_id, group_id, date, description, public_post) values (12, null, '2023-11-05', 'Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis.', false);
-insert into posts (user_id, group_id, date, description, public_post) values (97, null, '2023-11-04', 'Donec dapibus. Duis at velit eu est congue elementum.', true);
-insert into posts (user_id, group_id, date, description, public_post) values (317, null, '2023-11-01', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem. Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus. Pellentesque at nulla.', false);
-insert into posts (user_id, group_id, date, description, public_post) values (434, null, '2023-12-01', 'Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat. Praesent blandit. Nam nulla.', true);
-insert into posts (user_id, group_id, date, description, public_post) values (250, null, '2023-12-06', 'Phasellus sit amet erat. Nulla tempus.', true);
-insert into posts (user_id, group_id, date, description, public_post) values (182, null, '2023-11-02', 'Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl. Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.', true);
-insert into posts (user_id, group_id, date, description, public_post) values (490, null, '2023-11-20', 'Nulla mollis molestie lorem. Quisque ut erat. Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem. Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat. Praesent blandit. Nam nulla.', true);
-insert into posts (user_id, group_id, date, description, public_post) values (68, null, '2023-10-24', 'In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.', false);
-insert into posts (user_id, group_id, date, description, public_post) values (482, null, '2023-12-15', 'Suspendisse accumsan tortor quis turpis.', true);
+insert into posts (user_id, group_id, date, description, public_post) values (329, null, '2024-11-03', 'Quisque ut erat. Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem. Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.', false);
+insert into posts (user_id, group_id, date, description, public_post) values (332, null, '2024-11-01', 'Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.', false);
+insert into posts (user_id, group_id, date, description, public_post) values (313, null, '2024-12-12', 'Vivamus tortor. Duis mattis egestas metus. Aenean fermentum.', false);
+insert into posts (user_id, group_id, date, description, public_post) values (445, null, '2024-11-05', 'Aliquam quis turpis eget elit sodales scelerisque.', true);
+insert into posts (user_id, group_id, date, description, public_post) values (191, null, '2024-11-26', 'Integer non velit. Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue.', true);
+insert into posts (user_id, group_id, date, description, public_post) values (391, null, '2024-12-28', 'Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est. Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.', false);
+insert into posts (user_id, group_id, date, description, public_post) values (12, null, '2024-11-05', 'Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis.', false);
+insert into posts (user_id, group_id, date, description, public_post) values (97, null, '2024-11-04', 'Donec dapibus. Duis at velit eu est congue elementum.', true);
+insert into posts (user_id, group_id, date, description, public_post) values (317, null, '2024-11-01', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem. Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus. Pellentesque at nulla.', false);
+insert into posts (user_id, group_id, date, description, public_post) values (434, null, '2024-12-01', 'Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat. Praesent blandit. Nam nulla.', true);
+insert into posts (user_id, group_id, date, description, public_post) values (250, null, '2024-12-06', 'Phasellus sit amet erat. Nulla tempus.', true);
+insert into posts (user_id, group_id, date, description, public_post) values (182, null, '2024-11-02', 'Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl. Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.', true);
+insert into posts (user_id, group_id, date, description, public_post) values (490, null, '2024-11-20', 'Nulla mollis molestie lorem. Quisque ut erat. Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem. Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat. Praesent blandit. Nam nulla.', true);
+insert into posts (user_id, group_id, date, description, public_post) values (68, null, '2024-10-24', 'In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.', false);
+insert into posts (user_id, group_id, date, description, public_post) values (482, null, '2024-12-15', 'Suspendisse accumsan tortor quis turpis.', true);
 
 /*Is_friend*/
 

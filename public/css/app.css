@@ -1,64 +1,124 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit&family=Roboto:wght@300&display=swap');
 
 html {
-  height: 100%;
   font-family: 'Roboto', sans-serif;
 }
 
 body {
-  background-image: linear-gradient(to left top, #5a0535, #4a0a2b, #3b0d22, #2c0d1a, #1e0911, #19060e, #13040a, #0b0105, #10020a, #140310, #150415, #16061a);
+  background-image: linear-gradient(to left top, #4a0a2b, #3b0d22, #2c0d1a, #1e0911, #19060e, #13040a, #0b0105, #10020a, #140310, #150415, #16061a);
+  background-attachment: fixed;
   margin: 0;  
 }
 
-  .login-page {
-    width: 50%;
-    min-height: 30em;
+  header {
+    display: flex;
+    width: 70%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em 2em;
+    color: white;
+  }
+
+  #content > .search {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 2em;
+  }
+
+  #content > .search form {
+    color: white;
+    margin: 0;
+    background-color: #242526;
+    border: 1px solid	#242526;
+    max-width: 40em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 1em;
+    border-radius: 5px;
+  }
+
+  #content > .search form input {
+    min-height: 3em;
+    background-color: inherit;
+    border: inherit;
+    font-size: 1em;
+    color: white;
+    margin: 0;
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    height: 100vh;
+  }
+
+  main > aside {
+    display:flex;
+    flex-direction: column;
+    padding: 1em 2.5em;
+    color: white;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  main > aside ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  main > aside ul > li {
+    padding: 1em 0.5em;
+    border-radius: 5px;
     display: flex;
     align-items: center;
-    border-radius: 10px;
-    background-color: #151212;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin: 1em 0;
+    gap: 1em;
+  }
+
+  main > aside ul > li:hover {
+    cursor: pointer;
+    background-color: #242526;
+  }
+
+  main > aside#left-bar {
+    grid-column: 1;
+  }
+
+  main > aside#right-bar {
+    grid-column: 3;
+    padding-top: 3em;
+  }
+
+  main > #content {
+    display: flex;
+    grid-column: 2;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    padding: 1em 0;
+    overflow:auto;
+  }
+
+  main > #content::-webkit-scrollbar {
+    display: none;
+  }
+
+  aside .logo {
     padding: 2em 0;
   }
 
-  .auth-image {
-    flex: 45%;
-    height: 100%;
-
+  aside .logo img {
+    width: 100%;
+    max-width: 100%;
   }
 
-  .auth-form {
-    flex: 45%;
-    padding: 0 3em;
-  }
-
-  .auth-form > h1 {
-    text-align: center;
-    color: white;
-    font-size: 2.5em;
-    font-weight: bold;
-  }
-
-  .logo {
-    padding: 3em 3em;
-  }
-
-  .logo img {
-    max-width: 40%;
-  }
-
-  .login-form{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
   #content label {
     font-weight: normal;
   }
+  
   #content form {
     margin: 0 auto;
     max-width: 30em;
@@ -96,14 +156,73 @@ body {
   #content form input[type="password"]:focus {
     border: 1px solid #480470;
   }
- 
-  footer {
-    position: absolute;
-    bottom: 0;
+
+  #posts {
     display: flex;
-    justify-content: right;
-    gap: 1.5em;
-    padding: 0.5em 2em;
-    color: white;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    padding: 1em 0;
+  }
+
+  .post {
     width: 100%;
+    max-width: 40em;
+    background-color: 		#242526;
+    border-radius: 10px;
+    padding: 1.1em 1em;
+    color: white;
+  }
+
+  .post .post-body {
+    padding: 1em 0;
+  }
+
+  .post .post-header {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+  }
+
+
+  .post .post-header .author-date p:first-child {
+    margin: 0;
+    font-weight: bold;
+    font-size: 1.7rem;
+    color: pink;
+  }
+
+  .post .post-header .author-date p:last-child {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #d1d1e1;
+  }
+
+  .post .post-header img {
+    width: 3em;
+    height: 3em;
+    object-fit: cover;
+    border-radius: 50%;
+    image-rendering: pixelated;
+}
+
+
+  .post .post-actions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1em 1em;
+    font-size: 0.9em;
+    border-top: 0.5px solid #494747;
+  }
+
+  .post .post-actions .post-action {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  .post .post-actions .post-action p {
+    margin: 0;
   }

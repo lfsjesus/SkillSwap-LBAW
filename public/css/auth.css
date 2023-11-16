@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit&family=Roboto:wght@300&display=swap');
+
+html {
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  background-image: linear-gradient(to left top, #4a0a2b, #3b0d22, #2c0d1a, #1e0911, #19060e, #13040a, #0b0105, #10020a, #140310, #150415, #16061a);
+  background-attachment: fixed;
+  margin: 0;  
+}
+
+  header {
+    display: flex;
+    width: 70%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em 2em;
+    color: white;
+  }
+
+  .login-page {
+    width: 50%;
+    min-height: 30em;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #151212;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2em 0;
+  }
+
+  .auth-image {
+    flex: 45%;
+    height: 100%;
+
+  }
+
+  .auth-form {
+    flex: 45%;
+    padding: 0 3em;
+  }
+
+  .auth-form > h1 {
+    text-align: center;
+    color: white;
+    font-size: 2.5em;
+    font-weight: bold;
+  }
+
+  aside .logo {
+    padding: 2em 0;
+  }
+
+  aside .logo img {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .logo {
+    padding: 3em 3em;
+  }
+
+  .logo img {
+    max-width: 50%;
+  }
+
+  .login-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #content label {
+    font-weight: normal;
+  }
+  
+  #content form {
+    margin: 0 auto;
+    max-width: 30em;
+    width: 100%;
+    color:white;
+  }
+  #content form .error {
+    font-weight: bold;
+    color: #ff3333;
+  }
+  #content form .success {
+    font-weight: bold;
+    color: #106af1;
+  }
+  #content form input {
+    background-color: #111010;
+    border: 1px solid #111010;
+    border-radius: 5px;
+    font-size: 1em;
+    color: white;
+  }
+
+  #content form input[type="email"] {
+    height: 3.5em;
+  }
+
+  #content form input[type="email"]:focus {
+    border: 1px solid #480470;
+  }
+
+  #content form input[type="password"] {
+    height: 3.5em;
+  }
+
+  #content form input[type="password"]:focus {
+    border: 1px solid #480470;
+  }
+ 
+  footer {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: right;
+    gap: 1.5em;
+    padding: 0.5em 2em;
+    color: white;
+    width: 100%;
+  }
+
