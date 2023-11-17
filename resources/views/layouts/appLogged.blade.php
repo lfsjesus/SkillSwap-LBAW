@@ -27,7 +27,7 @@
                     <div class="logo">
                         <!-- image is one public/assets/skillswap_white_grey.svg -->
                         <a href="{{ url('/') }}">
-                                <img src="{{ url('assets/skillswap_white_grey.png') }}"/>
+                                <img src="{{ url('assets/skillswap.png') }}"/>
                         </a>
                     </div>
             
