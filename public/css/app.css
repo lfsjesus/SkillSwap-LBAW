@@ -65,9 +65,8 @@ body {
     justify-content: space-between;
     height: 100%;
     background-color: #232a37;
-    
     border-radius: 1rem;
-  }
+ }
 
   main > aside ul {
     list-style: none;
@@ -118,6 +117,7 @@ body {
     grid-column: 1;
     /*background: linear-gradient(to right, #000000,#050505, #0e030e, rgba(22,6,26, 0.1));
     */
+    
   }
 
   main > aside#right-bar {
@@ -142,8 +142,10 @@ body {
     background-color: #151b26;
     height: 100%;
     border-radius: 1rem;
+    box-shadow:-10px -10px 20px #1c2332, 10px 10px 20px #1c2332;
+ 
   }
-
+    
   main > #content::-webkit-scrollbar {
     display: none;
   }
