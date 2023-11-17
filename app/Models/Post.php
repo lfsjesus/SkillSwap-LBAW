@@ -35,20 +35,19 @@ class Post extends Model
 
 
     public function group() {
-        return $this->belongsTo('App\Models\Group');
+        return $this->belongsTo(Group::class, 'group_id');
     }
 
     public function comments() {
-        return $this->hasMany('App\Models\Comment');
+        return $this->hasMany(Comment::class);
     }
 
     public function likes() {
-        return count($this->hasMany('App\Models\Like')->get()); 
+        return count($this->hasMany(Like::class)->get());
     }
 
     public function files() {
-        return $this->hasMany('App\Models\File');
+        return $this->hasMany(File::class);
     }
-
 
 }

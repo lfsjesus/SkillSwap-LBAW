@@ -31,7 +31,7 @@ body {
     margin: 0;
     background-color: #242526;
     border: 1px solid	#242526;
-    max-width: 40em;
+    max-width: 50em;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -57,7 +57,7 @@ body {
   main > aside {
     display:flex;
     flex-direction: column;
-    padding: 1em 2.5em;
+    padding: 1.5em 2.5em;
     color: white;
     justify-content: space-between;
     height: 100%;
@@ -85,11 +85,12 @@ body {
 
   main > aside#left-bar {
     grid-column: 1;
+    background: linear-gradient(to right, #000000,#050505, #0e030e, rgba(22,6,26, 0.1));
   }
 
   main > aside#right-bar {
     grid-column: 3;
-    padding-top: 3em;
+    background: linear-gradient(to bottom left, #000000,#050505, #0e030e, rgba(22,6,26, 0.1));
   }
 
   main > #content {
@@ -98,11 +99,15 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 1em;
-    padding: 1em 0;
+    padding: 1.5em 0;
     overflow:auto;
   }
 
   main > #content::-webkit-scrollbar {
+    display: none;
+  }
+
+  main > #content #posts::-webkit-scrollbar {
     display: none;
   }
 
@@ -161,17 +166,17 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 1em;
     padding: 1em 0;
+    overflow:auto;
   }
 
   .post {
     width: 100%;
-    max-width: 40em;
+    max-width: 50em;
     background-color: 		#242526;
     border-radius: 10px;
-    padding: 1.1em 1em;
+    padding: 1.1em 1em 0;
     color: white;
   }
 
@@ -179,7 +184,7 @@ body {
     padding: 1em 0;
   }
 
-  .post .post-header {
+  .post-header {
     display: flex;
     flex-direction: row;
     gap: 1em;
@@ -199,7 +204,7 @@ body {
     color: #d1d1e1;
   }
 
-  .post .post-header img {
+  .post-header img {
     width: 3em;
     height: 3em;
     object-fit: cover;
@@ -226,3 +231,48 @@ body {
   .post .post-actions .post-action p {
     margin: 0;
   }
+
+  .create-post {
+    width: 100%;
+    padding: 1em 1em;
+    background-color: rgba(36, 37, 38, 0.6);
+    border-radius: 10px;
+  }
+
+  .create-post .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .create-post .post-text {
+    width: 100%;
+  }
+
+  #content .create-post form {
+    margin: 0;
+    max-width: 45em;
+  }
+
+  #content .create-post form input {
+    width: 100%;
+    margin: 0;
+    padding: 1.5em 1em;
+    border-radius: 10px;
+    background-color: rgba(36, 37, 38, 0.6);
+    border: 1px solid rgba(36, 37, 38, 0.6);
+    color: white;
+  }
+
+
+  #content .create-post form input:focus {
+    border: 1px solid pink;
+  }
+
+
+  #content .create-post .post-files span{
+    font-size: 2em;
+    color: white;
+    cursor: pointer;
+  }
+

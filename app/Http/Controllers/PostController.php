@@ -14,7 +14,6 @@ class PostController extends Controller
         if (Auth::check()) {
             $posts = Post::publicPosts()->get();
             return view('pages.home', ['posts' => $posts]);
-        
         }
     }
 
