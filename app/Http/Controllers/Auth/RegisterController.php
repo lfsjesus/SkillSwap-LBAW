@@ -17,8 +17,11 @@ class RegisterController extends Controller
     /**
      * Display a login form.
      */
-    public function showRegistrationForm(): View
+    public function showRegistrationForm()
     {
+        if (Auth::check()) {
+            return redirect('/home');
+        }
         return view('auth.register');
     }
 
