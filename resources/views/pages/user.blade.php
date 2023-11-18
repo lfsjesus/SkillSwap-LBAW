@@ -7,11 +7,7 @@
 <!-- Profile Section -->
 <section id="profile" class="profile-section">
     <!-- Profile Header with Background Image -->
-    <div class="profile-header">
-        <h1>{{ $user->name }}</h1>
-        <h2>{{ $user->email }}</h2>
-        <h3>{{ $user->bio }}</h3>
-       
+    <div class="profile-header">       
         <div class="header-background">
             <img src="{{url('assets/blob-background.jpg')}}" alt="Background Picture">
         </div>
@@ -27,7 +23,7 @@
         <!-- Profile Info -->
         <div class="profile-info">
             <h1 class="user-name">{{ $user->name }}</h1>
-            <p class="user-title">{{ $user->position }}</p>
+            <p class="user-title">{{ $user->email }}</p>
         </div>
     </div>
     <!-- Profile Content Grid -->

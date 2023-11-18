@@ -388,5 +388,18 @@ aside .logo img {
 
 .profile-picture {
   position: absolute;
+  top: 8em;
   bottom: 0;
+}
+
+.profile-info {  padding-left: 20px; /* This should be at least the width of the profile picture */
+  margin-top: 5em;
+  display: flex;
+  margin-left: 0;
+  padding-left: 0.5em;
+  flex-direction: column;
+  justify-content: left;
+  align-items: left;
+  gap: 0.1em;
+  color: white;
 }
