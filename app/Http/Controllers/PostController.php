@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Post;
+use App\Models\Files;
 
 class PostController extends Controller
 {
@@ -23,25 +24,29 @@ class PostController extends Controller
 
         $content = $request->input('description');
 
-        // deal with files later: check the array of files
-
         if (!isset($content)) {
             return redirect()->back()->with('error', 'The post cannot be empty');
         }
 
-        $post = new Post();
-        $post->user_id = Auth::user()->id;
-        $post->group_id = $request->input('group_id', null);
-        $post->description = nl2br($content);
-        $post->date = date('Y-m-d H:i:s');
-        $post->public_post = $request->input('public_post', true);
-        $post->save();
+        try {
+            DB::beginTransaction();
+            $post = new Post();
+            $post->user_id = Auth::user()->id;
+            $post->group_id = $request->input('group_id', null);
+            $post->description = nl2br($content);
+            $post->date = date('Y-m-d H:i:s');
+            $post->public_post = $request->input('public_post', true);
+            $post->save();
 
-        return redirect()->back()->with('success', 'Post created successfully');
-    }
+            FileController::uploadFiles($request, $post->id);
 
-    public function getUrls() {
-        $this->pluck('url');
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Post created successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Error in creating post');
+        }
     }
 
 

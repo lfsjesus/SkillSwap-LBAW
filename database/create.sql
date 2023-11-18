@@ -91,7 +91,7 @@ CREATE TABLE files (
     comment_id INTEGER REFERENCES comments(id)  ON DELETE CASCADE,
     CHECK (post_id IS NULL AND comment_id IS NOT NULL OR post_id IS NOT NULL AND comment_id IS NULL),
     title VARCHAR(50) NOT NULL,
-    files BYTEA NOT NULL,
+    file_path VARCHAR(100) NOT NULL,
     date TIMESTAMP NOT NULL,
     CHECK (date <= CURRENT_TIMESTAMP)
 );

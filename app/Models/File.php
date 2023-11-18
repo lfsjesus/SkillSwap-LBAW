@@ -11,13 +11,23 @@ class File extends Model
     public $timestamps  = false;
     protected $table='files';
 
+
     protected $fillable = [
         'post_id',
         'comment_id',
         'title',
-        'files',
+        'file_path',
         'date'
     ];
 
+    public function post() {
+        return $this->belongsTo(Post::class, 'post_id');
+    }
+
+    public function comment() {
+        return $this->belongsTo(Comment::class, 'comment_id');
+    }
+
+    
     
 }
