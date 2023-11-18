@@ -55,3 +55,8 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+
+
+// User
+Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
+Route::get('/user/{id}/posts', [UserController::class, 'posts'])->name('user_posts');
