@@ -7,11 +7,7 @@
 <!-- Profile Section -->
 <section id="profile" class="profile-section">
     <!-- Profile Header with Background Image -->
-    <div class="profile-header">
-        <h1>{{ $user->name }}</h1>
-        <h2>{{ $user->email }}</h2>
-        <h3>{{ $user->bio }}</h3>
-       
+    <div class="profile-header">       
         <div class="header-background">
             <img src="{{url('assets/blob-background.jpg')}}" alt="Background Picture">
         </div>
@@ -27,29 +23,30 @@
         <!-- Profile Info -->
         <div class="profile-info">
             <h1 class="user-name">{{ $user->name }}</h1>
-            <p class="user-title">{{ $user->position }}</p>
+            <p class="user-title">{{ $user->email }}</p>
         </div>
     </div>
     <!-- Profile Content Grid -->
     <div class="profile-content">
-        <!-- Intro Box -->
-        <div class="intro-box">
-            <!-- User Intro Info -->
-            <div class="user-intro">
-                <p class="user-website"><a href="#" target="_blank">{{ $user->website }}</a></p>
-                <!-- Additional info like gender, birthday, location -->
+        <!-- Friends and Groups Grid -->
+        <div class="friends-groups-grid">
+            <!-- Friends Box -->
+            <div class="friends-box">
+                <h2>Friendsssssssssssssssssss</h2>
+                <!-- Content for friends list goes here -->
+            </div>
+            <!-- Groups Box -->
+            <div class="groups-box">
+                <h2>Groupssssssssssssssssssssssss</h2>
+                <!-- Content for groups list goes here -->
             </div>
         </div>
-        <!-- Profile Posts -->
-        <div class="posts-box">
+        
+        <!-- Posts Section -->
+        <section id="posts">
             <h2>Posts</h2>
             @each('partials.post', $posts, 'post')
-        </div>
-        <!-- Profile Groups -->
-        <div class="groups-box">
-            <h2>Groups</h2>
-         
-        </div>
+        </section>
     </div>
 </section>
 
