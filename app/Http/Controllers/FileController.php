@@ -30,7 +30,7 @@ class FileController extends Controller
         
                     $fileModel->save();
 
-                    $file->storeAs('public/files', $fileModel->title);
+                    $file->storeAs('public/uploads', $fileModel->title);
                     $fileModel->file_path = 'storage/uploads/' . $fileModel->title;
                     $fileModel->save();
                 }

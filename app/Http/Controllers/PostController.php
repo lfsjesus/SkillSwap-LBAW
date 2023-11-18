@@ -13,7 +13,7 @@ class PostController extends Controller
 {
     public function list() {
         if (Auth::check()) {
-            $posts = Post::publicPosts()->get();
+            $posts = Post::publicPosts()->get()->sortByDesc('date');
             return view('pages.home', ['posts' => $posts]);
         }
     }

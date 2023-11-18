@@ -47,7 +47,7 @@ class Post extends Model
     }
 
     public function files() {
-        return $this->hasMany(File::class);
+        return $this->hasMany(File::class)->get();
     }
 
 }
