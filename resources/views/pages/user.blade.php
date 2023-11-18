@@ -28,25 +28,26 @@
     </div>
     <!-- Profile Content Grid -->
     <div class="profile-content">
-        <!-- Intro Box / Friends -->
-        <div class="intro-box">
-            <h2>Friends</h2>
-            <!-- User Intro Info / Friends List -->
-            <!-- Content for friends list goes here -->
+        <!-- Friends and Groups Grid -->
+        <div class="friends-groups-grid">
+            <!-- Friends Box -->
+            <div class="friends-box">
+                <h2>Friendsssssssssssssssssss</h2>
+                <!-- Content for friends list goes here -->
+            </div>
+            <!-- Groups Box -->
+            <div class="groups-box">
+                <h2>Groupssssssssssssssssssssssss</h2>
+                <!-- Content for groups list goes here -->
+            </div>
         </div>
-        <!-- Profile Posts -->
-        <section id="posts-box">
+        
+        <!-- Posts Section -->
+        <section id="posts">
             <h2>Posts</h2>
             @each('partials.post', $posts, 'post')
-            
         </section>
-        <!-- Profile Groups -->
-        <div class="groups-box">
-            <h2>Groups</h2>
-            <!-- Content for groups list goes here -->
-        </div>
     </div>
-
 </section>
 
 @endsection
