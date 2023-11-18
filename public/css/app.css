@@ -295,10 +295,10 @@ body {
 
   #content .create-post form {
     margin: 0;
-    max-width: 45em;
+    max-width: 50em;
   }
 
-  #content .create-post form input {
+  #content .create-post form textarea {
     width: 100%;
     margin: 0;
     padding: 1.5em 1em;
@@ -306,11 +306,18 @@ body {
     background-color: rgba(36, 37, 38, 0.6);
     border: 1px solid rgba(36, 37, 38, 0.6);
     color: white;
+    resize: vertical;
   }
 
+  
 
-  #content .create-post form input:focus {
+
+  #content .create-post form textarea:focus {
     border: 1px solid pink;
+  }
+
+  #content .create-post form textarea::placeholder {
+    font-family: 'Montserrat', sans-serif;
   }
 
 

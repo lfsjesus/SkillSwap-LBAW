@@ -4,7 +4,7 @@
         <div class="post-text">
             <form>
 
-                <input type="textarea" placeholder="What you are you thinking about?">
+                <textarea cols="25" placeholder="What project are you thinking about?"></textarea>
             </form>
         </div>
         <div class="post-files">
