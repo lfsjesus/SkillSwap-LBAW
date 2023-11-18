@@ -39,6 +39,12 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+
+        ],
+
+        'webadmin' => [
+            'driver' => 'session',
+            'provider' => 'administrators',
         ],
     ],
 
@@ -69,6 +75,10 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+        'administrators' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Administrator::class,
+        ],
     ],
 
     /*
