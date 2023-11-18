@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="post-body">
-        <p> {{$post->description}} </p>
+        <p> {!! $post->description !!} </p>
         @if($post->files())
             @foreach($post->files() as $file)
                 <a href="">
