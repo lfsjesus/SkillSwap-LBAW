@@ -392,7 +392,8 @@ aside .logo img {
   bottom: 0;
 }
 
-.profile-info {  padding-left: 20px; /* This should be at least the width of the profile picture */
+.profile-info {  
+  padding-left: 2em; 
   margin-top: 5em;
   display: flex;
   margin-left: 0;
