@@ -75,15 +75,12 @@ body {
   }
 
   main > aside ul > li {
-    padding: 1em 0.5em;
     border-radius: 5px;
     display: flex;
     align-items: center;
     margin: 1em 0;
     gap: 1em;
-    font-size: 2rem;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+
 
     /*change this to li > a
     */
@@ -106,11 +103,28 @@ body {
     width: 100%;
   }
 
-
-
   main > aside ul > li:hover {
     cursor: pointer;
     background-color: #242526;
+  }
+
+  main > aside ul > li > a {
+    padding: 1em 0.5em;
+    text-decoration: none;
+    color: white;
+    gap: 1em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 2rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+  }
+
+  main > aside ul > li > a:hover {
+    color: #fff;
   }
 
   main > aside#left-bar {

@@ -32,18 +32,34 @@
                     </div>
             
                     <ul>
-                        <li><span class="material-symbols-outlined">
-                            account_circle
-                            </span>Profile</li>
-                        <li><span class="material-symbols-outlined">
-                            settings
-                            </span>Settings</li>
-                        <li><span class="material-symbols-outlined">
-                            groups
-                            </span>Groups</li>
-                        <li><span class="material-symbols-outlined">
-                            expand_more
-                            </span>See More</li>
+                        <li>
+                            <a href="https://www.google.com">
+                                <span class="material-symbols-outlined">
+                                account_circle
+                                </span>Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="material-symbols-outlined">
+                                settings
+                                </span>Settings
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="material-symbols-outlined">
+                                groups
+                                </span>Groups
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="material-symbols-outlined">
+                                expand_more
+                                </span>See More
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 @if (Auth::check())
