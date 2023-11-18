@@ -28,25 +28,25 @@
     </div>
     <!-- Profile Content Grid -->
     <div class="profile-content">
-        <!-- Intro Box -->
+        <!-- Intro Box / Friends -->
         <div class="intro-box">
-            <!-- User Intro Info -->
-            <div class="user-intro">
-                <p class="user-website"><a href="#" target="_blank">{{ $user->website }}</a></p>
-                <!-- Additional info like gender, birthday, location -->
-            </div>
+            <h2>Friends</h2>
+            <!-- User Intro Info / Friends List -->
+            <!-- Content for friends list goes here -->
         </div>
         <!-- Profile Posts -->
-        <div class="posts-box">
+        <section id="posts-box">
             <h2>Posts</h2>
             @each('partials.post', $posts, 'post')
-        </div>
+            
+        </section>
         <!-- Profile Groups -->
         <div class="groups-box">
             <h2>Groups</h2>
-         
+            <!-- Content for groups list goes here -->
         </div>
     </div>
+
 </section>
 
 @endsection
