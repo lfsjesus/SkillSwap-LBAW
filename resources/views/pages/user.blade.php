@@ -1,6 +1,6 @@
 @extends('layouts.appLogged')
 
-@section('title', 'Profile')
+@section('title', 'User')
 
 @section('content')
 
@@ -20,10 +20,13 @@
             <h1>Posts</h1>
             @each('partials.post', $posts, 'post')
         </div>
+
+        <!--
         <div class="profile-groups">
             <h1>Groups</h1>
-            @each('partials.group', $groups, 'group')
+           @ each('partials.group', $groups, 'group')
         </div>
+        -->
     </div>
 </section>
 

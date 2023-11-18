@@ -1,7 +1,7 @@
 <div class="create-post">
     <div class="post-header">
         @if(Auth::user()->profile_picture)
-        <img src="{{stream_get_contents($post->author->profile_picture)}}"/>
+        <img src="{{stream_get_contents(Auth::user()->profile_picture)}}"/>
         @else
         <img src="{{ url('assets/profile-picture.png') }}"/>
         @endif

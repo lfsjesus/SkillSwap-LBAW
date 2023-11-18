@@ -8,14 +8,12 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
 
+
 class UserController extends Controller
 {
-    public function show() {
-
-        if (Auth::check()) {
-            $user = User::find(Auth::user()->id);
-            return view('pages.user', ['user' => $this->user]);
-        }
-        
+    public function show(string $username) {
+        $user = User::where('username', $username)->firstOrFail();
+        $posts = $user->posts()->get();
+        return view('pages.user', ['user' => $user, 'posts' => $posts]);
     }
 }

@@ -33,10 +33,10 @@
             
                     <ul>
                         <li>
-                            <a href="https://www.google.com">
+                            <a href="{{ route('user', ['username' => Auth::user()->username]) }}" > 
                                 <span class="material-symbols-outlined">
-                                account_circle
-                                </span>Profile
+                                    account_circle
+                                    </span>Profile
                             </a>
                         </li>
                         <li>

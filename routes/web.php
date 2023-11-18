@@ -8,6 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,5 +59,4 @@ Route::controller(RegisterController::class)->group(function () {
 
 
 // User
-Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
-Route::get('/user/{id}/posts', [UserController::class, 'posts'])->name('user_posts');
+Route::get('/user/{username}', [UserController::class, 'show'])->name('user');
