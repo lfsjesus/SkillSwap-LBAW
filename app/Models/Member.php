@@ -16,4 +16,9 @@ class Member extends Model
         'group_id',
         'date'
     ];
+
+    protected $primaryKey = [
+        'user_id',
+        'group_id'
+    ];
 }
