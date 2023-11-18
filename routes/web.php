@@ -25,10 +25,10 @@ Route::redirect('/', '/login');
 Route::get('/home', [PostController::class, 'list'])->name('home');
 
 
-
 Route::controller(PostController::class)->group(function () {
     Route::get('/posts', 'list')->name('posts');
     Route::get('/posts/{id}', 'show');
+    Route::post('/posts/create', 'create')->name('create_post');
 });
 
 // API

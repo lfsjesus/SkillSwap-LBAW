@@ -17,5 +17,28 @@ class PostController extends Controller
         }
     }
 
+    public function create(Request $request) {
+
+        // check for authorization
+
+        $content = $request->input('description');
+
+        // deal with files later: check the array of files
+
+        if (!isset($content)) {
+            return redirect()->back()->with('error', 'The post cannot be empty');
+        }
+
+        $post = new Post();
+        $post->user_id = Auth::user()->id;
+        $post->group_id = $request->input('group_id', null);
+        $post->description = nl2br($content);
+        $post->date = date('Y-m-d H:i:s');
+        $post->public_post = $request->input('public_post', true);
+        $post->save();
+
+        return redirect()->back()->with('success', 'Post created successfully');
+    }
+
 
 }
