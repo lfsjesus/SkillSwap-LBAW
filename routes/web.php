@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,3 +61,6 @@ Route::controller(RegisterController::class)->group(function () {
 
 // User
 Route::get('/user/{username}', [UserController::class, 'show'])->name('user');
+
+// Admin
+Route::get('/admin', [AdminController::class, 'show'])->name('admin');
