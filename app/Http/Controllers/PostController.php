@@ -40,5 +40,9 @@ class PostController extends Controller
         return redirect()->back()->with('success', 'Post created successfully');
     }
 
+    public function getUrls() {
+        $this->pluck('url');
+    }
+
 
 }

@@ -1,6 +1,7 @@
 <article class="post" data-id="{{ $post->id }}">
     <div class="post-header">
-        <img src="{{ url('assets/profile-picture.jpeg') }}"/>
+        
+        <img src="{{stream_get_contents($post->author->profile_picture)}}"/>
         <div class="author-date">
             <p> {{$post->author->name}} </p>
             <p> {{$post->date->format('F j, Y, g:i a')}} </p>
