@@ -12,11 +12,12 @@ class FileController extends Controller
 
     public static function uploadFiles(Request $request, $post_id = null, $comment_id = null)
     {
-        $files = array();
-        try {
-            DB::beginTransaction();
-            $files = $request->file('files');
-            if (isset($files)) {
+        
+        $files = $request->file('files');
+        if (isset($files)) {
+            try {
+                DB::beginTransaction();
+            
                 foreach ($files as $file) {
                     $fileModel = new File();
                                         
@@ -32,19 +33,18 @@ class FileController extends Controller
                     $file->storeAs('public/files', $fileModel->title);
                     $fileModel->file_path = 'storage/uploads/' . $fileModel->title;
                     $fileModel->save();
-
                 }
-    
+                
+        
                 DB::commit();
-    
+
                 return back()->with('success', 'File(s) have been uploaded.');
             }
-        } catch (\Exception $e) {
-            DB::rollback();
+            catch (\Exception $e) {
+                DB::rollback();
+                return back()->with('error', 'Error in uploading file(s).');
+            }
 
-            return back()->with('error', 'Error in uploading file(s).');
         }
-
     }
-    
 }
