@@ -17,5 +17,11 @@ class Friend extends Model
         'date'
     ];
 
+    protected $primaryKey = [
+        'user_id',
+        'friend_id'
+    ];
+
+
 
 }
