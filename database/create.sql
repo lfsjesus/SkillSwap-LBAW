@@ -1289,7 +1289,8 @@ insert into owns (user_id, group_id, date) values (52, 14, '12/21/2022');
 insert into owns (user_id, group_id, date) values (282, 10, '11/8/2022');
 insert into owns (user_id, group_id, date) values (264, 10, '12/30/2022');
 
-
+insert into is_member (user_id, group_id, date) values (601, 1, CURRENT_TIMESTAMP);
+insert into is_member (user_id, group_id, date) values (601, 2, CURRENT_TIMESTAMP);
 
 /*Posts*/
 INSERT INTO posts (user_id, group_id, date, description, public_post) VALUES (23, NULL, CURRENT_TIMESTAMP, 'Post by user 23.', true);
@@ -1331,7 +1332,8 @@ INSERT INTO is_friend (user_id, friend_id, date) VALUES (45, 97, CURRENT_TIMESTA
 INSERT INTO is_friend (user_id, friend_id, date) VALUES (220, 49, CURRENT_TIMESTAMP);
 INSERT INTO is_friend (user_id, friend_id, date) VALUES (66, 330, CURRENT_TIMESTAMP);
 INSERT INTO is_friend (user_id, friend_id, date) VALUES (489, 159, CURRENT_TIMESTAMP);
-
+INSERT INTO is_friend (user_id, friend_id, date) VALUES (601, 1, CURRENT_TIMESTAMP);
+INSERT INTO is_friend (user_id, friend_id, date) VALUES (601, 2, CURRENT_TIMESTAMP);
 /*Comments*/
 
 INSERT INTO comments (user_id, post_id, content, date) VALUES (89, 1, 'Comment from user 89.', CURRENT_TIMESTAMP);

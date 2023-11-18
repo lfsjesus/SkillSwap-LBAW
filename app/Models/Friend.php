@@ -21,7 +21,4 @@ class Friend extends Model
         'user_id',
         'friend_id'
     ];
-
-
-
 }
