@@ -2,9 +2,9 @@
     <div class="post-header">
         <img src="{{ url('assets/profile-picture.jpeg') }}"/>
         <div class="post-text">
-            <form>
-
-                <textarea cols="25" placeholder="What project are you thinking about?"></textarea>
+            <form method="POST">
+                {{ csrf_field() }}
+                <textarea name="description" placeholder="What project are you thinking about?" cols="25"></textarea>
             </form>
         </div>
         <div class="post-files">
