@@ -1,6 +1,11 @@
 <div class="create-post">
     <div class="post-header">
-        <img src="{{ url('assets/profile-picture.jpeg') }}"/>
+        @if(Auth::user()->profile_picture)
+        <img src="{{stream_get_contents($post->author->profile_picture)}}"/>
+        @else
+        <img src="{{ url('assets/profile-picture.png') }}"/>
+        @endif
+
         <div class="post-text">
             <form method="POST" action="{{ route('create_post') }}">
                 {{ csrf_field() }}
