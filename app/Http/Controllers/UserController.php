@@ -16,4 +16,10 @@ class UserController extends Controller
         $posts = $user->posts()->get();
         return view('pages.user', ['user' => $user, 'posts' => $posts]);
     }
+
+
+    public function edit(string $username) {
+        $user = User::where('username', $username)->firstOrFail();
+        return view('pages.editProfile', ['user' => $user]);
+    }
 }

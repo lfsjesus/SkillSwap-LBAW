@@ -1,8 +1,10 @@
-@extends('layouts.appLogged')
+@extends('layouts.appLoggedAdmin')
 
 @section('title', 'User')
 
 @section('content')
+
+
  
 <!-- Profile Section -->
 <section id="profile" class="profile-section">
@@ -14,8 +16,8 @@
 
         <!-- Profile Picture -->
         <div class="profile-picture">
-            @if(Auth::user()->profile_picture)
-            <img src="{{stream_get_contents(Auth::user()->profile_picture)}}"/>
+            @if($user->profile_picture)
+            <img src="{{stream_get_contents($user->profile_picture)}}"/>
             @else
             <img src="{{ url('assets/profile-picture.png') }}"/>
             @endif
@@ -24,7 +26,7 @@
         <div class="profile-info">
             <h1 class="user-name">{{ $user->name }}</h1>
             <p class="user-title">{{ $user->email }}</p>
-            <a href="{{ route('edit_profile', ['username' => Auth::user()->username]) }}" class="button">
+            <a href="{{ route('edit_profile', ['username' => $user->username]) }}" class="button">
                 Edit Profile
             </a>
         </div>

@@ -476,15 +476,157 @@ aside .logo img {
   max-width: 40em;
 }
 
-.friends-box{
-  column:1;
-}
-
-.groups-box{
-  column:2;
-}
-
 .posts-box {
   width: 100%;
 }
+
+/* Edit Profile Page Styles */
+
+#edit-profile{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.edit-profile-section {
+  width: 100%;
+  max-width: 50em;
+  margin: 0 auto;
+  padding: 1.25em;
+  box-shadow: 0 0 0.75em rgba(0, 0, 0, 0.1);
+  background-color: #1b2029;
+  border-radius: 8px;
+}
+
+.edit-profile-section h1 {
+  text-align: center;
+  color: white;
+  margin-bottom: 1.25em;
+}
+
+.form-group {
+  margin-bottom: 0.938em;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.313em;
+  color: white;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="date"],
+.form-group input[type="file"],
+.form-group textarea {
+  width: 100%;
+  padding: 0.625em;
+  border: 1px solid #2e3541;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #e9e9e936;
+}
+
+.form-group textarea {
+  height: 6.25em;
+  resize: vertical;
+}
+
+#admin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  padding: 1em 0;
+  width: 100%;
+  overflow:hidden;
+  
+}
+.greeting{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  padding: 1em 0;
+  width: 100%;
+  color: #8d73eb;
+}
+
+.yellow {
+  color: white;
+  font-weight: 500;
+  
+}
+
+.users {
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  padding: 1em 0;
+  width: 100%;
+  overflow-y:scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.users::-webkit-scrollbar {
+  display: none;
+}
+
+.user-card{
+  width: 100%;
+  max-width: 20em;
+  border-radius: 10px;
+  color: white;
+  background: linear-gradient(145deg, #232a37, #1b2029);
+
+  border: 1px solid #2e3541;
+  transition: 0.2s ease;
+}
+
+.user-card:hover {
+  cursor: pointer;
+
+  border: 1px solid #8d73eb;
+}
+
+.user-card img {
+  width: 3em;
+  height: 3em;
+  object-fit: cover;
+  border-radius: 50%;
+  image-rendering: pixelated;
+  border: 1px solid white;
+}
+
+.user-card > a {
+  text-decoration: none;
+  color: pink;
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.7rem;
+  width: 100%;
+  height: 100%;
+  padding: 1.1em 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: baseline;
+  gap: 1em;
+  transition: 0.2s ease;
+}
+
+.user-card > a:hover {
+  cursor: pointer;
+  color: #fff;
+}
+
+
+
+
 
