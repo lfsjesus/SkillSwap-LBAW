@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\Post;
 use App\Models\Group;
+use App\Models\Friend;
+use App\Models\Member;
+
 
 class User extends Authenticatable
 {

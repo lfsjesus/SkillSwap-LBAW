@@ -390,13 +390,9 @@ aside .logo img {
   margin: 1em;
   border-radius: 10px;
   background-color: #1b2029;
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  gap: 2em;
 }
 
 .profile-header {
-  grid-column: 1 / -1; /* Span across all columns */
   position: relative;
   border-radius: 10px;
   background-size: cover;
@@ -404,16 +400,13 @@ aside .logo img {
 }
 
 .header-background {
-  width: 100%;
-  height: 100%;
+  display:flex;
   max-height: 10em;
   border-radius: 10px;
 }
 
 .header-background img {
   display: inline-block;
-  width: 60vw;
-  height: 100%;
   border-radius: 10px;
   object-fit: cover;
 }
@@ -447,8 +440,6 @@ aside .logo img {
 }
 
 .profile-content {
-  width: 60vw;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -457,8 +448,7 @@ aside .logo img {
 
 .friends-groups-grid {  
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 1.5em;
   width: 100%;
   margin-bottom: 1.5em; /* Space between grid and posts */
