@@ -76,7 +76,7 @@ class User extends Authenticatable
      */
     public function get_friends():Collection
     {
-        return $this->belongsToMany(User::class, Friend::Class, 'user_id', 'friend_id')->get();
+        return $this->belongsToMany(User::class, Friend::class, 'user_id', 'friend_id')->get();
     }
 
     /**
@@ -84,7 +84,7 @@ class User extends Authenticatable
      */
     public function get_groups():Collection
     {
-        return $this->belongsToMany(Group::class, Member::Class, 'user_id', 'group_id')->get();
+        return $this->belongsToMany(Group::class, Member::class, 'user_id', 'group_id')->get();
     }
 
 }
