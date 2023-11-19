@@ -49,7 +49,7 @@
             <!-- Birthdate -->
             <div class="form-group">
                 <label for="birthdate">Birthdate</label>
-                <input type="text" name="birthdate" id="birthdate" class="form-control" value="{{ $user->birth_date->format('d/m/Y') }}">
+                <input type="date" name="birthdate" id="birthdate" class="form-control" value="{{ $user->birth_date->format('d/m/Y') }}">
             </div>
 
             <!-- Description -->
