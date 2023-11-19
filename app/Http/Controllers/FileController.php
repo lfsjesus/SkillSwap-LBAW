@@ -47,4 +47,14 @@ class FileController extends Controller
 
         }
     }
+
+    public static function deleteFilesFromStorage($files)
+    {
+        foreach ($files as $file) {
+            if (file_exists($file->file_path)) {
+                unlink($file->file_path);
+            }
+        }
+
+    }
 }

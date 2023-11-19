@@ -245,9 +245,20 @@ aside .logo img {
 .post-header {
   display: flex;
   flex-direction: row;
-  gap: 1em;
+  justify-content: space-between;
 }
 
+.post-header .post-header-left {
+  display: flex;
+  flex-direction: row;
+  gap: 1em
+}
+
+.post-header .post-header-right {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+}
 
 .post .post-header .author-date p:first-child {
   margin: 0;

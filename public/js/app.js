@@ -2,6 +2,33 @@
 
 // on dom ready
 
+function encodeForAjax(data) {
+  if (data == null) return null;
+  return Object.keys(data).map(function(k){
+    return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+  }).join('&');
+}
+
+
+function sendAjaxRequest(method, url, data, handler) {
+  let request = new XMLHttpRequest();
+  console.log(url);
+  request.open(method, url, true);
+  request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+  request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  request.addEventListener('load', handler);
+  request.send(encodeForAjax(data));
+}
+
+function postDeletedHandler() {
+  if (this.status != 200) window.location = '/';
+  let item = JSON.parse(this.responseText);
+  let element = document.querySelector('.post[data-id="' + item.id + '"]');
+  element.remove();
+}
+
+
+
 document.addEventListener('DOMContentLoaded', function() {
 
   let button = document.querySelector('#attach-button');
@@ -62,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
       );
 
       file.files = newFilesList.files;
+
       e.target.parentNode.remove();
       if (preview.children.length == 0) {
         preview.style.display = 'none';
@@ -71,4 +99,18 @@ document.addEventListener('DOMContentLoaded', function() {
   );
 
 
-});
+  // when user clicks on delete button, perform ajax request to delete post
+  let postDeleteButtons = document.querySelectorAll('.post-header-right span:last-child');
+  postDeleteButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      let id = e.target.parentNode.parentNode.parentNode.getAttribute('data-id');
+      let data = {post_id: id};
+      sendAjaxRequest('DELETE', '/posts/delete', data, postDeletedHandler);
+      }
+    );
+  }
+  );
+
+}
+);
+

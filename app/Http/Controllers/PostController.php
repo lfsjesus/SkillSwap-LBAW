@@ -49,5 +49,32 @@ class PostController extends Controller
         }
     }
 
+    public function delete(Request $request) {
+        $post_id = $request->input('post_id');
+
+        if (!isset($post_id)) {
+            return redirect()->back()->with('error', 'Post not found');
+        }
+
+        try {
+            DB::beginTransaction();
+            $post = Post::find($post_id);
+            $files = $post->files();
+            
+            if ($post->user_id != Auth::user()->id) {
+                return redirect()->back()->with('error', 'You are not authorized to delete this post');
+            }
+
+            $post->delete();
+            
+            FileController::deleteFilesFromStorage($files);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Post deleted successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Error in deleting post');
+        }
+    }
 
 }
