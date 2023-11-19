@@ -24,11 +24,13 @@
         <div class="profile-info">
             <h1 class="user-name">{{ $user->name }}</h1>
             <p class="user-title">{{ $user->email }}</p>
+            <a href="{{ route('edit_profile', ['username' => Auth::user()->username]) }}" class="button">
+                Edit Profile
+            </a>
         </div>
+
         <!-- Edit Button -->
-        <a href="{{ route('edit_profile', ['username' => Auth::user()->username]) }}" class="btn btn-primary">
-            Edit Profile
-        </a>
+        
 
     </div>
     <!-- Profile Content Grid -->
