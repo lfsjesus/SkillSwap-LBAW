@@ -364,7 +364,7 @@ aside .logo img {
   max-width: 50em;
 }
 
-#content .create-post form textarea {
+#content .create-post textarea {
   width: 100%;
   margin: 0;
   padding: 1.5em 1em;
@@ -378,11 +378,11 @@ aside .logo img {
 
 
 
-#content .create-post form textarea:focus {
+#content .create-post textarea:focus {
   border: 1px solid pink;
 }
 
-#content .create-post form textarea::placeholder {
+#content .create-post textarea::placeholder {
   font-family: 'Montserrat', sans-serif;
 }
 
