@@ -32,13 +32,21 @@
         <div class="friends-groups-grid">
             <!-- Friends Box -->
             <div class="friends-box">
-                <h2>Friendsssssssssssssssssss</h2>
-                <!-- Content for friends list goes here -->
+                <h2>Friends</h2>
+                <?php
+                foreach($user->get_friends() as $friend){
+                    echo $friend->username . '<br>';
+                }
+                ?>
             </div>
             <!-- Groups Box -->
             <div class="groups-box">
-                <h2>Groupssssssssssssssssssssssss</h2>
-                <!-- Content for groups list goes here -->
+                <h2>Groups</h2>
+                <?php
+                foreach($user->get_groups() as $group){
+                    echo $group->name . '<br>';
+                }
+                ?>
             </div>
         </div>
         
