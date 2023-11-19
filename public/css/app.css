@@ -465,14 +465,6 @@ aside .logo img {
   max-width: 40em;
 }
 
-.friends-box{
-  column:1;
-}
-
-.groups-box{
-  column:2;
-}
-
 .posts-box {
   width: 100%;
 }

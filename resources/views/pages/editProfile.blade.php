@@ -8,7 +8,6 @@
 <section id="edit-profile" class="edit-profile-section">
     <div class="container">
         <h1>Edit Profile</h1>
-        <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             
