@@ -76,5 +76,7 @@ Route::controller(RegisterController::class)->group(function () {
 // User
 Route::get('/user/{username}', [UserController::class, 'show'])->name('user');
 
+Route::get('/admin/{username}', [AdminController::class, 'show_user'])->name('view-user-admin');
+
 //Edit User profile
 Route::get('/user/{username}/edit', [UserController::class, 'edit'])->name('edit_profile');

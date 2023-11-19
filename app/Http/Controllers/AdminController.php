@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Administrator;
+use App\Models\User;
 
 
 class AdminController extends Controller
@@ -17,9 +18,18 @@ class AdminController extends Controller
             return redirect('/admin/login');
         }
 
-        //$ admin shoulde be the first line of the administrator table
-        $username = DB::table('administrators')->first()->username;
-        $admin = Administrator::where('username', $username)->firstOrFail();
-        return view('pages.admin', ['admin' => $admin]);
+        else{
+            $username = Auth::guard('webadmin')->user()->username;
+            $admin = Administrator::where('username', $username)->firstOrFail();
+            $users = DB::table('users')->get();
+            return view('pages.admin', ['admin' => $admin, 'users' => $users]);
+        }
     }
+
+    public function show_user($username) {
+        $user = User::where('username', $username)->firstOrFail();
+        $posts = $user->posts()->get();
+        return view('pages.view-user-admin', ['user' => $user, 'posts' => $posts]);
+    }
+
 }
