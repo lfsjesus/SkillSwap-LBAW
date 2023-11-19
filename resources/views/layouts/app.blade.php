@@ -32,6 +32,10 @@
                 @if (Auth::check())
                     <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
                 @endif
+
+                @if (Auth::guard('webadmin')->check())
+                    <a class="button" href="{{ url('/admin/logout') }}"> Logout </a>
+                @endif
             </header>
             <section id="content">
                 @yield('content')
