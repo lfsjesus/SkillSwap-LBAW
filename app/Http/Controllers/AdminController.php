@@ -12,6 +12,11 @@ use App\Models\Administrator;
 class AdminController extends Controller
 {
     public function show() {
+
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
+
         //$ admin shoulde be the first line of the administrator table
         $username = DB::table('administrators')->first()->username;
         $admin = Administrator::where('username', $username)->firstOrFail();

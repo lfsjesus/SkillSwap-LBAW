@@ -10,7 +10,6 @@ class Administrator extends Authenticatable
 {
     use HasFactory;
     public $timestamps  = false;
-    protected $guarded = [];
 
     protected $table='administrators';
 

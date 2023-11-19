@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\AdminLoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +25,12 @@ use App\Http\Controllers\AdminController;
 
 // Home
 Route::redirect('/', '/login');
+Route::redirect('/admin', '/admin/login');
+
 Route::get('/home', [PostController::class, 'list'])->name('home');
+
+// Admin
+Route::get('/admin/home', [AdminController::class, 'show'])->name('admin');
 
 
 Route::controller(PostController::class)->group(function () {
@@ -46,11 +52,19 @@ Route::controller(ItemController::class)->group(function () {
 });
 
 
+
 // Authentication
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
     Route::post('/login', 'authenticate');
     Route::get('/logout', 'logout')->name('logout');
+});
+
+// Authentication
+Route::controller(AdminLoginController::class)->group(function () {
+    Route::get('/admin/login', 'showLoginForm')->name('admin.login');
+    Route::post('/admin/login', 'authenticate')->name('admin.authenticate');
+    Route::get('/admin/logout', 'logout')->name('admin.logout');
 });
 
 Route::controller(RegisterController::class)->group(function () {
@@ -62,5 +76,3 @@ Route::controller(RegisterController::class)->group(function () {
 // User
 Route::get('/user/{username}', [UserController::class, 'show'])->name('user');
 
-// Admin
-Route::get('/admin', [AdminController::class, 'show'])->name('admin');

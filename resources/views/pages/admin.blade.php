@@ -9,6 +9,7 @@
     <div>
         <h1>Admin</h1>
         <p>Here you login as an admin:</p>
+        <h1>{{$admin->username}}</h1>
     </div>
     
 
