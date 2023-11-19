@@ -33,77 +33,82 @@ document.addEventListener('DOMContentLoaded', function() {
 
   let button = document.querySelector('#attach-button');
 
-  button.addEventListener('click', function() {
-      document.querySelector('input[type="file"]').click();
+  if (button != null) {
+    button.addEventListener('click', function() {
+        document.querySelector('input[type="file"]').click();
+    }
+    );
   }
-  );
 
   // if there are files, show them in preview div .list-files-preview
 
   let input = document.querySelector('input[type="file"]');
   let preview = document.querySelector('.files-list-preview');
 
-  input.addEventListener('change', function() {
-    let files = input.files;
-    let filesArr = Array.from(files);
-    let i = 0;
-    filesArr.forEach(function(file) {
-      let reader = new FileReader();
-      reader.onloadend = function() {
-        let div = document.createElement('div');
-        let span = document.createElement('span');
-        span.className = 'material-symbols-outlined';
-        span.innerHTML = 'close';
-        div.className = 'file-preview';
-        div.setAttribute('id', i);
+  if (input != null && preview != null) {
+    input.addEventListener('change', function() {
+      let files = input.files;
+      let filesArr = Array.from(files);
+      let i = 0;
+      filesArr.forEach(function(file) {
+        let reader = new FileReader();
+        reader.onloadend = function() {
+          let div = document.createElement('div');
+          let span = document.createElement('span');
+          span.className = 'material-symbols-outlined';
+          span.innerHTML = 'close';
+          div.className = 'file-preview';
+          div.setAttribute('id', i);
 
-        let img = document.createElement('img');
-        img.src = reader.result;
-        div.appendChild(span);
-        div.appendChild(img);
-        preview.appendChild(div);
-        preview.style.display = 'flex';
-        i++;
-      }
-      reader.readAsDataURL(file);
-    });
-  }
-  );
+          let img = document.createElement('img');
+          img.src = reader.result;
+          div.appendChild(span);
+          div.appendChild(img);
+          preview.appendChild(div);
+          preview.style.display = 'flex';
+          i++;
+        }
+        reader.readAsDataURL(file);
+      });
+    }
+    );
 
-  // remove file from preview and input on click on close button
+    // remove file from preview and input on click on close button
 
-  preview.addEventListener('click', remove_file_from_preview);
+    preview.addEventListener('click', remove_file_from_preview);
   
-
+  }
 
   // when user clicks on delete button, perform ajax request to delete post
   let postDeleteButtons = document.querySelectorAll('.post-header-right span:last-child');
-  postDeleteButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      let id = e.target.parentNode.parentNode.parentNode.getAttribute('data-id');
-      let data = {post_id: id};
-      sendAjaxRequest('DELETE', '/posts/delete', data, postDeletedHandler);
-      }
+
+  if (postDeleteButtons != null) {
+    postDeleteButtons.forEach(function(button) {
+      button.addEventListener('click', function(e) {
+        let id = e.target.parentNode.parentNode.parentNode.getAttribute('data-id');
+        let data = {post_id: id};
+        sendAjaxRequest('DELETE', '/posts/delete', data, postDeletedHandler);
+        }
+      );
+    }
     );
   }
-  );
 
 
   // when user clicks on edit button, replace article with create_post div
   let postEditButtons = document.querySelectorAll('.post-header-right span:first-child');
-  postEditButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      let id = e.target.parentNode.parentNode.parentNode.getAttribute('data-id');
-      editPost(id);
-      }
+
+  if (postEditButtons != null) {
+    postEditButtons.forEach(function(button) {
+      button.addEventListener('click', function(e) {
+        let id = e.target.parentNode.parentNode.parentNode.getAttribute('data-id');
+        editPost(id);
+        }
+      );
+    }
     );
+  
   }
-  );
-
-
-  // when user clicks on edit button, perform ajax request to edit post
-  let editButtons = document.querySelectorAll('.edit-button');
-  // get the files
 
 }
 );
