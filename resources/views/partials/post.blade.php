@@ -13,7 +13,16 @@
         </div>
     </div>
     <div class="post-body">
-        <p> {{$post->description}} </p>
+        <p> {!! $post->description !!} </p>
+        @if($post->files())
+            @foreach($post->files() as $file)
+                <a href="">
+                    <!-- file_path is one storage/public/uploads/name_of_file -->
+                    <img src="{{ url($file->file_path) }}"/>
+                </a>
+            @endforeach
+        @endif
+
     </div>
     @include('partials.post-actions')
 </article>

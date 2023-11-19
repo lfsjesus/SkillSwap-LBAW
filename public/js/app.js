@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         span.innerHTML = 'close';
         div.className = 'file-preview';
         div.setAttribute('id', i);
+
         let img = document.createElement('img');
         img.src = reader.result;
         div.appendChild(span);
