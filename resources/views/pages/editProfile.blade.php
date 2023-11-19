@@ -14,7 +14,12 @@
             <!-- Profile Picture -->
             <div class="form-group">
                 <label for="profile_picture">Profile Picture</label>
-                <input type="file" name="profile_picture" id="profile_picture" class="form-control">
+                <input type="file" name="profile_picture" id="profile_picture" class="form-control" style="display: none">
+            </div>
+            <div class="post-files" id="attach-button">
+                <span class="material-symbols-outlined">
+                    attach_file
+                </span>
             </div>
 
             <!-- Name -->
