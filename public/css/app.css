@@ -463,6 +463,8 @@ aside .logo img {
   width: 100%;
   margin-bottom: 1.5em; /* Space between grid and posts */
   overflow: auto;
+  /*remove lateral scroll*/
+  overflow-x: hidden;
 }
 
 .friends-box, .groups-box {
