@@ -329,6 +329,43 @@ paths:
           description: Unauthorized
         '500':
           description: Server error
+  
+  /search:
+    get:
+      tags:
+        - 'M05: Search'
+      summary: Search for users, posts, groups, etc.
+      description: >
+        Allows searching across different entities like users, posts, and groups.
+        Returns a list of matching items based on the query.
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+          required: true
+          description: Search query.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request (e.g., invalid query parameter)
+        '401':
+          description: Unauthorized (if authentication is required)
+        '500':
+          description: Internal server error
+
+
+
 
 components:
   schemas:
