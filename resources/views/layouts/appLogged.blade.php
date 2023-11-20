@@ -68,6 +68,9 @@
                 </div>
                 @if (Auth::check())
                     <a class="button" href="{{ url('/logout') }}"> Logout </a>
+
+                @else
+                    <a class="button" href="{{ url('/login') }}"> Login </a>
                 @endif
             </aside>
 

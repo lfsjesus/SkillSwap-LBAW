@@ -8,7 +8,6 @@
 
     <div class="greeting">
         <h3>Hello, <span class="yellow">{{$admin->username}}</span></h1>
-        
     </div>
     <div class="users">
         @each('partials.user-admin', $users, 'user')
