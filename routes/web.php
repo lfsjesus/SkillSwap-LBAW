@@ -79,30 +79,16 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{username}', 'show')->name('user');
     Route::get('/user/{username}/edit', 'showEditForm')->name('edit_profile');
     Route::put('/user/edit', 'edit')->name('edit_user');
-    Route::get('/search', 'exactMatchSearch')->name('search');
-    Route::get('/search', 'fullTextSearch')->name('search');
+    Route::get('/search', 'search')->name('search');
 });
 
 Route::controller(AdminController::class)->group(function () {
-    Route::get('/admin/{username}', 'show_user')->name('view-user-admin');
+    Route::get('/admin/users/search', 'search')->name('admin-search');
+    Route::get('/admin/{username}', 'show_user')->name('view-user-admin');  
     Route::get('/admin/{username}/edit', 'showEditUserForm')->name('edit-user-form-admin');
     Route::put('/admin/edit', 'edit_user')->name('edit_profile_admin');
 });
 
 
 
-/*
-//Exact Match Search
-Route::get('/search', [UserController::class, 'exactMatchSearch'])->name('search');
-
-//Full Text Search
-Route::get('/search', [UserController::class, 'fullTextSearch'])->name('search');
-
-*/
-
-//Search
-Route::get('/search', [UserController::class, 'search'])->name('search');
-
-//Search - admin - ERROR
-Route::get('admin/search', [AdminController::class, 'adminSearch'])->name('search');
 
