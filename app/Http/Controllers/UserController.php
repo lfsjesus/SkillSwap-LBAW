@@ -35,4 +35,16 @@ class UserController extends Controller
         return view('pages.exactMatchSearchResults', compact('users'));
 
     }
+
+    public function fullTextSearch(Request $request)
+    {
+        $searchTerm = trim($request->input('q')); // Trim spaces from the beginning and end
+
+        $users = User::query()
+            ->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$searchTerm])
+            ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$searchTerm])
+            ->get();
+
+        return view('pages.fullTextSearchResults', compact('users'));
+    }
 }
