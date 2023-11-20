@@ -42,20 +42,7 @@
             <!-- Friends Box -->
             <div class="friends-box">
                 <h2>Friends</h2>
-                @foreach ($user->get_friends() as $user)
-                <div class="user-card">
-                    <a href="{{ route('user', ['username' => $user->username]) }}">
-                        @if($user->profile_picture)
-                        <img src="{{stream_get_contents($user->profile_picture)}}"/>
-                        @else
-                        <img src="{{ url('assets/profile-picture.png') }}"/>
-                        @endif
-                        {{$user->username}}
-    
-                    </a>
-    
-                </div>
-                @endforeach
+                @each('partials.user', $user->get_friends(), 'user')
             </div>
             <!-- Groups Box -->
             <div class="groups-box">
