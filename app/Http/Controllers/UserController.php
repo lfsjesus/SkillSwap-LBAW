@@ -38,16 +38,15 @@ class UserController extends Controller
 
     public function fullTextSearch(Request $request)
     {
-        $searchTerm = $request->input('q');
-
-        // Convert the search term into a tsquery format
-        $searchTermTsquery = str_replace(' ', ' | ', $searchTerm);
+        $searchTerm = trim($request->input('q')); // Trim spaces from the beginning and end
 
         $users = User::query()
-            ->whereRaw("tsvectors @@ to_tsquery('english', ?)", [$searchTermTsquery])
+            ->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$searchTerm])
+            ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$searchTerm])
             ->get();
 
-        return view('pages.fullTextSearchResults', compact('users'));
+        return view('pages.exactMatchSearchResults', compact('users'));
     }
 
+    
 }
