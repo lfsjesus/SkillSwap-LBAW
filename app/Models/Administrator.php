@@ -17,7 +17,8 @@ class Administrator extends Authenticatable
         'name',
         'username',
         'email',
-        'password'
+        'password',
+        'remember_token'
     ];
 
 }

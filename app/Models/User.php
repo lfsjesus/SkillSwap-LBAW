@@ -41,7 +41,8 @@ class User extends Authenticatable
         'phone_number',
         'profile_picture',
         'description',
-        'birth_date'
+        'birth_date',
+        'remember_token'
     ];
 
     /**
