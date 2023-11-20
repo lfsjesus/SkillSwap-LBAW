@@ -228,6 +228,11 @@ aside .logo img {
   overflow:auto;
 }
 
+#posts h2{
+  color: white;
+  font-weight: 500;
+}
+
 .post {
   width: 100%;
   max-width: 60em;
@@ -474,11 +479,34 @@ aside .logo img {
   border-radius: 10px;
   width: 100%;
   max-width: 40em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  align-items: center;
+  overflow-y: scroll;
+  /*hide scroll bar*/
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.friends-box::-webkit-scrollbar {
+  display: none;
+}
+
+.groups-box::-webkit-scrollbar {
+  display: none;
+}
+
+
+.friends-box h2, .groups-box h2 {
+  color: white;
+  margin: 0;
+  font-weight: 500;
 }
 
 .posts-box {
   width: 100%;
 }
+
 
 /* Edit Profile Page Styles */
 

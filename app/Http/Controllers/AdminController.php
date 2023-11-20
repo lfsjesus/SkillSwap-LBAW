@@ -27,12 +27,20 @@ class AdminController extends Controller
     }
 
     public function show_user($username) {
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
+
         $user = User::where('username', $username)->firstOrFail();
         $posts = $user->posts()->get();
         return view('pages.view-user-admin', ['user' => $user, 'posts' => $posts]);
     }
 
     public function edit_user($username) {
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
+        
         $user = User::where('username', $username)->firstOrFail();
         return view('pages.edit-user-admin', ['user' => $user]);
     }
