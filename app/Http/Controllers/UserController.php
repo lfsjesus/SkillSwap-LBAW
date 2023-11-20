@@ -12,6 +12,9 @@ use App\Models\User;
 class UserController extends Controller
 {
     public function show(string $username) {
+        if (!(Auth::check())) {
+            return redirect('/login');
+        }
         $user = User::where('username', $username)->firstOrFail();
         $posts = $user->posts()->get();
         return view('pages.user', ['user' => $user, 'posts' => $posts]);
@@ -19,6 +22,9 @@ class UserController extends Controller
 
 
     public function edit(string $username) {
+        if (!(Auth::check())) {
+            return redirect('/login');
+        }
         $user = User::where('username', $username)->firstOrFail();
         return view('pages.editProfile', ['user' => $user]);
     }
@@ -53,6 +59,9 @@ class UserController extends Controller
     //Uses full text search for name and username and exact match search for email
     public function search(Request $request)
     {
+        if (!(Auth::check())) {
+            return redirect('/login');
+        }
         $query = trim($request->input('q'));
 
         if (str_contains($query, '@')) {
