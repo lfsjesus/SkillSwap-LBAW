@@ -66,7 +66,7 @@
                         @if($group->profile_picture)
                         <img src="{{stream_get_contents($user->profile_picture)}}"/>
                         @else
-                        <img src="{{ url('assets/profile-picture.png') }}"/>
+                        <img src="{{ url('assets/group.png') }}"/>
                         @endif
                         {{$group->name}}
                     </a>

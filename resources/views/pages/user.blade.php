@@ -24,9 +24,11 @@
         <div class="profile-info">
             <h1 class="user-name">{{ $user->name }}</h1>
             <p class="user-title">{{ $user->email }}</p>
+            @if(Auth::user()->username == $user->username)
             <a href="{{ route('edit_profile', ['username' => Auth::user()->username]) }}" class="button">
                 Edit Profile
             </a>
+            @endif
         </div>
 
         <!-- Edit Button -->
@@ -64,7 +66,7 @@
                         @if($group->profile_picture)
                         <img src="{{stream_get_contents($user->profile_picture)}}"/>
                         @else
-                        <img src="{{ url('assets/profile-picture.png') }}"/>
+                        <img src="{{ url('assets/group.png') }}"/>
                         @endif
                         {{$group->name}}
                     </a>
