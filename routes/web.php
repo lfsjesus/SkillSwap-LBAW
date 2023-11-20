@@ -85,3 +85,6 @@ Route::get('/user/{username}/edit', [UserController::class, 'edit'])->name('edit
 
 //Edit User profile - admin
 Route::get('/admin/{username}/edit', [AdminController::class, 'edit_user'])->name('edit_profile_admin');
+
+//Exact Match Search
+Route::get('/search', [UserController::class, 'search'])->name('search');
