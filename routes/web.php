@@ -88,8 +88,12 @@ Route::controller(UserController::class)->group(function () {
 Route::get('/admin/{username}', [AdminController::class, 'show_user'])->name('view-user-admin');
 
 
+// User profile - admin
+Route::get('/admin/{username}/edit', [AdminController::class, 'showEditUserForm'])->name('edit-user-form-admin');
+
+
 //Edit User profile - admin
-Route::get('/admin/{username}/edit', [AdminController::class, 'edit_user'])->name('edit_profile_admin');
+Route::put('/admin/edit', [AdminController::class, 'edit_user'])->name('edit_profile_admin');
 
 
 //Need to change the routes according to necessity. they cant have the same path.

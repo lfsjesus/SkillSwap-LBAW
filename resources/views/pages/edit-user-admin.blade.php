@@ -8,19 +8,16 @@
 <section id="edit-profile" class="edit-profile-section">
     <div class="container">
         <h1>Edit Profile</h1>
-            @csrf
+        <form action="{{route('edit_profile_admin')}}" method="POST" enctype="multipart/form-data">
+            {{ csrf_field() }}
             @method('PUT')
-            
+            <input type="hidden" name="user_id" value="{{ $user->id }}">
             <!-- Profile Picture -->
             <div class="form-group">
                 <label for="profile_picture">Profile Picture</label>
-                <input type="file" name="profile_picture" id="profile_picture" class="form-control" style="display: none">
+                <input type="file" name="profile_picture" id="profile_picture" class="form-control">
             </div>
-            <div class="post-files" id="attach-button">
-                <span class="material-symbols-outlined">
-                    attach_file
-                </span>
-            </div>
+
 
             <!-- Name -->
             <div class="form-group">
@@ -49,7 +46,7 @@
             <!-- Birthdate -->
             <div class="form-group">
                 <label for="birthdate">Birthdate</label>
-                <input type="text" name="birthdate" id="birthdate" class="form-control" value="{{ $user->birth_date->format('d/m/Y') }}">
+                <input type="text" name="birth_date" id="birthdate" class="form-control" value="{{ $user->birth_date->format('d/m/Y') }}">
             </div>
 
             <!-- Description -->
