@@ -401,6 +401,31 @@ paths:
           description: Authentication failed
         '500':
           description: Server error
+          
+  /logout:
+    post:
+      tags:
+        - 'M07: Authentication'
+      summary: User logout
+      description: Ends the user's session and invalidates the authentication token.
+      operationId: logoutUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: The authentication token to be invalidated.
+      responses:
+        '200':
+          description: Logout successful
+        '401':
+          description: Unauthorized (e.g., invalid or expired token)
+        '500':
+          description: Server error
 
 
 components:
