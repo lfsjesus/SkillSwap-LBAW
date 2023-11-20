@@ -35,6 +35,7 @@ Route::get('/admin/home', [AdminController::class, 'show'])->name('admin');
 
 Route::controller(PostController::class)->group(function () {
     Route::post('/posts/create', 'create')->name('create_post');
+    Route::put('/posts/edit', 'edit')->name('edit_post');
     Route::delete('/posts/delete', 'delete')->name('delete_post');
     Route::get('/posts', 'list')->name('posts');
     Route::get('/posts/{id}', 'show');

@@ -262,7 +262,20 @@ aside .logo img {
 .post-header .post-header-right {
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 1em;
+}
+
+.post-header .post-header-right span {
+  background-color: #663FA4;
+  padding: 0.1em;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.post-header .post-header-right span:hover {
+  background-color: #2e3541;
 }
 
 .post .post-header .author-date p:first-child {
@@ -369,7 +382,7 @@ aside .logo img {
   max-width: 50em;
 }
 
-#content .create-post form textarea {
+#content .create-post textarea {
   width: 100%;
   margin: 0;
   padding: 1.5em 1em;
@@ -383,11 +396,11 @@ aside .logo img {
 
 
 
-#content .create-post form textarea:focus {
+#content .create-post textarea:focus {
   border: 1px solid pink;
 }
 
-#content .create-post form textarea::placeholder {
+#content .create-post textarea::placeholder {
   font-family: 'Montserrat', sans-serif;
 }
 
