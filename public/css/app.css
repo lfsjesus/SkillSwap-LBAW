@@ -419,6 +419,7 @@ aside .logo img {
   margin: 1em;
   border-radius: 10px;
   background-color: #1b2029;
+  padding: 1em;
 }
 
 .profile-header {
@@ -545,21 +546,21 @@ aside .logo img {
   margin-bottom: 1.25em;
 }
 
-.form-group {
+#form-group {
   margin-bottom: 0.938em;
 }
 
-.form-group label {
+#form-group label {
   display: block;
   margin-bottom: 0.313em;
   color: pink;
 }
 
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="date"],
-.form-group input[type="file"],
-.form-group textarea {
+#form-group input[type="text"],
+#form-group input[type="email"],
+#form-group input[type="date"],
+#form-group input[type="file"],
+#form-group textarea {
   width: 100%;
   padding: 0.625em;
   border: 1px solid #2e3541;
@@ -571,15 +572,15 @@ aside .logo img {
   font-size: 0.9em;
 }
 
-.form-group input[type="text"]:focus,
-.form-group input[type="email"]:focus,
-.form-group input[type="date"]:focus,
-.form-group input[type="file"]:focus,
-.form-group textarea:focus {
+#form-group input[type="text"]:focus,
+#form-group input[type="email"]:focus,
+#form-group input[type="date"]:focus,
+#form-group input[type="file"]:focus,
+#form-group textarea:focus {
   border-color: #8d73eb;
 }
 
-.form-group textarea {
+#form-group textarea {
   height: 6.25em;
   resize: vertical;
   line-height: 1.5;
