@@ -24,10 +24,12 @@
         <div class="profile-info">
             <h1 class="user-name">{{ $user->name }}</h1>
             <p class="user-title">{{ $user->email }}</p>
-            @if(Auth::user()->username == $user->username)
-            <a href="{{ route('edit_profile', ['username' => Auth::user()->username]) }}" class="button">
-                Edit Profile
-            </a>
+            @if(Auth::user())
+                @if(Auth::user()->username == $user->username)
+                <a href="{{ route('edit_profile', ['username' => Auth::user()->username]) }}" class="button">
+                    Edit Profile
+                </a>
+                @endif
             @endif
         </div>
 

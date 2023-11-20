@@ -12,12 +12,15 @@ use App\Models\File;
 class PostController extends Controller
 {
     public function list() {
-        if (Auth::check()) {
+        if (!Auth::check()) {
             $posts = Post::publicPosts()->get()->sortByDesc('date');
             return view('pages.home', ['posts' => $posts]);
         }
 
-        return redirect('/login');
+        /*Else if user is logged in, show public posts + friends posts + own user posts */
+        $posts = Post::publicPosts()->get()->merge(Auth::user()->posts()->get())->merge(Auth::user()->friendsPosts()->get())->sortByDesc('date');
+        return view('pages.home', ['posts' => $posts]);
+
     }
 
     public function create(Request $request) {

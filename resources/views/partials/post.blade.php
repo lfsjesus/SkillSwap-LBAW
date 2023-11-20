@@ -12,11 +12,13 @@
                 <p> {{$post->date->format('F j, Y, g:i a')}} </p>
             </div>
         </div>
-        @if ($post->author->id == Auth::user()->id)
-        <div class="post-header-right">
-            <span class='material-symbols-outlined'>edit</span>
-            <span class='material-symbols-outlined'>delete</span>
-        </div>
+        @if(Auth::user())
+            @if ($post->author->id == Auth::user()->id)
+            <div class="post-header-right">
+                <span class='material-symbols-outlined'>edit</span>
+                <span class='material-symbols-outlined'>delete</span>
+            </div>
+            @endif
         @endif
 
     </div>
