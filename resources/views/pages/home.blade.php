@@ -4,7 +4,9 @@
 @section('content')
 
 <section id="posts">
-    @include('partials.create-post')
+    @if(Auth::user())
+        @include('partials.create-post')
+    @endif    
     @each('partials.post', $posts, 'post')
 </section>
 

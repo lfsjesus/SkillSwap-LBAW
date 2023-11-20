@@ -26,19 +26,21 @@
                 <div class="upper-bar">
                     <div class="logo">
                         <!-- image is one public/assets/skillswap_white_grey.svg -->
-                        <a href="{{ url('/') }}">
+                        <a href="{{ url('/home') }}">
                                 <img src="{{ url('assets/skillswap.png') }}"/>
                         </a>
                     </div>
             
                     <ul>
-                        <li>
-                            <a href="{{ route('user', ['username' => Auth::user()->username]) }}" > 
-                                <span class="material-symbols-outlined">
-                                    account_circle
-                                    </span>Profile
-                            </a>
-                        </li>
+                        @if (Auth::user())
+                            <li>
+                                <a href="{{ route('user', ['username' => Auth::user()->username]) }}" > 
+                                    <span class="material-symbols-outlined">
+                                        account_circle
+                                        </span>Profile
+                                </a>
+                            </li>
+                        @endif    
                         <li>
                             <a href="">
                                 <span class="material-symbols-outlined">
@@ -46,13 +48,15 @@
                                 </span>Settings
                             </a>
                         </li>
-                        <li>
-                            <a href="">
-                                <span class="material-symbols-outlined">
-                                groups
-                                </span>Groups
-                            </a>
-                        </li>
+                        @if (Auth::user())
+                            <li>
+                                <a href="">
+                                    <span class="material-symbols-outlined">
+                                    groups
+                                    </span>Groups
+                                </a>
+                            </li>
+                        @endif    
                         <li>
                             <a href="">
                                 <span class="material-symbols-outlined">
