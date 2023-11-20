@@ -86,6 +86,8 @@ Route::controller(AdminController::class)->group(function () {
     Route::get('/admin/users/search', 'search')->name('admin-search');
     Route::get('/admin/{username}', 'show_user')->name('view-user-admin');  
     Route::get('/admin/{username}/edit', 'showEditUserForm')->name('edit-user-form-admin');
+    Route::get('/admin/user/create', 'showCreateUserForm')->name('create-user-form-admin');
+    Route::post('/admin/create', 'create_user')->name('create_user_admin');
     Route::put('/admin/edit', 'edit_user')->name('edit_profile_admin');
 });
 
