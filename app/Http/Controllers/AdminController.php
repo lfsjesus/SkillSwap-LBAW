@@ -36,6 +36,16 @@ class AdminController extends Controller
         return view('pages.view-user-admin', ['user' => $user, 'posts' => $posts]);
     }
 
+
+    public function showEditUserForm() {
+
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
+        
+        $user = User::find(Auth::user()->id);
+        return view('pages.editProfile', ['user' => $user]);
+    }
     public function edit_user($username) {
         if (!(Auth::guard('webadmin')->check())) {
             return redirect('/admin/login');

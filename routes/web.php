@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CardController;
-use App\Http\Controllers\ItemController;
-
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\PostController;
@@ -29,8 +26,19 @@ Route::redirect('/admin', '/admin/login');
 
 Route::get('/home', [PostController::class, 'list'])->name('home');
 
-// Admin
-Route::get('/admin/home', [AdminController::class, 'show'])->name('admin');
+Route::controller(UserController::class)->group(function () {
+    Route::get('/user/{username}', 'show')->name('user');
+    Route::get('/user/{username}/edit', 'showEditForm')->name('edit_profile');
+    Route::put('/user/edit', 'edit')->name('edit_user');
+    Route::get('/search', 'exactMatchSearch')->name('search');
+    Route::get('/search', 'fullTextSearch')->name('search');
+});
+
+Route::controller(AdminController::class)->group(function() {
+    Route::get('/admin/home', 'show')->name('admin');
+    Route::get('/admin/{username}', 'show_user')->name('view-user-admin');
+    Route::get('/admin/edit', 'showEditUserForm')->name('admin.edit');
+});
 
 
 Route::controller(PostController::class)->group(function () {
@@ -40,19 +48,6 @@ Route::controller(PostController::class)->group(function () {
     Route::get('/posts', 'list')->name('posts');
     Route::get('/posts/{id}', 'show');
 });
-
-// API
-Route::controller(CardController::class)->group(function () {
-    Route::put('/api/cards', 'create');
-    Route::delete('/api/cards/{card_id}', 'delete');
-});
-
-Route::controller(ItemController::class)->group(function () {
-    Route::put('/api/cards/{card_id}', 'create');
-    Route::post('/api/item/{id}', 'update');
-    Route::delete('/api/item/{id}', 'delete');
-});
-
 
 
 // Authentication
@@ -75,21 +70,8 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 
-Route::controller(UserController::class)->group(function () {
-    Route::get('/user/{username}', 'show')->name('user');
-    Route::get('/user/{username}/edit', 'showEditForm')->name('edit_profile');
-    Route::put('/user/edit', 'edit')->name('edit_user');
-    Route::get('/search', 'exactMatchSearch')->name('search');
-    Route::get('/search', 'fullTextSearch')->name('search');
-});
 
 
-// User profile - admin
-Route::get('/admin/{username}', [AdminController::class, 'show_user'])->name('view-user-admin');
 
 
-//Edit User profile - admin
-Route::get('/admin/{username}/edit', [AdminController::class, 'edit_user'])->name('edit_profile_admin');
 
-
-//Need to change the routes according to necessity. they cant have the same path.
