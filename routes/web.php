@@ -99,5 +99,6 @@ Route::get('/search', [UserController::class, 'fullTextSearch'])->name('search')
 //Search
 Route::get('/search', [UserController::class, 'search'])->name('search');
 
-//Exact Match Search - Admin
-Route::get('/admin/search', [AdminController::class, 'adminSearch'])->name('search-admin');
+//Search - admin - ERROR
+Route::get('admin/search', [AdminController::class, 'adminSearch'])->name('search');
+

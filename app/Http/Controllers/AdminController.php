@@ -45,20 +45,26 @@ class AdminController extends Controller
         return view('pages.edit-user-admin', ['user' => $user]);
     }
 
-    public function adminSearch(Request $request)
-    {
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
+        //Uses full text search for name and username and exact match search for email
+        public function search(Request $request)
+        {   
+            if (!(Auth::guard('webadmin')->check())) {
+                return redirect('/admin/login');
+            }
+
+            $query = trim($request->input('q'));
+    
+            if (str_contains($query, '@')) {
+                // If the query contains '@', perform an exact match search (assuming it's an email)
+                $users = User::where('email', '=', $query)->get();
+            } else {
+                // Otherwise, perform a full-text search
+                $users = User::query()
+                            ->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$query])
+                            ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$query])
+                            ->get();
+            }
+    
+            return view('pages.search-admin', compact('users'));
         }
-
-        $query = $request->input('q');
-
-        // Performing an exact match search
-        $users = User::where('username', '=', $query)
-                    ->orWhere('email', '=', $query)
-                    ->get();
-
-        return view('pages.search-admin', ['users' => $users]);
-
-    }
 }
