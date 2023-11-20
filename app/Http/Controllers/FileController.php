@@ -14,6 +14,8 @@ class FileController extends Controller
     {
         
         $files = $request->file('files');
+        
+        
         if (isset($files)) {
             try {
                 DB::beginTransaction();
@@ -27,8 +29,10 @@ class FileController extends Controller
                     $fileModel->comment_id = $comment_id;
                     $fileModel->file_path = '';
                     $fileModel->date = now(); // Use the now() function to get the current date and time
-        
+                    
+                    
                     $fileModel->save();
+                    
 
                     $file->storeAs('public/uploads', $fileModel->title);
                     $fileModel->file_path = 'storage/uploads/' . $fileModel->title;
@@ -38,11 +42,11 @@ class FileController extends Controller
         
                 DB::commit();
 
-                return back()->with('success', 'File(s) have been uploaded.');
+                //return back()->with('success', 'File(s) have been uploaded.');
             }
             catch (\Exception $e) {
                 DB::rollback();
-                return back()->with('error', 'Error in uploading file(s).');
+                //return back()->with('error', 'Error in uploading file(s).');
             }
 
         }

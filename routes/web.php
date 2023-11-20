@@ -35,6 +35,7 @@ Route::get('/admin/home', [AdminController::class, 'show'])->name('admin');
 
 Route::controller(PostController::class)->group(function () {
     Route::post('/posts/create', 'create')->name('create_post');
+    Route::put('/posts/edit', 'edit')->name('edit_post');
     Route::delete('/posts/delete', 'delete')->name('delete_post');
     Route::get('/posts', 'list')->name('posts');
     Route::get('/posts/{id}', 'show');
@@ -86,15 +87,17 @@ Route::get('/user/{username}/edit', [UserController::class, 'edit'])->name('edit
 //Edit User profile - admin
 Route::get('/admin/{username}/edit', [AdminController::class, 'edit_user'])->name('edit_profile_admin');
 
+/*
 //Exact Match Search
-//Route::get('/search', [UserController::class, 'exactMatchSearch'])->name('search');
+Route::get('/search', [UserController::class, 'exactMatchSearch'])->name('search');
 
 //Full Text Search
 Route::get('/search', [UserController::class, 'fullTextSearch'])->name('search');
 
+*/
+
+//Search
+Route::get('/search', [UserController::class, 'search'])->name('search');
+
 //Exact Match Search - Admin
-//Route::get('/admin/search?q=abc', [AdminController::class, 'adminSearch'])->name('search-admin');
 Route::get('/admin/search', [AdminController::class, 'adminSearch'])->name('search-admin');
-
-
-//Need to change the routes according to necessity. they cant have the same path.
