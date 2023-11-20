@@ -72,6 +72,11 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function friendsPosts()
+    {
+        return $this->hasManyThrough(Post::class, Friend::class, 'user_id', 'user_id', 'id', 'friend_id');
+    }
+
     /**
      * Get the friends for a user.
      */
