@@ -14,8 +14,8 @@
 
         <!-- Profile Picture -->
         <div class="profile-picture">
-            @if(Auth::user()->profile_picture)
-            <img src="{{stream_get_contents(Auth::user()->profile_picture)}}"/>
+            @if($user->profile_picture)
+            <img src="{{stream_get_contents($user->profile_picture)}}"/>
             @else
             <img src="{{ url('assets/profile-picture.png') }}"/>
             @endif
