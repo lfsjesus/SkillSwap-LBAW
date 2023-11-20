@@ -92,3 +92,4 @@ Route::get('/search', [UserController::class, 'exactMatchSearch'])->name('search
 //Full Text Search
 Route::get('/search', [UserController::class, 'fullTextSearch'])->name('search');
 
+//Need to change the routes according to necessity. they cant have the same path.
