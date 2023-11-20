@@ -47,6 +47,4 @@ class UserController extends Controller
 
         return view('pages.exactMatchSearchResults', compact('users'));
     }
-
-    
 }
