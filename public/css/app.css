@@ -207,7 +207,7 @@ aside .logo img {
 }
 
 #content form input[type="email"]:focus {
-  border: 1px solid #480470;
+  border: 1px solid #8d73eb;
 }
 
 #content form input[type="password"] {
@@ -215,7 +215,7 @@ aside .logo img {
 }
 
 #content form input[type="password"]:focus {
-  border: 1px solid #480470;
+  border: 1px solid #8d73eb;
 }
 
 #posts {
@@ -556,11 +556,12 @@ aside .logo img {
   color: pink;
 }
 
-#form-group input[type="text"],
-#form-group input[type="email"],
-#form-group input[type="date"],
-#form-group input[type="file"],
-#form-group textarea {
+form #form-group input[type="text"],
+form #form-group input[type="email"],
+form #form-group input[type="date"],
+form #form-group input[type="file"],
+form #form-group input[type="password"],
+form #form-group textarea {
   width: 100%;
   padding: 0.625em;
   border: 1px solid #2e3541;
@@ -570,17 +571,18 @@ aside .logo img {
   font-family: 'Montserrat', sans-serif;
   background-color: #232a37;
   font-size: 0.9em;
+  height: 3.5em;
 }
 
-#form-group input[type="text"]:focus,
-#form-group input[type="email"]:focus,
-#form-group input[type="date"]:focus,
-#form-group input[type="file"]:focus,
-#form-group textarea:focus {
+form #form-group input[type="text"]:focus,
+form #form-group input[type="email"]:focus,
+form #form-group input[type="date"]:focus,
+form #form-group input[type="password"]:focus,
+form #form-group textarea:focus {
   border-color: #8d73eb;
 }
 
-#form-group textarea {
+form #form-group textarea {
   height: 6.25em;
   resize: vertical;
   line-height: 1.5;
