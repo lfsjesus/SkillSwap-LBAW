@@ -22,4 +22,16 @@ class UserController extends Controller
         $user = User::where('username', $username)->firstOrFail();
         return view('pages.editProfile', ['user' => $user]);
     }
+
+    public function exactMatchSearch(Request $request)
+    {
+        $query = $request->input('q');
+
+        // Performing an exact match search
+        $users = User::where('username', '=', $query)
+                    ->orWhere('email', '=', $query)
+                    ->get();
+
+        return view('users.search', compact('users')); // Use the appropriate view for displaying search results
+    }
 }
