@@ -88,9 +88,13 @@ Route::get('/user/{username}/edit', [UserController::class, 'edit'])->name('edit
 Route::get('/admin/{username}/edit', [AdminController::class, 'edit_user'])->name('edit_profile_admin');
 
 //Exact Match Search
+/*
 Route::get('/search', [UserController::class, 'exactMatchSearch'])->name('search');
 
 //Full Text Search
 Route::get('/search', [UserController::class, 'fullTextSearch'])->name('search');
+*/
 
-//Need to change the routes according to necessity. they cant have the same path.
+//Search
+Route::get('/search', [UserController::class, 'search'])->name('search');
+
