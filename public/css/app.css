@@ -511,7 +511,7 @@ aside .logo img {
 .form-group label {
   display: block;
   margin-bottom: 0.313em;
-  color: white;
+  color: pink;
 }
 
 .form-group input[type="text"],
@@ -524,13 +524,32 @@ aside .logo img {
   border: 1px solid #2e3541;
   border-radius: 4px;
   box-sizing: border-box;
-  color: #e9e9e936;
+  color: white;
+}
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="date"],
+.form-group input[type="file"],
+.form-group textarea {
+  background-color: #232a37;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="date"]:focus,
+.form-group input[type="file"]:focus,
+.form-group textarea:focus {
+  border-color: #8d73eb;
 }
 
 .form-group textarea {
   height: 6.25em;
   resize: vertical;
 }
+
+
+
+
 
 #admin {
   display: flex;
