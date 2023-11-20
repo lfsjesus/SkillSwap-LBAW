@@ -26,7 +26,7 @@
         <div class="profile-info">
             <h1 class="user-name">{{ $user->name }}</h1>
             <p class="user-title">{{ $user->email }}</p>
-            <a href="{{ route('edit_profile', ['username' => $user->username]) }}" class="button">
+            <a href="{{ route('edit_profile_admin', ['username' => $user->username]) }}" class="button">
                 Edit Profile
             </a>
         </div>
@@ -62,7 +62,7 @@
         <!-- Posts Section -->
         <section id="posts">
             <h2>Posts</h2>
-            @each('partials.post', $posts, 'post')
+            @each('partials.post-admin', $posts, 'post')
         </section>
     </div>
 </section>
