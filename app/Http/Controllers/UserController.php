@@ -59,18 +59,21 @@ class UserController extends Controller
     //Uses full text search for name and username and exact match search for email
     public function search(Request $request)
     {
-        if (!(Auth::check())) {
+        if (!Auth::check()) {
             return redirect('/login');
         }
+
         $query = trim($request->input('q'));
 
         if (str_contains($query, '@')) {
-            // If the query contains '@', perform an exact match search (assuming it's an email)
-            $users = User::where('email', '=', $query)->get();
+            // Use the local scope for public profiles
+            $users = User::publicProfile()
+                        ->where('email', '=', $query)
+                        ->get();
             $viewName = 'pages.exactMatchSearchResults';
         } else {
-            // Otherwise, perform a full-text search
-            $users = User::query()
+            // Use the local scope for public profiles in full-text search
+            $users = User::publicProfile()
                         ->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$query])
                         ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$query])
                         ->get();
