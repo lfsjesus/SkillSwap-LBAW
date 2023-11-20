@@ -98,4 +98,11 @@ class User extends Authenticatable
         return $query->where('public_profile', true);
     }
 
+    /**
+     * Get the friends for a user to be used on full text search.
+     */
+    public function get_friends_helper()
+    {
+        return $this->belongsToMany(User::class, Friend::class, 'user_id', 'friend_id');
+    }
 }
