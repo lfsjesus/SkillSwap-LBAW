@@ -33,7 +33,7 @@ header {
   margin: 0;
   background-color: #242526;
   border: 1px solid	#242526;
-  max-width: 50em;
+  max-width: 60em;
   display: flex;
   flex-direction: row;
   align-items: center;
