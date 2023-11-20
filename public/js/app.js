@@ -126,6 +126,7 @@ async function editPost(id) {
   input.setAttribute('name', 'files[]');
   input.setAttribute('multiple', 'multiple');
   input.setAttribute('id', 'test');
+  input.style.display = 'none';
 
   form.appendChild(input);
 

@@ -75,12 +75,13 @@ class AdminController extends Controller
         //Uses full text search for name and username and exact match search for email
         public function search(Request $request)
         {   
+ 
             if (!(Auth::guard('webadmin')->check())) {
                 return redirect('/admin/login');
             }
 
             $query = trim($request->input('q'));
-    
+   
             if (str_contains($query, '@')) {
                 // If the query contains '@', perform an exact match search (assuming it's an email)
                 $users = User::where('email', '=', $query)->get();
