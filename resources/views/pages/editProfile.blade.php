@@ -8,18 +8,14 @@
 <section id="edit-profile" class="edit-profile-section">
     <div class="container">
         <h1>Edit Profile</h1>
-            @csrf
+        <form action="{{ route('edit_user') }}" method="POST" enctype="multipart/form-data">
+            {{ csrf_field() }}
             @method('PUT')
             
             <!-- Profile Picture -->
             <div class="form-group">
                 <label for="profile_picture">Profile Picture</label>
-                <input type="file" name="profile_picture" id="profile_picture" class="form-control" style="display: none">
-            </div>
-            <div class="post-files" id="attach-button">
-                <span class="material-symbols-outlined">
-                    attach_file
-                </span>
+                <input type="file" name="profile_picture" id="profile_picture" class="form-control">
             </div>
 
             <!-- Name -->

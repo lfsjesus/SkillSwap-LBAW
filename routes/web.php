@@ -75,22 +75,21 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 
-// User profile
-Route::get('/user/{username}', [UserController::class, 'show'])->name('user');
+Route::controller(UserController::class)->group(function () {
+    Route::get('/user/{username}', 'show')->name('user');
+    Route::get('/user/{username}/edit', 'showEditForm')->name('edit_profile');
+    Route::put('/user/edit', 'edit')->name('edit_user');
+    Route::get('/search', 'exactMatchSearch')->name('search');
+    Route::get('/search', 'fullTextSearch')->name('search');
+});
+
 
 // User profile - admin
 Route::get('/admin/{username}', [AdminController::class, 'show_user'])->name('view-user-admin');
 
-//Edit User profile
-Route::get('/user/{username}/edit', [UserController::class, 'edit'])->name('edit_profile');
 
 //Edit User profile - admin
 Route::get('/admin/{username}/edit', [AdminController::class, 'edit_user'])->name('edit_profile_admin');
 
-//Exact Match Search
-Route::get('/search', [UserController::class, 'exactMatchSearch'])->name('search');
-
-//Full Text Search
-Route::get('/search', [UserController::class, 'fullTextSearch'])->name('search');
 
 //Need to change the routes according to necessity. they cant have the same path.
