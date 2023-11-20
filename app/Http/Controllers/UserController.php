@@ -75,7 +75,7 @@ class UserController extends Model
 
         return view('pages.fullTextSearchResults', compact('users'));
     }
-    */
+    
 
     //Uses full text search for name and username and exact match search for email
     public function search(Request $request)
