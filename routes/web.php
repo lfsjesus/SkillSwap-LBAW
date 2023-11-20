@@ -83,17 +83,13 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/search', 'fullTextSearch')->name('search');
 });
 
-
-// User profile - admin
-Route::get('/admin/{username}', [AdminController::class, 'show_user'])->name('view-user-admin');
-
-
-// User profile - admin
-Route::get('/admin/{username}/edit', [AdminController::class, 'showEditUserForm'])->name('edit-user-form-admin');
+Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin/{username}', 'show_user')->name('view-user-admin');
+    Route::get('/admin/{username}/edit', 'showEditUserForm')->name('edit-user-form-admin');
+    Route::put('/admin/edit', 'edit_user')->name('edit_profile_admin');
+});
 
 
-//Edit User profile - admin
-Route::put('/admin/edit', [AdminController::class, 'edit_user'])->name('edit_profile_admin');
 
 /*
 //Exact Match Search
