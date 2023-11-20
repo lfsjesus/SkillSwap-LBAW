@@ -69,7 +69,7 @@
 
             <section id="content">
                 <div class="search">
-                    <form action="{{ url('/search') }}" method="GET">
+                    <form action="{{ url('/admin/search') }}" method="GET">
                         <span class="material-symbols-outlined">
                             search
                         </span>

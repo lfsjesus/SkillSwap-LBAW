@@ -45,4 +45,20 @@ class AdminController extends Controller
         return view('pages.edit-user-admin', ['user' => $user]);
     }
 
+    public function adminSearch(Request $request)
+    {
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
+
+        $query = $request->input('q');
+
+        // Performing an exact match search
+        $users = User::where('username', '=', $query)
+                    ->orWhere('email', '=', $query)
+                    ->get();
+
+        return view('pages.search-admin', ['users' => $users]);
+
+    }
 }
