@@ -47,6 +47,15 @@ class AdminController extends Controller
         return view('pages.edit-user-admin', ['user' => $user]);
     }
 
+    public function showCreateUserForm() {
+
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
+
+        return view('pages.create-user-admin');
+    }
+
     public function edit_user(Request $request) {
         if (!(Auth::guard('webadmin')->check())) {
             return redirect('/admin/login');
@@ -72,27 +81,64 @@ class AdminController extends Controller
         return redirect()->route('view-user-admin', ['username' => $user->username])->with('success', 'Profile edited successfully');
     }
 
-        //Uses full text search for name and username and exact match search for email
-        public function search(Request $request)
-        {   
- 
-            if (!(Auth::guard('webadmin')->check())) {
-                return redirect('/admin/login');
-            }
-
-            $query = trim($request->input('q'));
-   
-            if (str_contains($query, '@')) {
-                // If the query contains '@', perform an exact match search (assuming it's an email)
-                $users = User::where('email', '=', $query)->get();
-            } else {
-                // Otherwise, perform a full-text search
-                $users = User::query()
-                            ->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$query])
-                            ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$query])
-                            ->get();
-            }
-    
-            return view('pages.search-admin', compact('users'));
+    public function create_user(Request $request) {
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
         }
+
+        try {
+        $user = new User();
+
+        $user->name = ($request->input('name') != null) ? $request->input('name') : $user->name;
+        $user->username = ($request->input('username') != null) ? $request->input('username') : $user->username;
+        $user->email = ($request->input('email') != null) ? $request->input('email') : $user->email;
+        $user->phone_number = ($request->input('phone_number') != null) ? $request->input('phone_number') : $user->phone_number;
+
+        // parse date
+        $user->birth_date = ($request->input('birth_date') != null) ?  date('Y-m-d', strtotime($request->input('birth_date'))) : $user->birth_date;
+        $user->profile_picture = ($request->file('profile_picture') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('profile_picture'))) : $user->profile_picture;
+        
+
+        $password = $request->input('password');
+        $repassword = $request->input('password_confirmation');
+
+        if ($password != $repassword) {
+            return redirect()->route('create-user-form-admin')->with('error', 'Passwords do not match');
+        }
+
+        $user->password = bcrypt($password);
+
+        $user->description = $request->input('description');
+
+        $user->save();
+        return redirect()->route('view-user-admin', ['username' => $user->username])->with('success', 'Profile edited successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('create-user-form-admin')->with('error', 'Error creating user');
+        }
+    }
+
+
+    //Uses full text search for name and username and exact match search for email
+    public function search(Request $request)
+    {   
+
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
+
+        $query = trim($request->input('q'));
+
+        if (str_contains($query, '@')) {
+            // If the query contains '@', perform an exact match search (assuming it's an email)
+            $users = User::where('email', '=', $query)->get();
+        } else {
+            // Otherwise, perform a full-text search
+            $users = User::query()
+                        ->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$query])
+                        ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$query])
+                        ->get();
+        }
+
+        return view('pages.search-admin', compact('users'));
+    }
 }

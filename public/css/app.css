@@ -523,13 +523,13 @@ aside .logo img {
 
 /* Edit Profile Page Styles */
 
-#edit-profile{
+#edit-profile, #create-profile {
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-.edit-profile-section {
+.edit-profile-section, .create-profile-section {
   width: 100%;
   max-width: 50em;
   margin: 0 auto;
@@ -539,7 +539,7 @@ aside .logo img {
   border-radius: 8px;
 }
 
-.edit-profile-section h1 {
+.edit-profile-section h1, .create-profile-section h1 {
   text-align: center;
   color: white;
   margin-bottom: 1.25em;
@@ -595,7 +595,7 @@ aside .logo img {
   overflow:hidden;
   
 }
-.greeting{
+.greeting {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -604,6 +604,15 @@ aside .logo img {
   padding: 1em 0;
   width: 100%;
   color: #8d73eb;
+}
+
+#admin button a {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5em;
+  text-decoration: none;
+  color: white;
 }
 
 .yellow {
