@@ -51,6 +51,7 @@ CREATE TABLE users (
     description VARCHAR(300),
     birth_date DATE NOT NULL,
     CONSTRAINT check_age CHECK (birth_date <= CURRENT_DATE - INTERVAL '18' YEAR),
+    remember_token VARCHAR(256) DEFAULT NULL,
     public_profile BOOLEAN DEFAULT true
 );
 
@@ -153,6 +154,7 @@ CREATE TABLE administrators (
     name VARCHAR(50) NOT NULL,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(50) UNIQUE NOT NULL,
+    remember_token VARCHAR(256) DEFAULT NULL,
     password TEXT NOT NULL
 );
 
