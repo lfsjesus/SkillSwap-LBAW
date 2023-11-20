@@ -32,4 +32,9 @@ class AdminController extends Controller
         return view('pages.view-user-admin', ['user' => $user, 'posts' => $posts]);
     }
 
+    public function edit_user($username) {
+        $user = User::where('username', $username)->firstOrFail();
+        return view('pages.edit-user-admin', ['user' => $user]);
+    }
+
 }

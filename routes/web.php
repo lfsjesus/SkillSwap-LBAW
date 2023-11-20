@@ -74,10 +74,14 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 
-// User
+// User profile
 Route::get('/user/{username}', [UserController::class, 'show'])->name('user');
 
+// User profile - admin
 Route::get('/admin/{username}', [AdminController::class, 'show_user'])->name('view-user-admin');
 
 //Edit User profile
 Route::get('/user/{username}/edit', [UserController::class, 'edit'])->name('edit_profile');
+
+//Edit User profile - admin
+Route::get('/admin/{username}/edit', [AdminController::class, 'edit_user'])->name('edit_profile_admin');

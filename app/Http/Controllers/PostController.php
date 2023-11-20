@@ -16,6 +16,8 @@ class PostController extends Controller
             $posts = Post::publicPosts()->get()->sortByDesc('date');
             return view('pages.home', ['posts' => $posts]);
         }
+
+        return redirect('/login');
     }
 
     public function create(Request $request) {
