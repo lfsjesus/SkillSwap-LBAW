@@ -45,6 +45,6 @@ class UserController extends Controller
             ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$searchTerm])
             ->get();
 
-        return view('pages.exactMatchSearchResults', compact('users'));
+        return view('pages.fullTextSearchResults', compact('users'));
     }
 }
