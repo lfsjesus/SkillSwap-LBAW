@@ -12,6 +12,9 @@ use App\Models\User;
 class UserController extends Model 
 {
     public function show(string $username) {
+        if (!(Auth::check())) {
+            return redirect('/login');
+        }
         $user = User::where('username', $username)->firstOrFail();
         $posts = $user->posts()->get();
         return view('pages.user', ['user' => $user, 'posts' => $posts]);
@@ -72,4 +75,33 @@ class UserController extends Model
 
         return view('pages.fullTextSearchResults', compact('users'));
     }
+    */
+
+    //Uses full text search for name and username and exact match search for email
+    public function search(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect('/login');
+        }
+
+        $query = trim($request->input('q'));
+
+        if (str_contains($query, '@')) {
+            // Use the local scope for public profiles
+            $users = User::publicProfile()
+                        ->where('email', '=', $query)
+                        ->get();
+            $viewName = 'pages.exactMatchSearchResults';
+        } else {
+            // Use the local scope for public profiles in full-text search
+            $users = User::publicProfile()
+                        ->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$query])
+                        ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$query])
+                        ->get();
+            $viewName = 'pages.fullTextSearchResults';
+        }
+
+        return view($viewName, compact('users'));
+    }
+
 }

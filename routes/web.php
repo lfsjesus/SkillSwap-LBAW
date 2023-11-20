@@ -95,5 +95,18 @@ Route::get('/admin/{username}/edit', [AdminController::class, 'showEditUserForm'
 //Edit User profile - admin
 Route::put('/admin/edit', [AdminController::class, 'edit_user'])->name('edit_profile_admin');
 
+/*
+//Exact Match Search
+Route::get('/search', [UserController::class, 'exactMatchSearch'])->name('search');
 
-//Need to change the routes according to necessity. they cant have the same path.
+//Full Text Search
+Route::get('/search', [UserController::class, 'fullTextSearch'])->name('search');
+
+*/
+
+//Search
+Route::get('/search', [UserController::class, 'search'])->name('search');
+
+//Search - admin - ERROR
+Route::get('admin/search', [AdminController::class, 'adminSearch'])->name('search');
+

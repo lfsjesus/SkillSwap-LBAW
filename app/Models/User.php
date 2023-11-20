@@ -79,6 +79,11 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, Friend::class, 'user_id', 'friend_id')->get();
     }
 
+    public function isFriendWith($userId): bool
+    {
+        return $this->friends()->where('friend_id', $userId)->exists();
+    }
+
     /**
      * Get the groups for a user.
      */
@@ -88,5 +93,9 @@ class User extends Authenticatable
     }
 
 
+    public function scopePublicProfile($query)
+    {
+        return $query->where('public_profile', true);
+    }
 
 }
