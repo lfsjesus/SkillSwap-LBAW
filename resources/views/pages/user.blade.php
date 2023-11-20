@@ -14,8 +14,8 @@
 
         <!-- Profile Picture -->
         <div class="profile-picture">
-            @if(Auth::user()->profile_picture)
-            <img src="{{stream_get_contents(Auth::user()->profile_picture)}}"/>
+            @if($user->profile_picture)
+            <img src="{{stream_get_contents($user->profile_picture)}}"/>
             @else
             <img src="{{ url('assets/profile-picture.png') }}"/>
             @endif
@@ -24,9 +24,11 @@
         <div class="profile-info">
             <h1 class="user-name">{{ $user->name }}</h1>
             <p class="user-title">{{ $user->email }}</p>
+            @if(Auth::user()->username == $user->username)
             <a href="{{ route('edit_profile', ['username' => Auth::user()->username]) }}" class="button">
                 Edit Profile
             </a>
+            @endif
         </div>
 
         <!-- Edit Button -->
@@ -40,20 +42,37 @@
             <!-- Friends Box -->
             <div class="friends-box">
                 <h2>Friends</h2>
-                <?php
-                foreach($user->get_friends() as $friend){
-                    echo $friend->username . '<br>';
-                }
-                ?>
+                @foreach ($user->get_friends() as $user)
+                <div class="user-card">
+                    <a href="{{ route('user', ['username' => $user->username]) }}">
+                        @if($user->profile_picture)
+                        <img src="{{stream_get_contents($user->profile_picture)}}"/>
+                        @else
+                        <img src="{{ url('assets/profile-picture.png') }}"/>
+                        @endif
+                        {{$user->username}}
+    
+                    </a>
+    
+                </div>
+                @endforeach
             </div>
             <!-- Groups Box -->
             <div class="groups-box">
                 <h2>Groups</h2>
-                <?php
-                foreach($user->get_groups() as $group){
-                    echo $group->name . '<br>';
-                }
-                ?>
+                @foreach ($user->get_groups() as $group)
+                <div class="user-card">
+                    <a href="">
+                        @if($group->profile_picture)
+                        <img src="{{stream_get_contents($user->profile_picture)}}"/>
+                        @else
+                        <img src="{{ url('assets/group.png') }}"/>
+                        @endif
+                        {{$group->name}}
+                    </a>
+    
+                </div>
+                @endforeach
             </div>
         </div>
         

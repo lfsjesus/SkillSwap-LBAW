@@ -228,6 +228,11 @@ aside .logo img {
   overflow:auto;
 }
 
+#posts h2{
+  color: white;
+  font-weight: 500;
+}
+
 .post {
   width: 100%;
   max-width: 60em;
@@ -474,11 +479,34 @@ aside .logo img {
   border-radius: 10px;
   width: 100%;
   max-width: 40em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  align-items: center;
+  overflow-y: scroll;
+  /*hide scroll bar*/
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.friends-box::-webkit-scrollbar {
+  display: none;
+}
+
+.groups-box::-webkit-scrollbar {
+  display: none;
+}
+
+
+.friends-box h2, .groups-box h2 {
+  color: white;
+  margin: 0;
+  font-weight: 500;
 }
 
 .posts-box {
   width: 100%;
 }
+
 
 /* Edit Profile Page Styles */
 
@@ -511,7 +539,7 @@ aside .logo img {
 .form-group label {
   display: block;
   margin-bottom: 0.313em;
-  color: white;
+  color: pink;
 }
 
 .form-group input[type="text"],
@@ -524,12 +552,24 @@ aside .logo img {
   border: 1px solid #2e3541;
   border-radius: 4px;
   box-sizing: border-box;
-  color: #e9e9e936;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #232a37;
+  font-size: 0.9em;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="date"]:focus,
+.form-group input[type="file"]:focus,
+.form-group textarea:focus {
+  border-color: #8d73eb;
 }
 
 .form-group textarea {
   height: 6.25em;
   resize: vertical;
+  line-height: 1.5;
 }
 
 #admin {
