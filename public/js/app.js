@@ -22,7 +22,7 @@ function sendAjaxRequest(method, url, data, handler) {
 }
 
 function postDeletedHandler() {
-  if (this.status != 200) window.location = '/';
+  if (this.status != 200) window.location = window.location.href;
   let item = JSON.parse(this.responseText);
   let element = document.querySelector('.post[data-id="' + item.id + '"]');
   element.remove();
@@ -41,20 +41,14 @@ document.addEventListener('DOMContentLoaded', function() {
     );
   }
 
-  // if there are files, show them in preview div .list-files-preview
-
   let input = document.querySelector('input[type="file"]');
-  let preview = input.parentNode.parentNode.parentNode.parentNode.querySelector('.files-list-preview');
+  
   
   if (input != null) {
+    let preview = input.parentNode.parentNode.parentNode.parentNode.querySelector('.files-list-preview');
     input.addEventListener('change', function() { 
       inputFilesHandler.call(this, preview); }
     );
-
-    // remove file from preview and input on click on close button
-
-    
-  
   }
 
   // when user clicks on delete button, perform ajax request to delete post
@@ -134,7 +128,6 @@ async function editPost(id) {
   input.setAttribute('id', 'test');
 
   form.appendChild(input);
-  
 
 
   let files_list_preview = document.createElement('div');
