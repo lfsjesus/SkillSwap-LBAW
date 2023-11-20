@@ -553,13 +553,9 @@ aside .logo img {
   border-radius: 4px;
   box-sizing: border-box;
   color: white;
-}
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="date"],
-.form-group input[type="file"],
-.form-group textarea {
+  font-family: 'Montserrat', sans-serif;
   background-color: #232a37;
+  font-size: 0.9em;
 }
 
 .form-group input[type="text"]:focus,
@@ -573,11 +569,8 @@ aside .logo img {
 .form-group textarea {
   height: 6.25em;
   resize: vertical;
+  line-height: 1.5;
 }
-
-
-
-
 
 #admin {
   display: flex;
