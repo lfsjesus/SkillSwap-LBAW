@@ -32,6 +32,7 @@ class UserController extends Controller
                     ->orWhere('email', '=', $query)
                     ->get();
 
-        return view('users.search', compact('users')); // Use the appropriate view for displaying search results
+        return view('pages.exactMatchSearchResults', compact('users'));
+
     }
 }
