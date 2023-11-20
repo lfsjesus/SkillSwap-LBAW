@@ -17,6 +17,7 @@ function sendAjaxRequest(method, url, data, handler) {
   request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
   request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   request.addEventListener('load', handler);
+  
   request.send(encodeForAjax(data));
 }
 
@@ -43,39 +44,16 @@ document.addEventListener('DOMContentLoaded', function() {
   // if there are files, show them in preview div .list-files-preview
 
   let input = document.querySelector('input[type="file"]');
-  let preview = document.querySelector('.files-list-preview');
-
-  if (input != null && preview != null) {
-    input.addEventListener('change', function() {
-      let files = input.files;
-      let filesArr = Array.from(files);
-      let i = 0;
-      filesArr.forEach(function(file) {
-        let reader = new FileReader();
-        reader.onloadend = function() {
-          let div = document.createElement('div');
-          let span = document.createElement('span');
-          span.className = 'material-symbols-outlined';
-          span.innerHTML = 'close';
-          div.className = 'file-preview';
-          div.setAttribute('id', i);
-
-          let img = document.createElement('img');
-          img.src = reader.result;
-          div.appendChild(span);
-          div.appendChild(img);
-          preview.appendChild(div);
-          preview.style.display = 'flex';
-          i++;
-        }
-        reader.readAsDataURL(file);
-      });
-    }
+  let preview = input.parentNode.parentNode.parentNode.parentNode.querySelector('.files-list-preview');
+  
+  if (input != null) {
+    input.addEventListener('change', function() { 
+      inputFilesHandler.call(this, preview); }
     );
 
     // remove file from preview and input on click on close button
 
-    preview.addEventListener('click', remove_file_from_preview);
+    
   
   }
 
@@ -117,7 +95,7 @@ function filterContent(content) {
   return content.replace(/(<([^>]+)>)/ig, ''); // remove html tags
 }
 
-function editPost(id) {
+async function editPost(id) {
   let post = document.querySelector('.post[data-id="' + id + '"]');
   let profile_picture = post.querySelector('.post-header-left img');
   let files = post.querySelectorAll('.post-body a img'); // TO CHANGE AFTER MODIFYING IMAGES VIEW
@@ -133,6 +111,18 @@ function editPost(id) {
   let post_text = document.createElement('div');
   post_text.className = 'post-text';
 
+  let form = document.createElement('form');
+  form.setAttribute('method', 'POST');
+  form.setAttribute('action', '/posts/edit');
+  form.setAttribute('enctype', 'multipart/form-data');
+
+  let form_id = document.createElement('input');
+  form_id.setAttribute('type', 'hidden');
+  form_id.setAttribute('name', 'post_id');
+  form_id.setAttribute('value', id);
+  form.appendChild(form_id);
+
+
   let post_files = document.createElement('div');
   post_files.className = 'post-files';
   post_files.setAttribute('id', 'attach-button');
@@ -141,33 +131,19 @@ function editPost(id) {
   input.setAttribute('type', 'file');
   input.setAttribute('name', 'files[]');
   input.setAttribute('multiple', 'multiple');
-  input.style.display = 'none';
-  post_files.appendChild(input);
+  input.setAttribute('id', 'test');
 
-  /* MISSING GETTING FILES FROM POST AND PUT THEM IN INPUT */
+  form.appendChild(input);
+  
+
 
   let files_list_preview = document.createElement('div');
   files_list_preview.className = 'files-list-preview';
   files_list_preview.style.display = 'flex';
 
-  // create as many file-preview divs as there are files
-  if (files != null) {
-    files.forEach(function(file) {
-      let div = document.createElement('div');
-      div.className = 'file-preview';
-      let span = document.createElement('span');
-      span.addEventListener('click', remove_file_from_preview);
-      span.className = 'material-symbols-outlined';
-      span.innerHTML = 'close';
-      div.appendChild(span);
-      let a = document.createElement('a');
-      let img = file;
-      a.appendChild(img);
-      div.appendChild(a);
-      files_list_preview.appendChild(div);
-    });
-  }
+  
 
+  
   /* */
 
 
@@ -176,14 +152,29 @@ function editPost(id) {
   textarea.className = 'post-textarea';
   textarea.setAttribute('cols', '25');
   textarea.setAttribute('rows', '5');
+  textarea.setAttribute('name', 'description');
 
   textarea.value = (content == null) ? '' : filterContent(content.innerHTML);
 
   let button = document.createElement('button');
   button.className = 'edit-button';
   button.innerHTML = 'Edit';
-  post_text.appendChild(textarea);
-  post_text.appendChild(button);
+  button.setAttribute('type', 'submit');
+  form.innerHTML += '<input type="hidden" name="_token" value="' + document.querySelector('meta[name="csrf-token"]').content + '">';
+  form.appendChild(textarea);
+  form.appendChild(button);
+  
+  // add hidden input with method PUT
+  let method = document.createElement('input');
+  method.setAttribute('type', 'hidden');
+  method.setAttribute('name', '_method');
+  method.setAttribute('value', 'PUT');
+  form.appendChild(method);
+
+
+
+  post_text.appendChild(form);
+  //post_text.appendChild(button);
 
   post_header.appendChild(profile_picture);
   post_header.appendChild(post_text);
@@ -194,18 +185,87 @@ function editPost(id) {
   create_post.appendChild(post_header);
   create_post.appendChild(files_list_preview);
 
-
+  
   // replace article with create_post div
   post.replaceWith(create_post);
 
+
+
+
+   let realInput = create_post.querySelector('input[type="file"]');
+   console.log(realInput);
+   
+   await fetchFiles(realInput, files);
+
+   //console.log(realInput.files);
+
+  // create as many file-preview divs as there are files
+  if (files != null) {
+    files.forEach(function(file) {
+      let div = document.createElement('div');
+      div.className = 'file-preview';
+      let span = document.createElement('span');
+      span.addEventListener('click', function(e) {
+        remove_file_from_preview(e, realInput, files_list_preview);
+      }
+      );
+      span.className = 'material-symbols-outlined';
+      span.innerHTML = 'close';
+      div.appendChild(span);
+      let a = document.createElement('a');
+      let img = file;
+      a.appendChild(img);
+      div.appendChild(a);
+      files_list_preview.appendChild(div);
+    });
+
+    //console.log(input.files);
+  }
+
+
+
+  post_files.addEventListener('click', function() {
+    realInput.click();
+  }
+  );
+
+  realInput.addEventListener('change', function() { inputFilesHandler.call(this, files_list_preview); } );
+  
+  let editButton = create_post.querySelector('.edit-button');
+  editButton.addEventListener('click', function() {
+    // prevent default
+    event.preventDefault();
+
+  
+    let request = new XMLHttpRequest();
+    let data = new FormData(form);
+
+    console.log(data.get('files[]'));
+    // send PUT
+    request.open('POST', '/posts/edit', true);
+    request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+    
+    request.addEventListener('load', function() {
+      if (this.status == 200) {
+        // refresh page to current window
+        window.location = window.location.href;
+        
+      }
+    }
+    );
+    request.send(data); 
+  } 
+  );
 }
 
 
-function remove_file_from_preview(e) {
+function remove_file_from_preview(e, file, preview) {
   if (e.target.tagName == 'SPAN') {
     let id = e.target.parentNode.id;
-    let file = document.querySelector('input[type="file"]');
+    //let file = document.querySelector('input[type="file"]');
     let files = file.files;
+    //let preview = document.querySelector('.files-list-preview');
+
     let filesArr = Array.from(files);
 
     let newFilesList = new DataTransfer();
@@ -224,4 +284,65 @@ function remove_file_from_preview(e) {
       preview.style.display = 'none';
     }
   }
+}
+
+
+async function fetchFiles(input, files) {
+  if (files != null) {
+      let newFilesList = new DataTransfer();
+      let fetchPromises = Array.from(files).map(file => {
+      let imageUrl = file.getAttribute('src');
+      let imageName = imageUrl.split('/').pop(); 
+      
+
+      return fetch(imageUrl)
+        .then(res => res.blob())
+        .then(blob => new File([blob], imageName, {type: 'image/png'}));
+
+    });
+
+
+    await Promise.all(fetchPromises)
+      .then(function(values) {
+        values.forEach(function(value) {
+          newFilesList.items.add(value);
+        });
+
+        input.files = newFilesList.files;
+      });
+
+  }
+}
+
+
+function inputFilesHandler(preview, finalFiles) {
+  let files = this.files;
+
+  let filesArr = Array.from(files);
+  let i = 0;
+  filesArr.forEach(function(file) {
+    let reader = new FileReader();
+    reader.onloadend = function() {
+      let div = document.createElement('div');
+      let span = document.createElement('span');
+      span.className = 'material-symbols-outlined';
+      span.innerHTML = 'close';
+      div.className = 'file-preview';
+      div.setAttribute('id', i);
+
+      let img = document.createElement('img');
+      img.src = reader.result;
+      div.appendChild(span);
+      div.appendChild(img);
+      preview.appendChild(div);
+      preview.style.display = 'flex';
+      preview.addEventListener('click', function(e) {
+        remove_file_from_preview(e, this.parentNode.querySelector('input[type="file"]'), this);
+      }
+      );
+      i++;
+    }
+    reader.readAsDataURL(file);
+  });
+
 }
