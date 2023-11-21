@@ -39,6 +39,17 @@ paths:
           description: 'All right. Show Profile'
         '302':
           description: 'If user is not logged in and profile is private or if user is logged in and profile is private and they aren t friends, redirect to home page'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'OK. You are in. Redirect to user profile.'
+                  value: '/user/{username}'
+                302Failure:
+                  description: 'You shall not pass. Redirect again to home.'
+                  value: '/home'
         '404':
           description: 'Resource not found'
     
@@ -60,6 +71,17 @@ paths:
           description: 'All right. Show Edit Profile Page'
         '302':
           description: 'If user is not logged in and profile is private or if user is logged in and profile is private and they aren t friends, redirect to profile page'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'OK. You are in. Redirect to user profile edit.'
+                  value: '/user/{username}/edit'
+                302Failure:
+                  description: 'You shall not pass. Redirect again to user profile.'
+                  value: '/user/{username}'
         '404':
           description: 'Resource not found'
 
@@ -112,8 +134,17 @@ paths:
           description: 'All right. Edit Profile'
         '302':
           description: 'If not logged in, redirect to home page'
-        '404':
-          description: 'Resource not found'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'OK. You are in. Redirect to user profile edit.'
+                  value: '/user/edit'
+                302Failure:
+                  description: 'You shall not pass. Redirect again to home page.'
+                  value: '/home'
 
   /posts/create:
      post:
@@ -158,8 +189,17 @@ paths:
           description: 'All right. Create Post'
         '302':
           description: 'If not logged in, redirect to home page'
-        '404':
-          description: 'Resource not found'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'OK. You are in. Redirect to home page.'
+                  value: '/home'
+                302Failure:
+                  description: 'You shall not pass. Redirect again to home page.'
+                  value: '/home'          
 
   /posts/edit:
       put:
@@ -204,8 +244,17 @@ paths:
             description: 'All right. Edit Post'
           '302':
             description: 'If not logged in, redirect to home page'
-          '404':
-            description: 'Resource not found'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to home page.'
+                    value: '/home'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home page.'
+                    value: '/home'          
   
   /posts/delete:
       delete:
@@ -250,8 +299,17 @@ paths:
             description: 'All right. Delete Post'
           '302':
             description: 'If not logged in, redirect to home page'
-          '404':
-            description: 'Resource not found'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to home page.'
+                    value: '/home'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home page.'
+                    value: '/home'          
 
   /posts:
       get:
@@ -294,8 +352,6 @@ paths:
         responses:
           '200': 
             description: 'All right. List Posts'
-          '404':
-            description: 'Resource not found'
 
   /posts/{id}:
     get:
@@ -312,9 +368,7 @@ paths:
             type: 'integer'
       responses:
         '200': 
-          description: 'All right. View Post'
-        '302':
-          description: 'If not logged in, redirect to home page'
+          description: 'All right. View Post'        
         '404':
           description: 'Resource not found'
   
@@ -334,10 +388,23 @@ paths:
         responses:
           '200': 
             description: 'All right. Search for users'
-          '302':
-            description: 'If not logged in, redirect to home page'
-          '404':
-            description: 'Resource not found'
+  
+  /admin/search:
+      get:
+        operationId: 'R502'
+        summary: 'R502: Admin Search User'
+        description: 'Search for users. Access: ADM'
+        tags:
+          - 'M05: Search'
+        parameters:
+          - name: 'q'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+        responses:
+          '200': 
+            description: 'All right. Search for users'
 
   /admin/{username}:
       get:
@@ -356,7 +423,18 @@ paths:
           '200': 
             description: 'All right. See user'
           '302':
-            description: 'If not logged in, redirect to home page'
+            description: 'If not logged in, redirect to login page'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to user profile.'
+                    value: '/admin/{username}'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home.'
+                    value: '/admin'
           '404':
             description: 'Resource not found'
 
@@ -377,7 +455,18 @@ paths:
           '200': 
             description: 'All right. Edit user'
           '302':
-            description: 'If not logged in, redirect to home page'
+            description: 'If not logged in, redirect to admin login page'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to user profile.'
+                    value: '/admin/{username}/edit'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home.'
+                    value: '/admin'
           '404':
             description: 'Resource not found'
 
@@ -428,7 +517,18 @@ paths:
           '200': 
             description: 'All right. Edit user'
           '302':
-            description: 'If not logged in, redirect to home page'
+            description: 'If not logged in, redirect to login page'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to admin edit.'
+                    value: '/admin/edit'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home.'
+                    value: '/admin'
           '404':
             description: 'Resource not found'
    
@@ -443,9 +543,18 @@ paths:
           '200': 
             description: 'All right. Create user'
           '302':
-            description: 'If not logged in, redirect to home page'
-          '404':
-            description: 'Resource not found'
+            description: 'If not logged in, redirect to login page'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to admin create.'
+                    value: '/admin/user/create'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home.'
+                    value: '/admin'
   
   /admin/create:
      post:
@@ -499,9 +608,18 @@ paths:
         '200': 
           description: 'All right. Create user'
         '302':
-          description: 'If not logged in, redirect to home page'
-        '404':
-          description: 'Resource not found'
+          description: 'If not logged in, redirect to login page'
+          headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to admin create.'
+                    value: '/admin/create'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home.'
+                    value: '/admin'
 
   /login:
       get:
@@ -533,7 +651,7 @@ paths:
               type: 'string'
         responses:
           '302':
-            description: 'If credentials fail, redirect to home page'
+            description: 'If credentials fail, redirect to login form'
             headers:
               Location:
                 schema:
@@ -557,7 +675,18 @@ paths:
           '200': 
             description: 'All right. Logout'
           '302':
-            description: 'If not logged in, redirect to home page'
+            description: 'If not logged in, redirect to login form'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to login form.'
+                    value: '/login'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to login form.'
+                    value: '/login'
 
   /register: 
       get:
@@ -616,4 +745,15 @@ paths:
           '200': 
             description: 'All right. Register'
           '302':
-            description: 'If not logged in, redirect to home page'
+            description: 'If not logged in, redirect to register form'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to homepage.'
+                    value: '/home'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to login form.'
+                    value: '/register'
