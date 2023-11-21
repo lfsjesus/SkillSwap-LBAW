@@ -502,3 +502,118 @@ paths:
           description: 'If not logged in, redirect to home page'
         '404':
           description: 'Resource not found'
+
+  /login:
+      get:
+        operationId: 'R701'
+        summary: 'R701: Login Form'
+        description: 'Login'
+        tags:
+          - 'M07: Authentication'
+        responses:
+          '200': 
+            description: 'All right. Login'
+
+      post:
+        operationId: 'R702'
+        summary: 'R702: Login Action'
+        description: 'Login'
+        tags:
+          - 'M07: Authentication'
+        parameters:
+          - name: 'email'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'password'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+        responses:
+          '302':
+            description: 'If credentials fail, redirect to home page'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to homepage.'
+                    value: '/home'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to login form.'
+                    value: '/login'
+
+  /logout:
+      get:
+        operationId: 'R703'
+        summary: 'R703: Logout Action'
+        description: 'Logout'
+        tags:
+          - 'M07: Authentication'
+        responses:
+          '200': 
+            description: 'All right. Logout'
+          '302':
+            description: 'If not logged in, redirect to home page'
+
+  /register: 
+      get:
+        operationId: 'R704'
+        summary: 'R704: Register Form'
+        description: 'Register'
+        tags:
+          - 'M07: Authentication'
+        responses:
+          '200': 
+            description: 'All right. Register'
+
+      post:
+        operationId: 'R705'
+        summary: 'R705: Register Action'
+        description: 'Register'
+        tags:
+          - 'M07: Authentication'
+        parameters:
+          - name: 'name'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'email'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'phone_number'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'birth_date'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'description'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'password'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'password-confirm'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+        responses:
+          '200': 
+            description: 'All right. Register'
+          '302':
+            description: 'If not logged in, redirect to home page'
