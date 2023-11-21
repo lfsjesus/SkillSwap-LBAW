@@ -16,390 +16,744 @@ externalDocs:
 tags:
  - name: 'M01: Users'
  - name: 'M02: Posts'
- - name: 'M03: Comments'
- - name: 'M04: Groups'
  - name: 'M05: Search'
  - name: 'M06: Administration'
  - name: 'M07: Authentication'
 
 paths:
-  /users:
+  /user/{username}:
     get:
+      operationId: 'R101'
+      summary: 'R101: User Profile'
+      description: 'Get user profile information. Access: ADM, USR, OWN, PUB'
       tags:
         - 'M01: Users'
-      summary: Get a list of users
-      description: Retrieve a list of users. Available to ADM only.
-      operationId: listUsers
       parameters:
-        - name: limit
-          in: query
-          description: Max number of results to return
-          required: false
+        - name: 'username'
+          in: 'path'
+          required: true
           schema:
-            type: integer
-            format: int32
+            type: 'string'
       responses:
-        '200':
-          description: An array of users
-          content:
-            application/json:
+        '200': 
+          description: 'All right. Show Profile'
+        '302':
+          description: 'If user is not logged in and profile is private or if user is logged in and profile is private and they aren t friends, redirect to home page'
+          headers:
+            Location:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
-        '401':
-          description: Unauthorized
-        '500':
-          description: Server error
-    post:
+                type: string
+              examples:
+                302Success:
+                  description: 'OK. You are in. Redirect to user profile.'
+                  value: '/user/{username}'
+                302Failure:
+                  description: 'You shall not pass. Redirect again to home.'
+                  value: '/home'
+        '404':
+          description: 'Resource not found'
+    
+  /user/{username}/edit:
+    get:
+      operationId: 'R102'
+      summary: 'R102: User Edit Profile Page'
+      description: 'Get user edit profile page. Access: USR'
       tags:
         - 'M01: Users'
-      summary: Create a user
-      description: Create a new user. Available to ADM only.
-      operationId: createUser
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
+      parameters:
+        - name: 'username'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
       responses:
-        '201':
-          description: User created
-        '400':
-          description: Invalid input
-        '401':
-          description: Unauthorized
-        '500':
-          description: Server error
+        '200': 
+          description: 'All right. Show Edit Profile Page'
+        '302':
+          description: 'If user is not logged in and profile is private or if user is logged in and profile is private and they aren t friends, redirect to profile page'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'OK. You are in. Redirect to user profile edit.'
+                  value: '/user/{username}/edit'
+                302Failure:
+                  description: 'You shall not pass. Redirect again to user profile.'
+                  value: '/user/{username}'
+        '404':
+          description: 'Resource not found'
 
-  /users/{userId}:
-    get:
+  /user/edit:
+     put:
+      operationId: 'R103'
+      summary: 'R103: User Edit Profile Action'
+      description: 'Edit user profile information. Access: USR'
       tags:
         - 'M01: Users'
-      summary: Get a user by ID
-      description: Retrieve a user by their ID. Available to USR, OWN and ADM.
-      operationId: getUserById
       parameters:
-        - name: userId
-          in: path
+        - name: 'username'
+          in: 'path'
           required: true
-          description: Unique ID of the user
           schema:
-            type: string
+            type: 'string'
+        - name: 'name'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'email'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'phone_number'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'birth_date'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'profile_picture'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'description'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+
       responses:
-        '200':
-          description: A single user
-          content:
-            application/json:
+        '200': 
+          description: 'All right. Edit Profile'
+        '302':
+          description: 'If not logged in, redirect to home page'
+          headers:
+            Location:
               schema:
-                $ref: '#/components/schemas/User'
-        '404':
-          description: User not found
-        '401':
-          description: Unauthorized
-        '500':
-          description: Server error
-    put:
+                type: string
+              examples:
+                302Success:
+                  description: 'OK. You are in. Redirect to user profile edit.'
+                  value: '/user/edit'
+                302Failure:
+                  description: 'You shall not pass. Redirect again to home page.'
+                  value: '/home'
+
+  /posts/create:
+     post:
+      operationId: 'R201'
+      summary: 'R201: Create post action'
+      description: 'Create post. Access: USR'
       tags:
-        - 'M01: Users'
-      summary: Update a user
-      description: Update a user's information. Available to OWN and ADM.
-      operationId: updateUser
+        - 'M02: Posts'
       parameters:
-        - name: userId
-          in: path
+        - name: 'description'
+          in: 'path'
           required: true
-          description: Unique ID of the user
           schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
+            type: 'string'
+        - name: 'files'
+          in: 'path'
+          required: true
+          schema:
+            type: 'array'
+        - name: 'public_post'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'date'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'user_id'
+          in: 'path'
+          required: true
+          schema:
+            type: 'integer'
+        - name: 'group_id'
+          in: 'path'
+          required: true
+          schema:
+            type: 'integer'
+      responses:
+        '200': 
+          description: 'All right. Create Post'
+        '302':
+          description: 'If not logged in, redirect to home page'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'OK. You are in. Redirect to home page.'
+                  value: '/home'
+                302Failure:
+                  description: 'You shall not pass. Redirect again to home page.'
+                  value: '/home'          
+
+  /posts/edit:
+      put:
+        operationId: 'R202'
+        summary: 'R202: Edit post action'
+        description: 'Edit post. Access: OWN'
+        tags:
+          - 'M02: Posts'
+        parameters:
+          - name: 'description'
+            in: 'path'
+            required: true
             schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '200':
-          description: User updated
-        '400':
-          description: Invalid input
-        '404':
-          description: User not found
-        '401':
-          description: Unauthorized
-        '500':
-          description: Server error
-    delete:
-      tags:
-        - 'M01: Users'
-      summary: Delete a user
-      description: Delete a user by their ID. Available to ADM only.
-      operationId: deleteUser
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          description: Unique ID of the user
-          schema:
-            type: string
-      responses:
-        '204':
-          description: User deleted
-        '404':
-          description: User not found
-        '401':
-          description: Unauthorized
-        '500':
-          description: Server error
+              type: 'string'
+          - name: 'files'
+            in: 'path'
+            required: true
+            schema:
+              type: 'array'
+          - name: 'public_post'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'date'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'user_id'
+            in: 'path'
+            required: true
+            schema:
+              type: 'integer'
+          - name: 'group_id'
+            in: 'path'
+            required: true
+            schema:
+              type: 'integer'
+        responses:
+          '200': 
+            description: 'All right. Edit Post'
+          '302':
+            description: 'If not logged in, redirect to home page'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to home page.'
+                    value: '/home'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home page.'
+                    value: '/home'          
+  
+  /posts/delete:
+      delete:
+        operationId: 'R203'
+        summary: 'R203: Delete post action'
+        description: 'Delete post. Access: OWN'
+        tags:
+          - 'M02: Posts'
+        parameters:
+          - name: 'description'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'files'
+            in: 'path'
+            required: true
+            schema:
+              type: 'array'
+          - name: 'public_post'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'date'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'user_id'
+            in: 'path'
+            required: true
+            schema:
+              type: 'integer'
+          - name: 'group_id'
+            in: 'path'
+            required: true
+            schema:
+              type: 'integer'
+        responses:
+          '200': 
+            description: 'All right. Delete Post'
+          '302':
+            description: 'If not logged in, redirect to home page'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to home page.'
+                    value: '/home'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home page.'
+                    value: '/home'          
 
   /posts:
+      get:
+        operationId: 'R204'
+        summary: 'R204: List posts'
+        description: 'List posts. Access: ADM, USR, OWN, PUB'
+        tags:
+          - 'M02: Posts'
+        parameters:
+          - name: 'description'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'files'
+            in: 'path'
+            required: true
+            schema:
+              type: 'array'
+          - name: 'public_post'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'date'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'user_id'
+            in: 'path'
+            required: true
+            schema:
+              type: 'integer'
+          - name: 'group_id'
+            in: 'path'
+            required: true
+            schema:
+              type: 'integer'
+        responses:
+          '200': 
+            description: 'All right. List Posts'
+
+  /posts/{id}:
     get:
+      operationId: 'R205'
+      summary: 'R205: View post'
+      description: 'View post. Access: ADM, USR, OWN, PUB'
       tags:
         - 'M02: Posts'
-      summary: Get a list of posts
-      description: Retrieve a list of posts. Available to all users.
-      operationId: listPosts
       parameters:
-        - name: limit
-          in: query
-          description: Max number of results to return
-          required: false
+        - name: 'id'
+          in: 'path'
+          required: true
           schema:
-            type: integer
-            format: int32
+            type: 'integer'
       responses:
-        '200':
-          description: An array of posts
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Post'
-        '401':
-          description: Unauthorized
-        '500':
-          description: Server error
-    post:
-      tags:
-        - 'M02: Posts'
-      summary: Create a post
-      description: Create a new post. Available to authenticated users only.
-      operationId: createPost
-      requestBody:
-        required: true
-        content:
-          application/json:
+        '200': 
+          description: 'All right. View Post'        
+        '404':
+          description: 'Resource not found'
+  
+  /search:
+      get:
+        operationId: 'R501'
+        summary: 'R501: User Search User'
+        description: 'Search for users. Access: ADM, USR, OWN, PUB'
+        tags:
+          - 'M05: Search'
+        parameters:
+          - name: 'q'
+            in: 'path'
+            required: true
             schema:
-              $ref: '#/components/schemas/Post'
-      responses:
-        '201':
-          description: Post created
-        '400':
-          description: Invalid input
-        '401':
-          description: Unauthorized
-        '500':
-          description: Server error
-
-  /posts/{postId}:
-    get:
-      tags:
-        - 'M02: Posts'
-      summary: Get a post by ID
-      description: Retrieve a post by its ID. Available to all users.
-      operationId: getPostById
-      parameters:
-        - name: postId
-          in: path
-          required: true
-          description: Unique ID of the post
-          schema:
-            type: string
-      responses:
-        '200':
-          description: A single post
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Post'
-        '404':
-          description: Post not found
-        '401':
-          description: Unauthorized
-        '500':
-          description: Server error
-    delete:
-      tags:
-        - 'M02: Posts'
-      summary: Delete a post
-      description: Delete a post by its ID. Available to OWN or ADM.
-      operationId: deletePost
-      parameters:
-        - name: postId
-          in: path
-          required: true
-          description: Unique ID of the post
-          schema:
-            type: string
-      responses:
-        '204':
-          description: Post deleted
-        '404':
-          description: Post not found
-        '401':
-          description: Unauthorized
-        '500':
-          description: Server error
-
-  /comments:
-    post:
-      tags:
-        - 'M03: Comments'
-      summary: Create a comment
-      description: Create a new comment on a post. Available to authenticated users only.
-      operationId: createComment
-      requestBody:
-        required: true
-        content:
-          application/json:
+              type: 'string'
+        responses:
+          '200': 
+            description: 'All right. Search for users'
+  
+  /admin/search:
+      get:
+        operationId: 'R502'
+        summary: 'R502: Admin Search User'
+        description: 'Search for users. Access: ADM'
+        tags:
+          - 'M05: Search'
+        parameters:
+          - name: 'q'
+            in: 'path'
+            required: true
             schema:
-              $ref: '#/components/schemas/Comment'
-      responses:
-        '201':
-          description: Comment created
-        '400':
-          description: Invalid input
-        '401':
-          description: Unauthorized
-        '500':
-          description: Server error
+              type: 'string'
+        responses:
+          '200': 
+            description: 'All right. Search for users'
 
-  /comments/{commentId}:
-    put:
-      tags:
-        - 'M03: Comments'
-      summary: Update a comment
-      description: Update a comment by its ID. Available to OWN or ADM.
-      operationId: updateComment
-      parameters:
-        - name: commentId
-          in: path
-          required: true
-          description: Unique ID of the comment
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
+  /admin/{username}:
+      get:
+        operationId: 'R601'
+        summary: 'R601: Admin See User'
+        description: 'See user. Access: ADM'
+        tags:
+          - 'M06: Administration'
+        parameters:
+          - name: 'username'
+            in: 'path'
+            required: true
             schema:
-              $ref: '#/components/schemas/Comment'
-      responses:
-        '200':
-          description: Comment updated
-        '400':
-          description: Invalid input
-        '404':
-          description: Comment not found
-        '401':
-          description: Unauthorized
-        '500':
-          description: Server error
-    delete:
+              type: 'string'
+        responses:
+          '200': 
+            description: 'All right. See user'
+          '302':
+            description: 'If not logged in, redirect to login page'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to user profile.'
+                    value: '/admin/{username}'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home.'
+                    value: '/admin'
+          '404':
+            description: 'Resource not found'
+
+  /admin/{username}/edit:
+      put:
+        operationId: 'R602'
+        summary: 'R602: Admin Edit User Page'
+        description: 'Edit user. Access: ADM'
+        tags:
+          - 'M06: Administration'
+        parameters:
+          - name: 'username'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+        responses:
+          '200': 
+            description: 'All right. Edit user'
+          '302':
+            description: 'If not logged in, redirect to admin login page'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to user profile.'
+                    value: '/admin/{username}/edit'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home.'
+                    value: '/admin'
+          '404':
+            description: 'Resource not found'
+
+  /admin/edit:
+      put:
+        operationId: 'R603'
+        summary: 'R603: Admin Edit User Action'
+        description: 'Edit user. Access: ADM'
+        tags:
+          - 'M06: Administration'
+        parameters:
+          - name: 'username'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'name'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'email'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'phone_number'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'birth_date'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'profile_picture'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'description'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+        responses:
+          '200': 
+            description: 'All right. Edit user'
+          '302':
+            description: 'If not logged in, redirect to login page'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to admin edit.'
+                    value: '/admin/edit'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home.'
+                    value: '/admin'
+          '404':
+            description: 'Resource not found'
+   
+  /admin/user/create:
+      get:
+        operationId: 'R604'
+        summary: 'R604: Admin Create User Page'
+        description: 'Create user. Access: ADM'
+        tags:
+          - 'M06: Administration'
+        responses:
+          '200': 
+            description: 'All right. Create user'
+          '302':
+            description: 'If not logged in, redirect to login page'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to admin create.'
+                    value: '/admin/user/create'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home.'
+                    value: '/admin'
+  
+  /admin/create:
+     post:
+      operationId: 'R605'
+      summary: 'R605: Admin Create User Action'
+      description: 'Create user. Access: ADM'
       tags:
-        - 'M03: Comments'
-      summary: Delete a comment
-      description: Delete a comment by its ID. Available to OWN or ADM.
-      operationId: deleteComment
+        - 'M06: Administration'
       parameters:
-        - name: commentId
-          in: path
+        - name: 'name'
+          in: 'path'
           required: true
-          description: Unique ID of the comment
           schema:
-            type: string
+            type: 'string'
+        - name: 'email'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'phone_number'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'birth_date'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'profile_picture'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'description'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'password'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'password_confirmation'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
       responses:
-        '204':
-          description: Comment deleted
-        '404':
-          description: Comment not found
-        '401':
-          description: Unauthorized
-        '500':
-          description: Server error
+        '200': 
+          description: 'All right. Create user'
+        '302':
+          description: 'If not logged in, redirect to login page'
+          headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to admin create.'
+                    value: '/admin/create'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to home.'
+                    value: '/admin'
 
-components:
-  schemas:
+  /login:
+      get:
+        operationId: 'R701'
+        summary: 'R701: Login Form'
+        description: 'Login. Access: PUB'
+        tags:
+          - 'M07: Authentication'
+        responses:
+          '200': 
+            description: 'All right. Login'
 
-    User:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the User
-        username:
-          type: string
-          description: Unique username for the User
-        email:
-          type: string
-          description: Email of the User
-        profile:
-          $ref: '#/components/schemas/UserProfile'
-      required:
-        - id
-        - username
-        - email
+      post:
+        operationId: 'R702'
+        summary: 'R702: Login Action'
+        description: 'Login. Acess: PUB'
+        tags:
+          - 'M07: Authentication'
+        parameters:
+          - name: 'email'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'password'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+        responses:
+          '302':
+            description: 'If credentials fail, redirect to login form'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to homepage.'
+                    value: '/home'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to login form.'
+                    value: '/login'
 
-    UserProfile:
-      type: object
-      properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
-        bio:
-          type: string
+  /logout:
+      get:
+        operationId: 'R703'
+        summary: 'R703: Logout Action'
+        description: 'Logout. Access: USR, OWN'
+        tags:
+          - 'M07: Authentication'
+        responses:
+          '200': 
+            description: 'All right. Logout'
+          '302':
+            description: 'If not logged in, redirect to login form'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to login form.'
+                    value: '/login'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to login form.'
+                    value: '/login'
 
-    Post:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the Post
-        title:
-          type: string
-          description: Title of the Post
-        content:
-          type: string
-          description: Content of the Post
-        creatorId:
-          type: string
-          description: The ID of the user who created the post
-      required:
-        - id
-        - title
-        - content
-        - creatorId
+  /register: 
+      get:
+        operationId: 'R704'
+        summary: 'R704: Register Form'
+        description: 'Register. Access: PUB'
+        tags:
+          - 'M07: Authentication'
+        responses:
+          '200': 
+            description: 'All right. Register'
 
-    Comment:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the Comment
-        postId:
-          type: string
-          description: The ID of the post the comment is associated with
-        content:
-          type: string
-          description: Content of the Comment
-        creatorId:
-          type: string
-          description: The ID of the user who created the comment
-      required:
-        - id
-        - postId
-        - content
-        - creatorId
+      post:
+        operationId: 'R705'
+        summary: 'R705: Register Action'
+        description: 'Register. Access: PUB'
+        tags:
+          - 'M07: Authentication'
+        parameters:
+          - name: 'name'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'email'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'phone_number'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'birth_date'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'description'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'password'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'password-confirm'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+        responses:
+          '200': 
+            description: 'All right. Register'
+          '302':
+            description: 'If not logged in, redirect to register form'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'OK. You are in. Redirect to homepage.'
+                    value: '/home'
+                  302Failure:
+                    description: 'You shall not pass. Redirect again to login form.'
+                    value: '/register'
