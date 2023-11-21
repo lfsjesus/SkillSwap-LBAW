@@ -1324,7 +1324,7 @@ insert into posts (user_id, group_id, date, description, public_post) values (68
 insert into posts (user_id, group_id, date, description, public_post) values (482, null, '2022-12-15', 'Suspendisse accumsan tortor quis turpis.', true);
 insert into posts (user_id, group_id, date, description, public_post) values (1, null, '2023-11-15', 'Yorgo Post.', false);
 insert into posts (user_id, group_id, date, description, public_post) values (2, null, '2023-11-15', 'Testing friends post.', false);
-
+insert into posts (user_id, group_id, date, description, public_post) values (1, null, '2023-11-15', 'Testing friends public post.', true);
 
 
 /*Is_friend*/

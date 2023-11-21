@@ -18,7 +18,10 @@ class PostController extends Controller
         }
 
         /*Else if user is logged in, show public posts + friends posts + own user posts */
-        $posts = Post::publicPosts()->get()->merge(Auth::user()->posts()->get())->merge(Auth::user()->friendsPosts()->get())->sortByDesc('date');
+        $posts = Post::publicPosts()->get()
+            ->merge(Auth::user()->posts()->get())
+            ->merge(Auth::user()->friendsPosts()->get())->unique('id')
+            ->sortByDesc('date');
         return view('pages.home', ['posts' => $posts]);
 
     }
