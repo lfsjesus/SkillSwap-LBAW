@@ -431,3 +431,74 @@ paths:
             description: 'If not logged in, redirect to home page'
           '404':
             description: 'Resource not found'
+   
+  /admin/user/create:
+      get:
+        operationId: 'R604'
+        summary: 'R604: Admin Create User Page'
+        description: 'Create user'
+        tags:
+          - 'M06: Administration'
+        responses:
+          '200': 
+            description: 'All right. Create user'
+          '302':
+            description: 'If not logged in, redirect to home page'
+          '404':
+            description: 'Resource not found'
+  
+  /admin/create:
+     post:
+      operationId: 'R605'
+      summary: 'R605: Admin Create User Action'
+      description: 'Create user'
+      tags:
+        - 'M06: Administration'
+      parameters:
+        - name: 'name'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'email'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'phone_number'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'birth_date'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'profile_picture'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'description'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'password'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+        - name: 'password_confirmation'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+      responses:
+        '200': 
+          description: 'All right. Create user'
+        '302':
+          description: 'If not logged in, redirect to home page'
+        '404':
+          description: 'Resource not found'
