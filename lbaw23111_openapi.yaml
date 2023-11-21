@@ -40,7 +40,7 @@ paths:
         '302':
           description: 'If user is not logged in and profile is private or if user is logged in and profile is private and they aren t friends, redirect to home page'
         '404':
-          description: 'User not found'
+          description: 'Resource not found'
     
   /user/{username}/edit:
     get:
@@ -61,7 +61,7 @@ paths:
         302:
           description: 'If user is not logged in and profile is private or if user is logged in and profile is private and they aren t friends, redirect to profile page'
         '404':
-          description: 'User not found'
+          description: 'Resource not found'
 
   /user/edit:
      put:
@@ -113,7 +113,7 @@ paths:
         '302':
           description: 'If not logged in, redirect to home page'
         '404':
-          description: 'User not found'
+          description: 'Resource not found'
 
   /posts/create:
      post:
@@ -159,7 +159,7 @@ paths:
         '302':
           description: 'If not logged in, redirect to home page'
         '404':
-          description: 'User not found'
+          description: 'Resource not found'
 
   /posts/edit:
       put:
@@ -205,7 +205,7 @@ paths:
           '302':
             description: 'If not logged in, redirect to home page'
           '404':
-            description: 'User not found'
+            description: 'Resource not found'
   
   /posts/delete:
       delete:
@@ -251,7 +251,7 @@ paths:
           '302':
             description: 'If not logged in, redirect to home page'
           '404':
-            description: 'User not found'
+            description: 'Resource not found'
 
   /posts:
       get:
@@ -294,7 +294,5 @@ paths:
         responses:
           '200': 
             description: 'All right. List Posts'
-          '302':
-            description: 'If not logged in, redirect to home page'
           '404':
-            description: 'User not found'
+            description: 'Resource not found'
