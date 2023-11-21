@@ -296,3 +296,45 @@ paths:
             description: 'All right. List Posts'
           '404':
             description: 'Resource not found'
+
+  /posts/{id}:
+    get:
+      operationId: 'R205'
+      summary: 'R205: View post'
+      description: 'View post'
+      tags:
+        - 'M02: Posts'
+      parameters:
+        - name: 'id'
+          in: 'path'
+          required: true
+          schema:
+            type: 'integer'
+      responses:
+        '200': 
+          description: 'All right. View Post'
+        '302':
+          description: 'If not logged in, redirect to home page'
+        '404':
+          description: 'Resource not found'
+  
+  /search:
+      get:
+        operationId: 'R501'
+        summary: 'R501: User Search User'
+        description: 'Search for users'
+        tags:
+          - 'M05: Search'
+        parameters:
+          - name: 'search-query'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+        responses:
+          '200': 
+            description: 'All right. Search for users'
+          '302':
+            description: 'If not logged in, redirect to home page'
+          '404':
+            description: 'Resource not found'
