@@ -25,7 +25,7 @@ paths:
     get:
       operationId: 'R101'
       summary: 'R101: User Profile'
-      description: 'Get user profile information'
+      description: 'Get user profile information. Access: ADM, USR, OWN, PUB'
       tags:
         - 'M01: Users'
       parameters:
@@ -46,7 +46,7 @@ paths:
     get:
       operationId: 'R102'
       summary: 'R102: User Edit Profile Page'
-      description: 'Get user edit profile page'
+      description: 'Get user edit profile page. Access: USR'
       tags:
         - 'M01: Users'
       parameters:
@@ -67,7 +67,7 @@ paths:
      put:
       operationId: 'R103'
       summary: 'R103: User Edit Profile Action'
-      description: 'Edit user profile information'
+      description: 'Edit user profile information. Access: USR'
       tags:
         - 'M01: Users'
       parameters:
@@ -119,7 +119,7 @@ paths:
      post:
       operationId: 'R201'
       summary: 'R201: Create post action'
-      description: 'Create post'
+      description: 'Create post. Access: USR'
       tags:
         - 'M02: Posts'
       parameters:
@@ -165,7 +165,7 @@ paths:
       put:
         operationId: 'R202'
         summary: 'R202: Edit post action'
-        description: 'Edit post'
+        description: 'Edit post. Access: OWN'
         tags:
           - 'M02: Posts'
         parameters:
@@ -211,7 +211,7 @@ paths:
       delete:
         operationId: 'R203'
         summary: 'R203: Delete post action'
-        description: 'Delete post'
+        description: 'Delete post. Access: OWN'
         tags:
           - 'M02: Posts'
         parameters:
@@ -257,7 +257,7 @@ paths:
       get:
         operationId: 'R204'
         summary: 'R204: List posts'
-        description: 'List posts'
+        description: 'List posts. Access: ADM, USR, OWN, PUB'
         tags:
           - 'M02: Posts'
         parameters:
@@ -301,7 +301,7 @@ paths:
     get:
       operationId: 'R205'
       summary: 'R205: View post'
-      description: 'View post'
+      description: 'View post. Access: ADM, USR, OWN, PUB'
       tags:
         - 'M02: Posts'
       parameters:
@@ -322,7 +322,7 @@ paths:
       get:
         operationId: 'R501'
         summary: 'R501: User Search User'
-        description: 'Search for users'
+        description: 'Search for users. Access: ADM, USR, OWN, PUB'
         tags:
           - 'M05: Search'
         parameters:
@@ -343,7 +343,7 @@ paths:
       get:
         operationId: 'R601'
         summary: 'R601: Admin See User'
-        description: 'See user'
+        description: 'See user. Access: ADM'
         tags:
           - 'M06: Administration'
         parameters:
@@ -364,7 +364,7 @@ paths:
       put:
         operationId: 'R602'
         summary: 'R602: Admin Edit User Page'
-        description: 'Edit user'
+        description: 'Edit user. Access: ADM'
         tags:
           - 'M06: Administration'
         parameters:
@@ -385,7 +385,7 @@ paths:
       put:
         operationId: 'R603'
         summary: 'R603: Admin Edit User Action'
-        description: 'Edit user'
+        description: 'Edit user. Access: ADM'
         tags:
           - 'M06: Administration'
         parameters:
@@ -436,7 +436,7 @@ paths:
       get:
         operationId: 'R604'
         summary: 'R604: Admin Create User Page'
-        description: 'Create user'
+        description: 'Create user. Access: ADM'
         tags:
           - 'M06: Administration'
         responses:
@@ -451,7 +451,7 @@ paths:
      post:
       operationId: 'R605'
       summary: 'R605: Admin Create User Action'
-      description: 'Create user'
+      description: 'Create user. Access: ADM'
       tags:
         - 'M06: Administration'
       parameters:
@@ -507,7 +507,7 @@ paths:
       get:
         operationId: 'R701'
         summary: 'R701: Login Form'
-        description: 'Login'
+        description: 'Login. Access: PUB'
         tags:
           - 'M07: Authentication'
         responses:
@@ -517,7 +517,7 @@ paths:
       post:
         operationId: 'R702'
         summary: 'R702: Login Action'
-        description: 'Login'
+        description: 'Login. Acess: PUB'
         tags:
           - 'M07: Authentication'
         parameters:
@@ -550,7 +550,7 @@ paths:
       get:
         operationId: 'R703'
         summary: 'R703: Logout Action'
-        description: 'Logout'
+        description: 'Logout. Access: USR, OWN'
         tags:
           - 'M07: Authentication'
         responses:
@@ -563,7 +563,7 @@ paths:
       get:
         operationId: 'R704'
         summary: 'R704: Register Form'
-        description: 'Register'
+        description: 'Register. Access: PUB'
         tags:
           - 'M07: Authentication'
         responses:
@@ -573,7 +573,7 @@ paths:
       post:
         operationId: 'R705'
         summary: 'R705: Register Action'
-        description: 'Register'
+        description: 'Register. Access: PUB'
         tags:
           - 'M07: Authentication'
         parameters:
