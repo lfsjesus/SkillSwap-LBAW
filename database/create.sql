@@ -1322,6 +1322,10 @@ insert into posts (user_id, group_id, date, description, public_post) values (18
 insert into posts (user_id, group_id, date, description, public_post) values (490, null, '2022-11-20', 'Nulla mollis molestie lorem. Quisque ut erat. Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem. Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat. Praesent blandit. Nam nulla.', true);
 insert into posts (user_id, group_id, date, description, public_post) values (68, null, '2022-10-24', 'In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.', false);
 insert into posts (user_id, group_id, date, description, public_post) values (482, null, '2022-12-15', 'Suspendisse accumsan tortor quis turpis.', true);
+insert into posts (user_id, group_id, date, description, public_post) values (1, null, '2023-11-15', 'Yorgo Post.', false);
+insert into posts (user_id, group_id, date, description, public_post) values (2, null, '2023-11-15', 'Testing friends post.', false);
+
+
 
 /*Is_friend*/
 
