@@ -12,13 +12,31 @@ use App\Models\User;
 class UserController extends Model 
 {
     public function show(string $username) {
+        if(!Auth::check()) {
+            if(User::where('username', $username)->firstOrFail()->public_profile == false) {
+                return redirect()->route('home')->with('error', 'You cannot view this profile');
+            }
+            $user = User::where('username', $username)->firstOrFail();
+            $posts = $user->posts()->get();
+            return view('pages.user', ['user' => $user, 'posts' => $posts]);
+        }
         $user = User::where('username', $username)->firstOrFail();
         $posts = $user->posts()->get();
         return view('pages.user', ['user' => $user, 'posts' => $posts]);
+
     }
 
 
-    public function showEditForm() {
+    public function showEditForm($username) {
+        
+        if(!Auth::check()) {
+            return redirect()->route('home')->with('error', 'You cannot edit this profile');
+        }
+
+        if(Auth::user()->username != $username) {
+            return redirect()->route('home')->with('error', 'You cannot edit this profile');
+        }
+
         $user = User::find(Auth::user()->id);
         return view('pages.editProfile', ['user' => $user]);
     }
