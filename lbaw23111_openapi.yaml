@@ -326,7 +326,7 @@ paths:
         tags:
           - 'M05: Search'
         parameters:
-          - name: 'search-query'
+          - name: 'q'
             in: 'path'
             required: true
             schema:
@@ -334,6 +334,99 @@ paths:
         responses:
           '200': 
             description: 'All right. Search for users'
+          '302':
+            description: 'If not logged in, redirect to home page'
+          '404':
+            description: 'Resource not found'
+
+  /admin/{username}:
+      get:
+        operationId: 'R601'
+        summary: 'R601: Admin See User'
+        description: 'See user'
+        tags:
+          - 'M06: Administration'
+        parameters:
+          - name: 'username'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+        responses:
+          '200': 
+            description: 'All right. See user'
+          '302':
+            description: 'If not logged in, redirect to home page'
+          '404':
+            description: 'Resource not found'
+
+  /admin/{username}/edit:
+      put:
+        operationId: 'R602'
+        summary: 'R602: Admin Edit User Page'
+        description: 'Edit user'
+        tags:
+          - 'M06: Administration'
+        parameters:
+          - name: 'username'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+        responses:
+          '200': 
+            description: 'All right. Edit user'
+          '302':
+            description: 'If not logged in, redirect to home page'
+          '404':
+            description: 'Resource not found'
+
+  /admin/edit:
+      put:
+        operationId: 'R603'
+        summary: 'R603: Admin Edit User Action'
+        description: 'Edit user'
+        tags:
+          - 'M06: Administration'
+        parameters:
+          - name: 'username'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'name'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'email'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'phone_number'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'birth_date'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'profile_picture'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+          - name: 'description'
+            in: 'path'
+            required: true
+            schema:
+              type: 'string'
+        responses:
+          '200': 
+            description: 'All right. Edit user'
           '302':
             description: 'If not logged in, redirect to home page'
           '404':
