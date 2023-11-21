@@ -139,6 +139,6 @@ class AdminController extends Controller
                         ->get();
         }
 
-        return view('pages.search-admin', compact('users'));
+        return view('pages.search-admin', ['users' => $users, 'query' => $query]);
     }
 }

@@ -312,7 +312,22 @@ aside .logo img {
 .post .post-actions .post-action {
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 10em;
+  padding: 0.5em;
+  border-radius: 10px;
   gap: 0.5em;
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+
+
+.post .post-actions .post-action:hover {
+  color: #fff;
+  font-weight: bold;
+  background-color: #8d73eb;
+
 }
 
 .post .post-actions .post-action p {

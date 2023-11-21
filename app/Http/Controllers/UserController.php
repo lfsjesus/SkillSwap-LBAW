@@ -75,20 +75,20 @@ class UserController extends Model
                     ->orWhere('email', '=', $query)
                     ->get();
 
-        return view('pages.exactMatchSearchResults', compact('users'));
+        return view('pages.exactMatchSearchResults', ['users' => $users, 'query' => $query]);
 
     }
 
     public function fullTextSearch(Request $request)
     {
-        $searchTerm = trim($request->input('q')); // Trim spaces from the beginning and end
+        $query = trim($request->input('q')); // Trim spaces from the beginning and end
 
         $users = User::query()
-            ->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$searchTerm])
-            ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$searchTerm])
+            ->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$query])
+            ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$query])
             ->get();
 
-        return view('pages.fullTextSearchResults', compact('users'));
+        return view('pages.fullTextSearchResults', ['users' => $users, 'query' => $query]);
     }
     
 
@@ -113,7 +113,7 @@ class UserController extends Model
                 $viewName = 'pages.search';
             }
 
-            return view($viewName, compact('users'));
+            return view($viewName, ['users' => $users, 'query' => $query]);
         } else {
             $query = trim($request->input('q'));
             $currentUser = Auth::user();
@@ -140,7 +140,7 @@ class UserController extends Model
             // Combine and remove duplicates
             $users = $publicUsers->merge($friends)->unique('id');
 
-            return view('pages.search', compact('users'));
+            return view('pages.search', ['users' => $users, 'query' => $query]);
         }
 
         
