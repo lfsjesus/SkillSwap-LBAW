@@ -58,7 +58,7 @@ paths:
       responses:
         '200': 
           description: 'All right. Show Edit Profile Page'
-        302:
+        '302':
           description: 'If user is not logged in and profile is private or if user is logged in and profile is private and they aren t friends, redirect to profile page'
         '404':
           description: 'Resource not found'
