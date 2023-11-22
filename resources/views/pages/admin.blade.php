@@ -13,12 +13,9 @@
     <div class="users">
         @each('partials.user-admin', $users, 'user')
     </div>
-
-
-    </div>
-
+    </div> 
 </section>
-
+    {{$users->links()}}
 
 @endsection
 

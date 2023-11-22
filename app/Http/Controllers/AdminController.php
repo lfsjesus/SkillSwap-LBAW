@@ -21,7 +21,7 @@ class AdminController extends Controller
         else{
             $username = Auth::guard('webadmin')->user()->username;
             $admin = Administrator::where('username', $username)->firstOrFail();
-            $users = DB::table('users')->get();
+            $users = DB::table('users')->simplePaginate(20);
             return view('pages.admin', ['admin' => $admin, 'users' => $users]);
         }
     }
