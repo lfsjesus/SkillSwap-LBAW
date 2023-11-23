@@ -15,7 +15,7 @@
     </div>
     </div> 
 </section>
-    {{$users->links()}}
+    {{$users->links()}} <!-- use Laravel's default pagination mode. -->
 
 @endsection
 

@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 
-
 class UserController extends Model 
 {
     public function show(string $username) {
@@ -64,7 +63,7 @@ class UserController extends Model
     }
 
 
-
+    /*
 
     public function exactMatchSearch(Request $request)
     {
@@ -90,7 +89,7 @@ class UserController extends Model
 
         return view('pages.fullTextSearchResults', ['users' => $users, 'query' => $query]);
     }
-    
+    */
 
     //Uses full text search for name and username and exact match search for email
     public function search(Request $request)
@@ -101,7 +100,7 @@ class UserController extends Model
             if (str_contains($query, '@')) {
                 // Use the local scope for public profiles
                 $users = User::publicProfile()
-                            ->where('email', '=', $query)
+                            ->orWhere('email', 'like', '%' . $request->input('q') . '%')
                             ->get();
                 $viewName = 'pages.search';
             } else {
@@ -121,8 +120,9 @@ class UserController extends Model
             // Fetch public users
             $publicUsers = User::where('public_profile', true)
                             ->where(function ($query) use ($request) {
-                                $query->where('username', '=', $request->input('q'))
-                                        ->orWhere('email', '=', $request->input('q'))
+                                $query->where('name', 'ILIKE', $request->input('q') . '%')
+                                        ->orWhere('username', 'ILIKE', $request->input('q') . '%')
+                                        ->orWhere('email', 'ILIKE', $request->input('q') . '%')
                                         ->orWhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
                                         ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')]);
 
@@ -131,8 +131,9 @@ class UserController extends Model
 
             // Fetch friends of the current user
             $friends = $currentUser->get_friends_helper()->where(function ($query) use ($request) {
-                                                            $query->where('username', '=', $request->input('q'))
-                                                                    ->orWhere('email', '=', $request->input('q'))
+                                                            $query->where('name', 'ILIKE', $request->input('q') . '%')
+                                                                    ->orWhere('username', 'ILIKE', '%' . $request->input('q') . '%')
+                                                                    ->orWhere('email', 'ILIKE', '%' . $request->input('q') . '%')
                                                                     ->orWhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
                                                                     ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')]);
                                                                 })

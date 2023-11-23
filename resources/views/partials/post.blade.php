@@ -9,7 +9,7 @@
 
             <div class="author-date">
                 <p> {{$post->author->name}} </p>
-                <p> {{$post->date->format('F j, Y, g:i a')}} </p>
+                <p> {{Carbon\Carbon::parse($post->date)->diffForHumans()}} </p>
             </div>
         </div>
         @if(Auth::user())
