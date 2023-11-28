@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AdminLoginController;
 
@@ -75,6 +76,17 @@ Route::controller(AdminController::class)->group(function () {
     Route::get('/admin/user/create', 'showCreateUserForm')->name('create-user-form-admin');
     Route::post('/admin/create', 'create_user')->name('create_user_admin');
     Route::put('/admin/edit', 'edit_user')->name('edit_profile_admin');
+});
+
+Route::controller(GroupController::class)->group(function () {
+    Route::get('/group/{id}', 'show')->name('group');
+    /*
+    Route::get('/groups/{id}', 'show')->name('group');
+    Route::get('/groups/{id}/edit', 'showEditForm')->name('edit_group');
+    Route::put('/groups/edit', 'edit')->name('edit_group');
+    Route::post('/groups/create', 'create')->name('create_group');
+    Route::delete('/groups/delete', 'delete')->name('delete_group');
+    */
 });
 
 

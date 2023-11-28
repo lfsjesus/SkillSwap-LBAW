@@ -1,10 +1,13 @@
 <div class="create-post">
     <div class="post-header">
+        
+        <a href="{{ route('user', ['username' => Auth::user()->username]) }}">
         @if(Auth::user()->profile_picture)
         <img src="{{stream_get_contents(Auth::user()->profile_picture)}}"/>
         @else
         <img src="{{ url('assets/profile-picture.png') }}"/>
         @endif
+        </a>
 
         <div class="post-text">
             <form method="POST" action="{{ route('create_post') }}" enctype="multipart/form-data">
