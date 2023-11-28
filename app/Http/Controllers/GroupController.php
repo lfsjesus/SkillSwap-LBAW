@@ -16,7 +16,7 @@ class GroupController extends Model
         $posts = $group->posts()->get();
         */
         $group = Group::find($id);
-        return view('pages.group', ['group' => $id]);
+        return view('pages.group', ['group' => $group]);
     }
 
 

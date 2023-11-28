@@ -49,11 +49,11 @@
             <!-- Groups Box -->
             <div class="groups-box">
                 <h2>Groups</h2>
-                @foreach ($user->get_groups() as $group)
+                @foreach ($groups as $group)
                 <div class="user-card">
                     <a href="{{ route('group', ['id' => $group->id]) }}">
-                        @if($group->profile_picture)
-                        <img src="{{stream_get_contents($user->profile_picture)}}"/>
+                        @if($group->banner)
+                        <img src="{{stream_get_contents($group->banner)}}"/>
                         @else
                         <img src="{{ url('assets/group.png') }}"/>
                         @endif
