@@ -79,7 +79,7 @@ Route::controller(AdminController::class)->group(function () {
 });
 
 Route::controller(GroupController::class)->group(function () {
-    Route::get('/groups/{id}', 'show')->name('group');
+    Route::get('/group/{id}', 'show')->name('group');
     /*
     Route::get('/groups/{id}', 'show')->name('group');
     Route::get('/groups/{id}/edit', 'showEditForm')->name('edit_group');
