@@ -69,7 +69,7 @@ class AdminController extends Controller
         // perform validation
         $request->validate([
             'name' => 'required|string|max:50',
-            'email' => 'required|email|max:50|unique:users,email,' . Auth::user()->id,
+            'email' => 'required|email|max:50|unique:users,email,' . $id,
             'phone_number' => [
                 'nullable',
                 'regex:/^\+?\d+$/',
@@ -77,7 +77,7 @@ class AdminController extends Controller
             ],
             'description' => 'nullable|string|max:500',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
-            'username' => 'required|string|max:50|unique:users,username,' . Auth::user()->id,
+            'username' => 'required|string|max:50|unique:users,username,' . $id,
             'birth_date' => 'nullable|date|before:18 years ago'
         ]);
         
@@ -93,7 +93,6 @@ class AdminController extends Controller
         $user->description = $request->input('description');
 
 
-
         $user->save();
 
         return redirect()->route('view-user-admin', ['username' => $user->username])->withSuccess('Profile updated successfully!');
@@ -104,6 +103,20 @@ class AdminController extends Controller
             return redirect('/admin/login');
         }
 
+        $request->validate([
+            'name' => 'required|string|max:50',
+            'email' => 'required|email|max:50|unique:users,email',
+            'phone_number' => [
+                'nullable',
+                'regex:/^\+?\d+$/',
+                'digits_between:8,15'
+            ],
+            'description' => 'nullable|string|max:500',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'username' => 'required|string|max:50|unique:users,username',
+            'birth_date' => 'nullable|date|before:18 years ago'
+        ]);
+
         try {
         $user = new User();
 
@@ -112,26 +125,19 @@ class AdminController extends Controller
         $user->email = ($request->input('email') != null) ? $request->input('email') : $user->email;
         $user->phone_number = ($request->input('phone_number') != null) ? $request->input('phone_number') : $user->phone_number;
 
-        // parse date
         $user->birth_date = ($request->input('birth_date') != null) ?  date('Y-m-d', strtotime($request->input('birth_date'))) : $user->birth_date;
         $user->profile_picture = ($request->file('profile_picture') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('profile_picture'))) : $user->profile_picture;
         
 
         $password = $request->input('password');
-        $repassword = $request->input('password_confirmation');
-
-        if ($password != $repassword) {
-            return redirect()->route('create-user-form-admin')->with('error', 'Passwords do not match');
-        }
-
         $user->password = bcrypt($password);
 
         $user->description = $request->input('description');
 
         $user->save();
-        return redirect()->route('view-user-admin', ['username' => $user->username])->with('success', 'Profile edited successfully');
+        return redirect()->route('view-user-admin', ['username' => $user->username])->withSuccess('User created successfully!');
         } catch (\Exception $e) {
-            return redirect()->route('create-user-form-admin')->with('error', 'Error creating user');
+            return redirect()->route('create-user-form-admin')->withError('Unexpected error occurred while creating user!');
         }
     }
 
