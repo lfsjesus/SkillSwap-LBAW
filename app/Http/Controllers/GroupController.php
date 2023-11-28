@@ -6,38 +6,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
+use App\Models\Group;
 
 class GroupController extends Model 
 {
-    public function show(string $username) {
-        if(!Auth::check()) {
-            if(User::where('username', $username)->firstOrFail()->public_profile == false) {
-                return redirect()->route('home')->with('error', 'You cannot view this profile');
-            }
-            $user = User::where('username', $username)->firstOrFail();
-            $posts = $user->posts()->get();
-            return view('pages.user', ['user' => $user, 'posts' => $posts]);
-        }
-        $user = User::where('username', $username)->firstOrFail();
-        $posts = $user->posts()->get();
-        return view('pages.user', ['user' => $user, 'posts' => $posts]);
-
+    public function show(string $id) {
+        /*
+        $group = Group::find($id);
+        $posts = $group->posts()->get();
+        */
+        return view('pages.group', ['group' => $id, 'posts' => $posts]);
     }
 
 
     public function showEditForm($username) {
-        
-        if(!Auth::check()) {
-            return redirect()->route('home')->with('error', 'You cannot edit this profile');
-        }
-
-        if(Auth::user()->username != $username) {
-            return redirect()->route('home')->with('error', 'You cannot edit this profile');
-        }
-
-        $user = User::find(Auth::user()->id);
-        return view('pages.editProfile', ['user' => $user]);
+        //Check if user is group owner
+        return view('pages.editGroup', ['group' => $group]);
     }
 
     public function edit(Request $request) {
