@@ -17,11 +17,13 @@ class UserController extends Model
             }
             $user = User::where('username', $username)->firstOrFail();
             $posts = $user->posts()->get();
-            return view('pages.user', ['user' => $user, 'posts' => $posts]);
+            $groups = $user->get_groups();
+            return view('pages.user', ['user' => $user, 'posts' => $posts, 'groups' => $groups]);
         }
         $user = User::where('username', $username)->firstOrFail();
         $posts = $user->posts()->get();
-        return view('pages.user', ['user' => $user, 'posts' => $posts]);
+        $groups = $user->get_groups();
+        return view('pages.user', ['user' => $user, 'posts' => $posts, 'groups' => $groups]);
 
     }
 
