@@ -51,7 +51,7 @@
                 <h2>Groups</h2>
                 @foreach ($user->get_groups() as $group)
                 <div class="user-card">
-                    <a href="{{ route('groups') }}">
+                    <a href="{{ route('groups', ['id' => group()->id]) }}">
                         @if($group->profile_picture)
                         <img src="{{stream_get_contents($user->profile_picture)}}"/>
                         @else

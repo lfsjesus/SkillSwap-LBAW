@@ -10,12 +10,13 @@ use App\Models\Group;
 
 class GroupController extends Model 
 {
-    public function show(string $id) {
+    public function show(int $id) {
         /*
         $group = Group::find($id);
         $posts = $group->posts()->get();
         */
-        return view('pages.group', ['group' => $id, 'posts' => $posts]);
+        $group = Group::find($id);
+        return view('pages.group', ['group' => $id]);
     }
 
 

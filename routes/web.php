@@ -79,12 +79,14 @@ Route::controller(AdminController::class)->group(function () {
 });
 
 Route::controller(GroupController::class)->group(function () {
-    Route::get('/groups', 'list')->name('groups');
+    Route::get('/groups/{id}', 'show')->name('group');
+    /*
     Route::get('/groups/{id}', 'show')->name('group');
     Route::get('/groups/{id}/edit', 'showEditForm')->name('edit_group');
     Route::put('/groups/edit', 'edit')->name('edit_group');
     Route::post('/groups/create', 'create')->name('create_group');
     Route::delete('/groups/delete', 'delete')->name('delete_group');
+    */
 });
 
 
