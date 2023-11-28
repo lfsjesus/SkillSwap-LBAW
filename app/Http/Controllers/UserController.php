@@ -50,6 +50,22 @@ class UserController extends Model
             return redirect()->back()->with('error', 'You cannot edit this user');
         }
 
+        
+        $request->validate([
+            'name' => 'required|string|max:50',
+            'email' => 'required|email|max:50|unique:users,email,' . Auth::user()->id,
+            'phone_number' => [
+                'nullable',
+                'regex:/^\+?\d+$/',
+                'digits_between:8,15'
+            ],
+            'description' => 'nullable|string|max:500',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'username' => 'required|string|max:50|unique:users,username,' . Auth::user()->id,
+            'birth_date' => 'nullable|date|before:18 years ago'
+        ]);
+        
+
         $user->name = ($request->input('name') != null) ? $request->input('name') : $user->name;
         $user->username = ($request->input('username') != null) ? $request->input('username') : $user->username;
         $user->email = ($request->input('email') != null) ? $request->input('email') : $user->email;
@@ -61,7 +77,7 @@ class UserController extends Model
 
 
         $user->save();
-        return redirect()->route('user', ['username' => $user->username])->with('success', 'Profile edited successfully');
+        return redirect()->route('user', ['username' => $user->username])->withSuccess('Profile updated successfully!');
     }
 
 

@@ -7,6 +7,11 @@
 <!-- Profile Section -->
 <section id="profile" class="profile-section">
     <!-- Profile Header with Background Image -->
+    @if (session('success'))
+    <p class="success">
+        {{ session('success') }}
+    </p>
+    @endif
     <div class="profile-header">       
         <div class="header-background">
             <img src="{{url('assets/blob-background.jpg')}}" alt="Background Picture">

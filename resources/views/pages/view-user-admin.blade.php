@@ -8,6 +8,11 @@
  
 <!-- Profile Section -->
 <section id="profile" class="profile-section">
+    @if (session('success'))
+    <p class="success">
+        {{ session('success') }}
+    </p>
+    @endif
     <!-- Profile Header with Background Image -->
     <div class="profile-header">       
         <div class="header-background">
