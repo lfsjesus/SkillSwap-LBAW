@@ -66,7 +66,7 @@
             <!-- Birthdate -->
             <div id="form-group">
                 <label for="birthdate">Birthdate</label>
-                <input type="text" name="birth_date" id="birthdate" class="form-control" value="{{ $user->birth_date->format('d/m/Y') }}">
+                <input type="date" name="birth_date" id="birthdate" class="form-control" value="{{ $user->birth_date->format('d/m/Y') }}">
                 @if ($errors->has('birth_date'))
                 <span class="error">
                     {{ $errors->first('birth_date') }}
