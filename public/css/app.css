@@ -729,3 +729,18 @@ form #form-group textarea {
   padding: 1em 0;
   overflow:auto;
 }
+
+.flex{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+}
+
+.flex > .username{
+  font-size: 1.4rem;
+  color: wheat;
+  font-weight: bold;
+  font-family: 'Montserrat', sans-serif;
+}
