@@ -1,3 +1,9 @@
+@if (session('error'))
+<p class="error">
+    {{ session('error') }}
+</p>
+@endif
+
 <div class="create-post">
     <div class="post-header">
         
@@ -12,7 +18,7 @@
         <div class="post-text">
             <form method="POST" action="{{ route('create_post') }}" enctype="multipart/form-data">
                 {{ csrf_field() }}
-                <textarea name="description" placeholder="What project are you thinking about?" cols="25"></textarea>
+                <textarea name="description" placeholder="What project are you thinking about?" cols="25" value="{{ old('description') }}"></textarea>
                 <input type="file" name="files[]" multiple="multiple" style="display: none;"/>
                 <button type="submit">
                     Post
@@ -25,5 +31,17 @@
             </span>
         </div>
     </div>
+
     <div class="files-list-preview"></div>
+    @if ($errors->has('description'))
+    <span class="error">
+        {{ $errors->first('description') }}
+    </span>
+    @endif
+    
+    @if ($errors->has('files'))
+    <span class="error">
+        {{ $errors->first('files') }}
+    </span>
+    @endif
 </div>
