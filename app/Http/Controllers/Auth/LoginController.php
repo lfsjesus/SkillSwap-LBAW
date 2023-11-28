@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Artisan;
 
 use Illuminate\View\View;
 
@@ -20,6 +21,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
+        Artisan::call('storage:link');
         if (Auth::check()) {
             return redirect('/home');
         } else {

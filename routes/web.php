@@ -27,11 +27,6 @@ use App\Http\Controllers\Auth\AdminLoginController;
 Route::redirect('/', '/login');
 Route::redirect('/admin', '/admin/login');
 
-// Route to run on first time setup
-Route::get('/linkstorage', function () {
-    Artisan::call('storage:link');
-});
-
 Route::get('/home', [PostController::class, 'list'])->name('home');
 
 // Admin

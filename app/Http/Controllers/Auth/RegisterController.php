@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Artisan;
 
 use Illuminate\View\View;
 
@@ -19,6 +20,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
+        Artisan::call('storage:link');
         if (Auth::check()) {
             return redirect('/home');
         }
