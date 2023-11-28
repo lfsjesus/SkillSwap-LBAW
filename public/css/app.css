@@ -186,7 +186,7 @@ aside .logo img {
   width: 100%;
   color:white;
 }
-#content form .error {
+#content .error {
   font-weight: bold;
   color: #ff3333;
 }

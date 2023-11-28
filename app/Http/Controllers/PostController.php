@@ -27,30 +27,30 @@ class PostController extends Controller
     }
 
     public function create(Request $request) {
-        $content = $request->input('description');
+        $request->validate([
+            'description' => 'required',
+            'files.*' => 'nullable|mimes:jpg,jpeg,png,gif,doc,docx,pdf,txt|max:10240'
+        ]);
 
-        if (!isset($content)) {
-            return redirect()->back()->with('error', 'The post cannot be empty');
-        }
 
         try {
             DB::beginTransaction();
             $post = new Post();
             $post->user_id = Auth::user()->id;
             $post->group_id = $request->input('group_id', null);
-            $post->description = nl2br($content);
+            $post->description = nl2br($request->input('description'));
             $post->date = date('Y-m-d H:i:s');
             $post->public_post = $request->input('public_post', true);
+            
             $post->save();
 
             FileController::uploadFiles($request, $post->id);
 
             DB::commit();
-
-            return redirect()->back()->with('success', 'Post created successfully');
+            return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Error in creating post');
+            return redirect()->back()->withError('Unexpected error while creating post. Try again!');
         }
     }
 
