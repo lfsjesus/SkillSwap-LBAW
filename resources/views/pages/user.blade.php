@@ -25,19 +25,50 @@
             <img src="{{ url('assets/profile-picture.png') }}"/>
             @endif
         </div>
-        <!-- Profile Info -->
-        <div class="profile-info">
-            <h1 class="user-name">{{ $user->name }}</h1>
-            <p class="user-title">{{ $user->email }}</p>
+    
+        <div class="profile-information">
+            <!-- Profile Info -->
+            <div class="profile-info">
+                <div class="user-flex">
+                    <h1 class="user-name">{{ $user->name }}</h1>
+                    <span class="username"> &#64{{$user->username}} </span>
+                    
+                </div>
+                <p class="user-email">
+                    <span class="material-symbols-outlined">
+                    mail
+                    </span>
+                    {{ $user->email }}
+                </p>
+
+        
+            </div>
+            
             @if(Auth::user())
                 @if(Auth::user()->username == $user->username)
                 <a href="{{ route('edit_profile', ['username' => Auth::user()->username]) }}" class="button">
                     Edit Profile
                 </a>
                 @endif
+
+                @if(Auth::user()->username != $user->username)
+                    <!-- Add Friend Button -->
+                    @if(Auth::user()->is_friend($user))
+                    <a href="" class="button">
+                        <span class="material-symbols-outlined">
+                            person_remove
+                        </span>
+                        Remove Friend
+                    </a>
+                   
+                    @endif
+                @endif    
+
             @endif
         </div>
-
+        <p class="user-description">
+            {{ $user->description }}
+        </p>
         <!-- Edit Button -->
         
 
@@ -56,7 +87,8 @@
                 <h2>Groups</h2>
                 @foreach ($groups as $group)
                 <div class="user-card">
-                    <a href="{{ route('group', ['id' => $group->id]) }}">
+                    <!-- <a href="{'{ route('group', ['id' => $group->id]) }'}"> -->
+                    <a href="">
                         @if($group->banner)
                         <img src="{{stream_get_contents($group->banner)}}"/>
                         @else
