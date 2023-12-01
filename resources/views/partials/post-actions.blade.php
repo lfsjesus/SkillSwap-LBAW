@@ -13,3 +13,5 @@
         <p> Comment </p>
     </div>
 </div>
+@include('partials.comment-box')
+

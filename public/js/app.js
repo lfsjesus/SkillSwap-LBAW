@@ -369,7 +369,7 @@ function likePostHandler() {
 }
 
 let likeButtons = document.querySelectorAll('article.post .post-actions .post-action:first-child');
-console.log(likeButtons);
+
 if (likeButtons != null) {
   likeButtons.forEach(function(button) {
     button.addEventListener('click', function(e) {
@@ -377,6 +377,29 @@ if (likeButtons != null) {
       console.log(id);
       let data = {post_id: id};
       sendAjaxRequest('POST', '/posts/like', data, likePostHandler);
+      }
+    );
+  }
+  );
+}
+
+
+// show comment box when user clicks on comment button
+
+let commentButtons = document.querySelectorAll('article.post .post-actions .post-action:nth-child(2)');
+
+if (commentButtons != null) {
+  commentButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      let id = e.target.closest('article.post').getAttribute('data-id');
+      let commentBox = document.querySelector('.post[data-id="' + id + '"] .comment-box');
+    
+      if (commentBox.style.display == 'none') {
+        commentBox.style.display = 'flex';
+      }
+      else {
+        commentBox.style.display = 'none';
+      }
       }
     );
   }

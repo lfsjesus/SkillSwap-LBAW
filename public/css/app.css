@@ -190,7 +190,6 @@ aside .logo img {
 
 #content form {
   margin: 0 auto;
-  max-width: 30em;
   width: 100%;
   color:white;
 }
@@ -796,3 +795,50 @@ form #form-group textarea {
   font-weight: bold;
   font-family: 'Montserrat', sans-serif;
 }
+
+.comment-box {
+  padding: 1em 0;
+}
+
+.comment-box-header {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+}
+
+.comment-box-header .comment-box-header-left {
+  display: flex;
+  flex-direction: row;
+  gap: 1em
+}
+
+.comment-box-header .comment-box-header-right {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+
+}
+
+.comment-box-header .comment-box-header-right textarea {
+  width: 100%;
+  margin: 0;
+  padding: 1.5em 1em;
+  border-radius: 10px;
+  background-color: rgba(36, 37, 38, 0.6);
+  border: 1px solid rgba(36, 37, 38, 0.6);
+  color: white;
+  resize: vertical;
+}
+
+.comment-box-header .comment-box-header-left img {
+  width: 2em;
+  height: 2em;
+  object-fit: cover;
+  border-radius: 50%;
+  image-rendering: pixelated;
+}
+
