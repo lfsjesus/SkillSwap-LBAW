@@ -39,15 +39,29 @@ class Post extends Model
     }
 
     public function comments() {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class)->get();
+    }
+
+    public function getCommentsCount() {
+        return $this->comments()->count();
     }
 
     public function likes() {
-        return count($this->hasMany(Like::class)->get());
+        return $this->hasMany(Like::class)->get();
+    }
+
+    public function getLikesCount() {
+        return $this->likes()->count();
+    }
+
+    public function isLikedBy($user_id) {
+        return $this->likes()->where('user_id', $user_id)->count() > 0;
     }
 
     public function files() {
         return $this->hasMany(File::class)->get();
     }
+
+
 
 }

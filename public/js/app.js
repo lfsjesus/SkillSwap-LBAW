@@ -340,3 +340,45 @@ function inputFilesHandler(preview, finalFiles) {
   });
 
 }
+
+
+
+// LIKE POST
+function likePostHandler() {
+  // set class active to .post-actions .post-action:first-child
+  let item = JSON.parse(this.responseText);
+  if (item == null) return;
+
+  let element = document.querySelector('.post[data-id="' + item.post_id + '"]');
+  let button = element.querySelector('.post-actions .post-action:first-child');
+
+  // To update like count
+  let likeStat = element.querySelector('.post-stats .post-stat:first-child p');
+  let likeCount = parseInt(likeStat.innerHTML);
+  
+  if (item.liked) {
+    button.classList.add('active');
+    likeCount++;
+  }
+  else {
+    button.classList.remove('active');
+    likeCount--;
+  }
+  
+  likeStat.innerHTML = likeCount;    
+}
+
+let likeButtons = document.querySelectorAll('article.post .post-actions .post-action:first-child');
+console.log(likeButtons);
+if (likeButtons != null) {
+  likeButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      let id = e.target.closest('article.post').getAttribute('data-id');
+      console.log(id);
+      let data = {post_id: id};
+      sendAjaxRequest('POST', '/posts/like', data, likePostHandler);
+      }
+    );
+  }
+  );
+}

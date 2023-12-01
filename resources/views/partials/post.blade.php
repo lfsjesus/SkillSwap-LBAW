@@ -43,5 +43,18 @@
         @endif
 
     </div>
+    <div class="post-stats">
+        <div class="post-stat">
+            <span class="material-symbols-outlined">
+                thumb_up
+            </span>
+            <p> {{$post->getLikesCount()}} </p>
+        </div>
+        <div class="post-stat">
+            @if($post->getCommentsCount() > 0)
+            <p> {{$post->getCommentsCount()}} comments </p>
+            @endif
+        </div>
+    </div>
     @include('partials.post-actions')
 </article>
