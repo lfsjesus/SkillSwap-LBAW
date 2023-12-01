@@ -360,7 +360,7 @@ aside .logo img {
   justify-content: space-between;
   gap: 1em;
   align-items: center;
-  padding: 1em 1em;
+  padding: 0 1em 1em 1em;
   font-size: 0.8em;
   font-weight: 500;
 }
