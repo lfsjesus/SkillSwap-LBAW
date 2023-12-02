@@ -57,4 +57,14 @@
         </div>
     </div>
     @include('partials.post-actions')
+
+    <div class="post-comments">
+        @if($post->getCommentsCount() > 0)
+            @foreach($post->comments as $comment)
+                @include('partials.comment')
+            @endforeach
+        @endif
+    </div>
+
 </article>
+

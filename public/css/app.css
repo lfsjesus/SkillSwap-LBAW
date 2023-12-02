@@ -800,6 +800,14 @@ form #form-group textarea {
   padding: 1em 0;
 }
 
+#content .comment-box input[type="submit"] {
+  background-color: #8d73eb;
+  border: none;
+  margin: 0;
+  padding: 0 0.5em;
+  font-size: 1.3em;
+}
+
 .comment-box-header {
   display: flex;
   width: 100%;
@@ -842,3 +850,72 @@ form #form-group textarea {
   image-rendering: pixelated;
 }
 
+.comment {
+  display: flex;
+  font-size: 0.8em;
+  margin: 0.6em 0;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1em;
+}
+
+.comment p {
+  margin: 0;
+}
+
+.comment img {
+  width: 2em;
+  height: 2em;
+  object-fit: cover;
+  border-radius: 50%;
+  image-rendering: pixelated;
+}
+
+.comment-main {
+  background-color: #232a37;
+  border-radius: 10px;
+  padding: 1em;
+}
+
+.comment-body a{
+  display: flex;
+  color: pink;
+  font-weight: 500;
+  flex-direction: row;
+  gap: 0.5em;
+}
+
+.comment-body .comment-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.comment-actions {
+  display: flex;
+  color: #d1d1e1;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+  padding-left: 1em;
+  font-size: 0.7em;
+  font-weight: 500;
+}
+
+.comment-actions p:nth-child(2) {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.comment-actions p:nth-child(3) {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.comment-actions p:nth-child(2):hover {
+  text-decoration: underline;
+}
+
+.comment-actions p:nth-child(3):hover {
+  text-decoration: underline;
+}

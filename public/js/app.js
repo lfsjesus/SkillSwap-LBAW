@@ -405,3 +405,26 @@ if (commentButtons != null) {
   }
   );
 }
+
+
+function commentPostHandler() {
+}
+
+
+// comment on post
+let commentForms = document.querySelectorAll('article.post form.comment-box');
+
+if (commentForms != null) {
+  commentForms.forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      let post_id = e.target.querySelector('input[name="post_id"]').value;
+      let user_id = e.target.querySelector('input[name="user_id"]').value;
+      let content = e.target.querySelector('textarea[name="content"]').value;
+      let data = {post_id: post_id, user_id: user_id, content: content};
+      sendAjaxRequest('POST', '/posts/comment', data, commentPostHandler);
+      }
+    );
+  }
+  );
+}
