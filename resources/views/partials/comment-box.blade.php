@@ -1,11 +1,14 @@
-<form class="comment-box" style="display: none;">
+<form class="comment-box" style="">
     <input type="hidden" name="post_id" value="{{ $post->id }}"/>
     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}"/>
     <div class="comment-box-header">
         <div class="comment-box-header-left">
             <a href="{{ route('user', ['username' => Auth::user()->username]) }}">
                 @if(Auth::user()->profile_picture)
-                <img src="{{stream_get_contents(Auth::user()->profile_picture)}}"/>
+                <img src="{{ stream_get_contents(Auth::user()->profile_picture) }}"/>
+                @php 
+                rewind(Auth::user()->profile_picture); 
+                @endphp
                 @else
                 <img src="{{ url('assets/profile-picture.png') }}"/>
                 @endif
