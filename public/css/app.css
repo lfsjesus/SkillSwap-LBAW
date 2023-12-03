@@ -1006,7 +1006,7 @@ form #form-group textarea {
     flex-direction: column;
     gap: 1em;
     align-items: center;
-    /*overflow-y: scroll;*/
-    /*hide scroll bar*/
+    overflow-y: scroll;
+    overflow-y: hidden; /* Hide vertical scrollbar */
     -ms-overflow-style: none;  /* IE and Edge */
 }
