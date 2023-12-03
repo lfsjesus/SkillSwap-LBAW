@@ -13,7 +13,7 @@
         </div>
 
         <!-- Profile Info -->
-        <div class="profile-info">
+        <div class="group-info">
             <h1 class="group-name">{{ $group->name }}</h1>
             <p class="group-description">{{ $group->description }}</p>
         </div>
@@ -29,8 +29,6 @@
         
 
     </div>
-    <!-- Profile Content Grid -->
-    <div class="profile-content">
 
        
     </div>

@@ -522,7 +522,7 @@ aside .logo img {
   bottom: 0;
 }
 
-.profile-info {  
+.profile-info, .group-info {  
   padding-left: 2em; 
   margin-top: 5em;
   display: flex;
