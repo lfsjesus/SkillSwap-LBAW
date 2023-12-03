@@ -87,8 +87,7 @@
                 <h2>Groups</h2>
                 @foreach ($groups as $group)
                 <div class="user-card">
-                    <!-- <a href="{'{ route('group', ['id' => $group->id]) }'}"> -->
-                    <a href="">
+                    <a href="{{ route('group', ['id' => $group->id]) }}">
                         @if($group->banner)
                         <img src="{{stream_get_contents($group->banner)}}"/>
                         @else
