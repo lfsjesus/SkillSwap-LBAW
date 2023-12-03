@@ -42,6 +42,10 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function directComments() {
+        return $this->comments()->whereNull('comment_id');
+    }
+
     public function getCommentsCount() {
         return $this->comments()->count();
     }

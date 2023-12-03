@@ -31,6 +31,13 @@
                 <p> Reply </p>
             </div>
             </div>
+            @if($comment->isParent() && $comment->getRepliesCount() > 0)
+            <div class="comment-replies">
+                @foreach($comment->descendants() as $reply)
+                    @include('partials.comment', ['comment' => $reply])
+                @endforeach
+            </div>
+            @endif
             @include('partials.comment-box') 
         </div>   
 </div>

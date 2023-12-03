@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 use function PHPSTORM_META\map;
 
@@ -36,4 +37,32 @@ class Comment extends Model
     public function isLikedBy($user_id) {
         return $this->likes()->where('user_id', $user_id)->count() > 0;
     }
+
+    public function replies() {
+        return $this->hasMany(Comment::class, 'comment_id');
+    }
+
+    public function getRepliesCount() {
+        return $this->replies()->count();
+    }
+
+    public function isParent() {
+        return $this->comment_id == null;
+    }
+
+    // get all comments that are descendants of this comment (not only direct replies)
+    public function descendants() {
+        $descendants = collect();
+        $replies = $this->replies;
+
+        foreach ($replies as $reply) {
+            $descendants->push($reply);
+            $descendants = $descendants->merge($reply->descendants());   
+        }
+    
+        return $descendants;
+    }
+    
+    
+    
 }
