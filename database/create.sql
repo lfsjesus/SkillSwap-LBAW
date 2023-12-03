@@ -1296,6 +1296,7 @@ insert into is_member (user_id, group_id, date) values (601, 1, CURRENT_TIMESTAM
 insert into is_member (user_id, group_id, date) values (601, 2, CURRENT_TIMESTAMP);
 
 /*Posts*/
+
 INSERT INTO posts (user_id, group_id, date, description, public_post) VALUES (23, NULL, CURRENT_TIMESTAMP, 'Post by user 23.', true);
 INSERT INTO posts (user_id, group_id, date, description, public_post) VALUES (142, NULL, CURRENT_TIMESTAMP, 'Post by user 142.', true);
 INSERT INTO posts (user_id, group_id, date, description, public_post) VALUES (402, NULL, CURRENT_TIMESTAMP, 'Post by user 402.', true);
