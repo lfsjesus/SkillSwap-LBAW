@@ -754,6 +754,7 @@ form #form-group textarea {
 }
 
 .profile-information{
+  padding: 1rem 0;
   display: flex;
   flex-direction: row;
   align-items: baseline;
