@@ -37,7 +37,7 @@
     <section id="posts">
         <h2>Posts</h2>
         @if(Auth::user())
-        @include('partials.create-post')
+        @include('partials.create-group-post', ['group' => $group])
         @endif    
         @each('partials.post', $group->posts, 'post')
     </section>
