@@ -452,15 +452,35 @@ if (commentButtons != null) {
 }
 
 
+let replyButtons = document.querySelectorAll('article.post .comment .comment-actions p:nth-child(3)');
+if (replyButtons != null) {
+  replyButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      let id = e.target.closest('.comment').getAttribute('data-id');
+      let commentBox = document.querySelector('.comment[data-id="' + id + '"] .comment-box');
+    
+      if (commentBox.style.display == 'none') {
+        commentBox.style.display = 'flex';
+      }
+      else {
+        commentBox.style.display = 'none';
+      }
+      }
+    );
+  }
+  );
+}
+
+
 function commentPostHandler() {
 }
 
 
 // comment on post
-let commentForms = document.querySelectorAll('article.post form.comment-box');
+let postCommentForms = document.querySelectorAll('article.post > form.comment-box');
 
-if (commentForms != null) {
-  commentForms.forEach(function(form) {
+if (postCommentForms != null) {
+  postCommentForms.forEach(function(form) {
     form.addEventListener('submit', function(e) {
       e.preventDefault();
       let post_id = e.target.querySelector('input[name="post_id"]').value;
@@ -475,3 +495,21 @@ if (commentForms != null) {
 }
 
 
+// comment on comment
+let replyCommentForms = document.querySelectorAll('article.post .comment .comment-box');
+
+if (replyCommentForms != null) {
+  replyCommentForms.forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      let post_id = e.target.closest('.post').querySelector('input[name="post_id"]').value;
+      let comment_id = e.target.closest('.comment').getAttribute('data-id');
+      let user_id = e.target.closest('.post').querySelector('input[name="user_id"]').value;
+      let content = e.target.querySelector('textarea[name="content"]').value;
+      let data = {post_id: post_id, comment_id: comment_id, user_id: user_id, content: content};
+      sendAjaxRequest('POST', '/posts/comment', data, null);
+      }
+    );
+  }
+  );
+}

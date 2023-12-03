@@ -60,7 +60,7 @@
 
     <div class="post-comments">
         @if($post->getCommentsCount() > 0)
-            @foreach($post->comments as $comment)
+            @foreach($post->directComments as $comment)
                 @include('partials.comment')
             @endforeach
         @endif

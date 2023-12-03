@@ -898,7 +898,7 @@ form #form-group textarea {
 
 .comment {
   display: flex;
-  font-size: 0.8em;
+  font-size: 1.3rem;
   margin: 0.6em 0;
   flex-direction: row;
   align-items: flex-start;
@@ -917,13 +917,18 @@ form #form-group textarea {
   image-rendering: pixelated;
 }
 
-.comment-main {
+.inner-comment {
+  width: fit-content;
   background-color: #232a37;
   border-radius: 10px;
   display: flex;
   align-items: center;
   gap: 1em;
   padding: 1em;
+}
+
+.comment-body {
+  width: 100%;
 }
 
 .comment-body a{
