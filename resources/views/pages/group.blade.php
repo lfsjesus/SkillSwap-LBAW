@@ -35,10 +35,10 @@
 
     <!-- Posts Section -->
     <section id="posts">
+        <h2>Posts</h2>
         @if(Auth::user())
         @include('partials.create-post')
         @endif    
-        <h2>Posts</h2>
         @each('partials.post', $group->posts, 'post')
     </section>
 </section>
