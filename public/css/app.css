@@ -553,7 +553,7 @@ aside .logo img {
   overflow-x: hidden;
 }
 
-.friends-box, .groups-box {
+.friends-box, .groups-box{
   background-color: #232a37;
   padding: 1.5em;
   border-radius: 10px;
@@ -994,4 +994,19 @@ form #form-group textarea {
   padding: 0.3em;
   border-radius: 50%;
   cursor: pointer;
+}
+
+.members-box {
+  background-color: #232a37;
+    padding: 1.5em;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 60em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    align-items: center;
+    /*overflow-y: scroll;*/
+    /*hide scroll bar*/
+    -ms-overflow-style: none;  /* IE and Edge */
 }

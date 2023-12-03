@@ -20,8 +20,8 @@
 
         <!-- Group Content Grid -->
         <div class="group-content">
-            <!-- Friends and Groups Grid -->
-                <div class="member-box">
+            <!-- Member Box -->
+                <div class="members-box">
                     <h2>Members</h2>
              
                 </div>
