@@ -17,6 +17,7 @@ class CommentController extends Controller
         ]);
 
         $post_id = $request->input('post_id');
+        $replyTo_id = $request->input('comment_id') ?? null;
         $content = $request->input('content');
 
         try {
@@ -24,6 +25,7 @@ class CommentController extends Controller
             $comment = new Comment();
             $comment->user_id = Auth::user()->id;
             $comment->post_id = $post_id;
+            $comment->comment_id = $replyTo_id;
             $comment->content = nl2br($content);
             $comment->date = date('Y-m-d H:i:s');
             $comment->save();
@@ -31,6 +33,7 @@ class CommentController extends Controller
 
             $response = array(
                 'comment_id' => $comment->id,
+                'replyTo_id' => $replyTo_id,
                 'content' => $comment->content,
                 'date' => $comment->date,
                 'author' => Auth::user()->name,
