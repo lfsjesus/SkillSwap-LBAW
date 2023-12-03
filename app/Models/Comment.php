@@ -20,4 +20,8 @@ class Comment extends Model
         'content',
         'date'
     ];
+
+    public function author() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

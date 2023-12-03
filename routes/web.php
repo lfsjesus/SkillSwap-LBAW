@@ -12,6 +12,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AdminLoginController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +89,17 @@ Route::controller(GroupController::class)->group(function () {
     Route::post('/groups/create', 'create')->name('create_group');
     Route::delete('/groups/delete', 'delete')->name('delete_group');
     */
+});
+
+// Like
+Route::controller(LikeController::class)->group(function () {
+    Route::post('/posts/like', 'likePost')->name('like_post');
+    Route::post('/comments/like', 'likeComment')->name('like_comment');
+});
+
+Route::controller(CommentController::class)->group(function () {
+    Route::post('/posts/comment', 'createComment')->name('create_comment');
+    //Route::delete('/posts/comment', 'deleteComment')->name('delete_comment');
 });
 
 
