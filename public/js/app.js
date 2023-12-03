@@ -340,3 +340,138 @@ function inputFilesHandler(preview, finalFiles) {
   });
 
 }
+
+
+
+// LIKE POST
+function likePostHandler() {
+  // set class active to .post-actions .post-action:first-child
+  let item = JSON.parse(this.responseText);
+  if (item == null) return;
+
+  let element = document.querySelector('.post[data-id="' + item.post_id + '"]');
+  let button = element.querySelector('.post-actions .post-action:first-child');
+
+  // To update like count
+  let likeStat = element.querySelector('.post-stats .post-stat:first-child p');
+  let likeCount = parseInt(likeStat.innerHTML);
+  
+  if (item.liked) {
+    button.classList.add('active');
+    likeCount++;
+  }
+  else {
+    button.classList.remove('active');
+    likeCount--;
+  }
+  
+  likeStat.innerHTML = likeCount;    
+}
+
+let postLikeButtons = document.querySelectorAll('article.post .post-actions .post-action:first-child');
+
+if (postLikeButtons != null) {
+  postLikeButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      let id = e.target.closest('article.post').getAttribute('data-id');
+      console.log(id);
+      let data = {post_id: id};
+      sendAjaxRequest('POST', '/posts/like', data, likePostHandler);
+      }
+    );
+  }
+  );
+}
+
+
+
+function likeCommentHandler() {
+  // set class active to .post-actions .post-action:first-child
+  let item = JSON.parse(this.responseText);
+  if (item == null) return;
+
+  let element = document.querySelector('.comment[data-id="' + item.comment_id + '"]');
+  let button = element.querySelector('.comment-actions p:nth-child(2)');
+
+  // To update like count
+  let likeStat = element.querySelector('.comment-stat p');
+  let likeCount = parseInt(likeStat.innerHTML);
+  
+  if (item.liked) {
+    button.classList.add('active');
+    likeCount++;
+    button.innerHTML = 'Unlike';
+  }
+  else {
+    button.classList.remove('active');
+    likeCount--;
+    button.innerHTML = 'Like';
+  }
+  
+  likeStat.innerHTML = likeCount;    
+
+}
+
+
+let commentLikeButtons = document.querySelectorAll('article.post .comment .comment-actions p:nth-child(2)');
+
+if (commentLikeButtons != null) {
+  commentLikeButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      let id = e.target.closest('.comment').getAttribute('data-id');
+      console.log(id);
+      let data = {comment_id: id};
+      sendAjaxRequest('POST', '/comments/like', data, likeCommentHandler);
+      }
+    );
+  }
+  );
+}
+
+
+// show comment box when user clicks on comment button
+
+let commentButtons = document.querySelectorAll('article.post .post-actions .post-action:nth-child(2)');
+
+if (commentButtons != null) {
+  commentButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      let id = e.target.closest('article.post').getAttribute('data-id');
+      let commentBox = document.querySelector('.post[data-id="' + id + '"] .comment-box');
+    
+      if (commentBox.style.display == 'none') {
+        commentBox.style.display = 'flex';
+      }
+      else {
+        commentBox.style.display = 'none';
+      }
+      }
+    );
+  }
+  );
+}
+
+
+function commentPostHandler() {
+}
+
+
+// comment on post
+let commentForms = document.querySelectorAll('article.post form.comment-box');
+
+if (commentForms != null) {
+  commentForms.forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      let post_id = e.target.querySelector('input[name="post_id"]').value;
+      let user_id = e.target.querySelector('input[name="user_id"]').value;
+      let content = e.target.querySelector('textarea[name="content"]').value;
+      let data = {post_id: post_id, user_id: user_id, content: content};
+      sendAjaxRequest('POST', '/posts/comment', data, commentPostHandler);
+      }
+    );
+  }
+  );
+}
+
+

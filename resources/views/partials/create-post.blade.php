@@ -10,6 +10,9 @@
         <a href="{{ route('user', ['username' => Auth::user()->username]) }}">
         @if(Auth::user()->profile_picture)
         <img src="{{stream_get_contents(Auth::user()->profile_picture)}}"/>
+        @php 
+        rewind(Auth::user()->profile_picture);
+        @endphp
         @else
         <img src="{{ url('assets/profile-picture.png') }}"/>
         @endif

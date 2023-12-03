@@ -17,4 +17,21 @@ class Like extends Model
         'comment_id',
         'date'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function post()
+    {
+        return $this->belongsTo(Post::class, 'post_id');
+    }
+
+    public function comment()
+    {
+        return $this->belongsTo(Comment::class, 'comment_id');
+    }
+
+    
 }
