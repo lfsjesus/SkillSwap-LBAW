@@ -874,6 +874,9 @@ form #form-group textarea {
 .comment-main {
   background-color: #232a37;
   border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 1em;
   padding: 1em;
 }
 
@@ -918,4 +921,26 @@ form #form-group textarea {
 
 .comment-actions p:nth-child(3):hover {
   text-decoration: underline;
+}
+
+.comment-stat {
+  display: flex;
+  gap: 0.5em;
+  font-size: 0.8em;
+  font-weight: 500;
+  align-items: center;
+  padding: 0.5em;
+  border-radius: 12px;
+  background-color: #2e3541;
+  cursor: pointer;
+}
+
+.comment-stat span {
+  background-color: #663FA4;
+  font-variation-settings:
+  'FILL' 1;
+  font-size: 0.9em;
+  padding: 0.3em;
+  border-radius: 50%;
+  cursor: pointer;
 }
