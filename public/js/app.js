@@ -368,15 +368,60 @@ function likePostHandler() {
   likeStat.innerHTML = likeCount;    
 }
 
-let likeButtons = document.querySelectorAll('article.post .post-actions .post-action:first-child');
+let postLikeButtons = document.querySelectorAll('article.post .post-actions .post-action:first-child');
 
-if (likeButtons != null) {
-  likeButtons.forEach(function(button) {
+if (postLikeButtons != null) {
+  postLikeButtons.forEach(function(button) {
     button.addEventListener('click', function(e) {
       let id = e.target.closest('article.post').getAttribute('data-id');
       console.log(id);
       let data = {post_id: id};
       sendAjaxRequest('POST', '/posts/like', data, likePostHandler);
+      }
+    );
+  }
+  );
+}
+
+
+
+function likeCommentHandler() {
+  // set class active to .post-actions .post-action:first-child
+  let item = JSON.parse(this.responseText);
+  if (item == null) return;
+
+  let element = document.querySelector('.comment[data-id="' + item.comment_id + '"]');
+  let button = element.querySelector('.comment-actions p:nth-child(2)');
+
+  // To update like count
+  let likeStat = element.querySelector('.comment-stat p');
+  let likeCount = parseInt(likeStat.innerHTML);
+  
+  if (item.liked) {
+    button.classList.add('active');
+    likeCount++;
+    button.innerHTML = 'Unlike';
+  }
+  else {
+    button.classList.remove('active');
+    likeCount--;
+    button.innerHTML = 'Like';
+  }
+  
+  likeStat.innerHTML = likeCount;    
+
+}
+
+
+let commentLikeButtons = document.querySelectorAll('article.post .comment .comment-actions p:nth-child(2)');
+
+if (commentLikeButtons != null) {
+  commentLikeButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      let id = e.target.closest('.comment').getAttribute('data-id');
+      console.log(id);
+      let data = {comment_id: id};
+      sendAjaxRequest('POST', '/comments/like', data, likeCommentHandler);
       }
     );
   }
@@ -428,3 +473,5 @@ if (commentForms != null) {
   }
   );
 }
+
+
