@@ -11,11 +11,8 @@ use App\Models\Group;
 class GroupController extends Model 
 {
     public function show(int $id) {
-        /*
         $group = Group::find($id);
         $posts = $group->posts()->get();
-        */
-        $group = Group::find($id);
         return view('pages.group', ['group' => $group]);
     }
 
@@ -102,5 +99,4 @@ class GroupController extends Model
 
         
     }
-
 }

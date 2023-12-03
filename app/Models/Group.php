@@ -18,4 +18,14 @@ class Group extends Model
         'public_group',
         'date'
     ];
+
+
+    /**
+    * Get the posts for a group.
+    */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
 }

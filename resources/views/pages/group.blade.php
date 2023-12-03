@@ -18,14 +18,28 @@
             <p class="group-description">{{ $group->description }}</p>
         </div>
 
-        <!-- Edit Button -->
+        <!-- Group Content Grid -->
+        <div class="group-content">
+            <!-- Friends and Groups Grid -->
+                <div class="member-box">
+                    <h2>Members</h2>
+             
+                </div>
+            </div>
         
 
     </div>
     <!-- Profile Content Grid -->
     <div class="profile-content">
+
        
     </div>
+
+    <!-- Posts Section -->
+    <section id="posts">
+        <h2>Posts</h2>
+        @each('partials.post', $group->posts, 'post')
+    </section>
 </section>
 
 @endsection
