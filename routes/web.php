@@ -42,6 +42,9 @@ Route::controller(PostController::class)->group(function () {
     Route::delete('/posts/delete', 'delete')->name('delete_post');
     Route::get('/posts', 'list')->name('posts');
     Route::get('/posts/{id}', 'show');
+
+    Route::post('/groups/{id}/create_post', 'create')->name('create_group_post');
+
 });
 
 // Authentication
