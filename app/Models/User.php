@@ -111,4 +111,16 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, Friend::class, 'user_id', 'friend_id');
     }
+
+    public function is_friend($user)
+    {
+        return $this->friends()->where('friend_id', $user->id)->exists();
+    }
+
+    // Assuming you have a friends relationship defined like this
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, Friend::class, 'user_id', 'friend_id');
+    }
+
 }

@@ -640,3 +640,10 @@ img {
 }
 
 /*# sourceMappingURL=milligram.min.css.map */
+.button{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 0.4em;
+}

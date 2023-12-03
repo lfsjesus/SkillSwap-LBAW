@@ -789,11 +789,57 @@ form #form-group textarea {
   gap: 0.4em;
 }
 
-.flex > .username{
+.user-flex{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: baseline;
+  gap: 0.4em;
+}
+
+.user-flex  .username{
   font-size: 1.4rem;
   color: wheat;
   font-weight: bold;
   font-family: 'Montserrat', sans-serif;
+}
+
+.profile-information{
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.profile-information .username{
+  font-size: 2rem;
+  color: pink;
+  font-weight: bold;
+  margin-left: 1rem;
+}
+
+.user-name{
+  font-size: 3.1rem;
+}
+
+.user-email{
+  display: flex;
+  flex-direction: row;
+  align-items: center;;
+  gap: 0.4em;
+  font-size: 1.7rem;
+  color: white;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.user-description{
+  font-size: 1.7rem;
+  color: white;
+  margin-top: 0;
+  text-align: justify;
+  padding-left: 8px;
 }
 
 .comment-box {
