@@ -29,6 +29,10 @@
                 <p> {{Carbon\Carbon::parse($comment->date)->diffForHumans()}} </p>
                 <p> @if($comment->isLikedBy(Auth::user()->id)) Unlike @else Like @endif </p>
                 <p> Reply </p>
+                @if ($comment->author->id == Auth::user()->id)
+                <p> Edit </p>
+                <p> Delete </p>
+                @endif
             </div>
             </div>
             <div class="comment-replies">

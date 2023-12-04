@@ -1,6 +1,5 @@
 <form class="comment-box" style="display: none;">
     <input type="hidden" name="post_id" value="{{ $post->id }}"/>
-    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}"/>
     <div class="comment-box-header">
         <div class="comment-box-header-left">
             <a href="{{ route('user', ['username' => Auth::user()->username]) }}">
