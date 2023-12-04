@@ -538,11 +538,6 @@ if (postCommentForms != null) {
       let content = e.target.querySelector('textarea[name="content"]').value;
       let data = {post_id: post_id, content: content};
 
-      /* Handler parameters */
-      let profile_picture = e.target.closest('article.post').querySelector('.post-header-left img').src;
-      let author_url = e.target.closest('article.post').querySelector('.post-header-left a').getAttribute('href');
-
-      // pass profile_picture and author_url to handler and conserve the response
       sendAjaxRequest('POST', '/posts/comment', data, commentPostHandler);
       }
     );
@@ -724,6 +719,11 @@ function createComment(id, post_id, author_name, content, replyTo_id) {
 
   let commentActionsP4 = document.createElement('p');
   commentActionsP4.innerHTML = 'Edit';
+  commentActionsP4.addEventListener('click', function(e) {
+    let id = e.target.closest('.comment').getAttribute('data-id');
+    editComment(id);
+    }
+  );
 
   let commentActionsP5 = document.createElement('p');
   commentActionsP5.innerHTML = 'Delete';
