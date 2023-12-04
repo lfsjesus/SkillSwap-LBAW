@@ -1,3 +1,4 @@
+@if(Auth::user())
 <form class="comment-box" style="display: none;">
     <input type="hidden" name="post_id" value="{{ $post->id }}"/>
     <div class="comment-box-header">
@@ -22,3 +23,4 @@
         </div>
     </div>
 </form>
+@endif

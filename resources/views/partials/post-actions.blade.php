@@ -1,5 +1,5 @@
 <div class="post-actions">
-    <div class="post-action @if($post->isLikedBy(auth()->user()->id))active @endif">
+    <div class="post-action @if(Auth::user() && $post->isLikedBy(auth()->user()->id))active @endif">
         <span class="material-symbols-outlined">
             thumb_up
             </span>

@@ -8,9 +8,6 @@
             <img src="{{ url('assets/profile-picture.png') }}"/>
             @endif
             </a>
-    
-            
-
             <div class="author-date">
                 <a class="flex" href="{{ route('user', ['username' => $post->author->username]) }}">
                     <p> {{$post->author->name}}</p>
@@ -57,7 +54,6 @@
         </div>
     </div>
     @include('partials.post-actions')
-
     <div class="post-comments">
         @if($post->getCommentsCount() > 0)
             @foreach($post->directComments as $comment)
