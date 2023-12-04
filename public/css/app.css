@@ -974,6 +974,26 @@ form #form-group textarea {
   text-decoration: underline;
 }
 
+.comment-actions p:nth-child(4) {
+  font-weight: bold;
+  color: #8d73eb;
+  cursor: pointer;
+}
+
+.comment-actions p:nth-child(4):hover {
+  text-decoration: underline;
+}
+
+.comment-actions p:nth-child(5) {
+  font-weight: bold;
+  color: #8d73eb;
+  cursor: pointer;
+}
+
+.comment-actions p:nth-child(5):hover {
+  text-decoration: underline;
+}
+
 .comment-stat {
   display: flex;
   gap: 0.5em;

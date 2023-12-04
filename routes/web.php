@@ -102,7 +102,8 @@ Route::controller(LikeController::class)->group(function () {
 
 Route::controller(CommentController::class)->group(function () {
     Route::post('/posts/comment', 'createComment')->name('create_comment');
-    //Route::delete('/posts/comment', 'deleteComment')->name('delete_comment');
+    Route::delete('/posts/comment/delete', 'deleteComment')->name('delete_comment');
+    Route::put('/posts/comment/edit', 'editComment')->name('edit_comment');
 });
 
 
