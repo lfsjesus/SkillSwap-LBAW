@@ -419,7 +419,6 @@ if (commentLikeButtons != null) {
   commentLikeButtons.forEach(function(button) {
     button.addEventListener('click', function(e) {
       let id = e.target.closest('.comment').getAttribute('data-id');
-      console.log(id);
       let data = {comment_id: id};
       sendAjaxRequest('POST', '/comments/like', data, likeCommentHandler);
       }
@@ -435,21 +434,37 @@ let commentButtons = document.querySelectorAll('article.post .post-actions .post
 
 if (commentButtons != null) {
   commentButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      let id = e.target.closest('article.post').getAttribute('data-id');
-      let commentBox = document.querySelector('.post[data-id="' + id + '"] .comment-box');
-    
-      if (commentBox.style.display == 'none') {
-        commentBox.style.display = 'flex';
-      }
-      else {
-        commentBox.style.display = 'none';
-      }
-      }
-    );
+    button.addEventListener('click', commentButtonHandler);
   }
   );
 }
+
+
+function commentButtonHandler() {
+
+  let id = this.closest('article.post').getAttribute('data-id');
+  let comment = this.closest('.comment');
+  let commentBox = null;
+
+  if (comment == null) {
+    commentBox = document.querySelector('article.post[data-id="' + id + '"] .comment-box');
+  }
+  else {  
+    commentBox = comment.querySelector('.comment-box');
+    if (commentBox == null) {
+      commentBox = comment.parentNode.parentNode.querySelector('.comment-box');
+    }
+  }
+
+
+  if (commentBox.style.display == 'none') {
+    commentBox.style.display = 'flex';
+  }
+  else {
+    commentBox.style.display = 'none';
+  }
+}
+
 
 
 let replyButtons = document.querySelectorAll('article.post .comment .comment-actions p:nth-child(3)');
@@ -457,24 +472,231 @@ if (replyButtons != null) {
   replyButtons.forEach(function(button) {
     button.addEventListener('click', function(e) {
       let id = e.target.closest('.comment').getAttribute('data-id');
-      let commentBox = document.querySelector('.comment[data-id="' + id + '"] .comment-box');
+      let commentBox = document.querySelector('.comment[data-id="' + id + '"]').querySelector('.comment-box');
+
+      if (commentBox == null) {
+        commentBox = document.querySelector('.comment[data-id="' + id + '"]').parentNode.parentNode.querySelector('.comment-box');
+      }
     
       if (commentBox.style.display == 'none') {
         commentBox.style.display = 'flex';
       }
       else {
         commentBox.style.display = 'none';
-      }
+      }  
       }
     );
   }
   );
 }
 
-
 function commentPostHandler() {
-}
+  let response = JSON.parse(this.responseText);
 
+  if (response == null) return;
+
+  let profile_picture = document.querySelector('.comment-box-header-left img').src;
+  let author_url = document.querySelector('.comment-box-header-left a').getAttribute('href');
+
+  let comment = document.createElement('div');
+  comment.className = 'comment';
+  comment.setAttribute('data-id', response.id);
+
+  let img = document.createElement('img');
+  img.src = profile_picture;
+
+  let commentBody = document.createElement('div');
+  commentBody.className = 'comment-body';
+
+  let commentMain = document.createElement('div');
+  commentMain.className = 'comment-main';
+
+  let innerComment = document.createElement('div');
+  innerComment.className = 'inner-comment';
+
+  let commentHeader = document.createElement('div');
+  commentHeader.className = 'comment-header';
+
+  let a = document.createElement('a');
+  a.setAttribute('href', author_url);
+
+  let p = document.createElement('p');
+  p.innerHTML = response.author_name; 
+
+  let span = document.createElement('span');
+  span.className = 'username';
+  span.innerHTML = '&#64;' + author_url.split('/').pop();
+
+  let commentContent = document.createElement('div');
+  commentContent.className = 'comment-content';
+
+  let commentContentP = document.createElement('p');
+  commentContentP.innerHTML = response.content; 
+
+  // Comment-header
+  a.appendChild(p);
+  a.appendChild(span);
+  commentHeader.appendChild(a);
+  commentContent.appendChild(commentContentP);
+  commentHeader.appendChild(commentContent);
+
+
+  let commentStat = document.createElement('div');
+  commentStat.className = 'comment-stat';
+
+  let commentStatSpan = document.createElement('span');
+  commentStatSpan.className = 'material-symbols-outlined';
+  commentStatSpan.innerHTML = 'thumb_up';
+
+  let commentStatP = document.createElement('p');
+  commentStatP.innerHTML = '0';
+
+  // Inner comment
+  commentStat.appendChild(commentStatSpan);
+  commentStat.appendChild(commentStatP);
+  innerComment.appendChild(commentHeader);
+  innerComment.appendChild(commentStat);
+
+  // Comment main
+  commentMain.appendChild(innerComment);
+
+  let commentActions = document.createElement('div');
+  commentActions.className = 'comment-actions';
+
+  let commentActionsP1 = document.createElement('p');
+  commentActionsP1.innerHTML = 'Just now'; 
+
+  let commentActionsP2 = document.createElement('p');
+  commentActionsP2.innerHTML = 'Like'; 
+  commentActionsP2.addEventListener('click', function(e) {
+    let id = e.target.closest('.comment').getAttribute('data-id');
+    let data = {comment_id: id};
+    sendAjaxRequest('POST', '/comments/like', data, likeCommentHandler);
+    }
+  );
+
+  let commentActionsP3 = document.createElement('p');
+  commentActionsP3.innerHTML = 'Reply'; 
+  commentActionsP3.addEventListener('click', commentButtonHandler);
+
+  // Comment actions
+  commentActions.appendChild(commentActionsP1);
+  commentActions.appendChild(commentActionsP2);
+  commentActions.appendChild(commentActionsP3);
+
+  // Comment body
+  let commentReplies = document.createElement('div');
+  commentReplies.className = 'comment-replies';
+  commentBody.appendChild(commentMain);
+  commentBody.appendChild(commentReplies);
+  
+
+  commentMain.appendChild(commentActions);
+
+
+  if (response.replyTo_id == null) {
+    let commentBox = document.createElement('form');
+    commentBox.className = 'comment-box';
+    commentBox.style.display = 'none';
+    commentBox.addEventListener('submit', replyCommentFormHandler);
+
+
+    let commentBoxInput1 = document.createElement('input');
+    commentBoxInput1.setAttribute('type', 'hidden');
+    commentBoxInput1.setAttribute('name', 'post_id');
+    commentBoxInput1.setAttribute('value', response.post_id);
+
+    let commentBoxInput2 = document.createElement('input');
+    commentBoxInput2.setAttribute('type', 'hidden');
+    commentBoxInput2.setAttribute('name', 'user_id');
+    commentBoxInput2.setAttribute('value', response.author_id);
+
+
+
+    let commentBoxHeader = document.createElement('div');
+    commentBoxHeader.className = 'comment-box-header';
+
+    let commentBoxHeaderLeft = document.createElement('div');
+    commentBoxHeaderLeft.className = 'comment-box-header-left';
+
+    let commentBoxHeaderLeftA = document.createElement('a');
+    commentBoxHeaderLeftA.setAttribute('href', author_url);
+
+    let commentBoxHeaderLeftImg = document.createElement('img');
+    commentBoxHeaderLeftImg.src = profile_picture;
+
+    commentBoxHeaderLeftA.appendChild(commentBoxHeaderLeftImg);
+    commentBoxHeaderLeft.appendChild(commentBoxHeaderLeftA);
+
+
+    // image and a are the same as above
+
+    let commentBoxHeaderRight = document.createElement('div');
+    commentBoxHeaderRight.className = 'comment-box-header-right';
+
+    let commentBoxHeaderRightTextarea = document.createElement('textarea');
+    commentBoxHeaderRightTextarea.setAttribute('placeholder', 'Write a comment...');
+    commentBoxHeaderRightTextarea.setAttribute('name', 'content');
+
+    let commentBoxHeaderRightSpan1 = document.createElement('span');
+    commentBoxHeaderRightSpan1.className = 'material-symbols-outlined';
+    commentBoxHeaderRightSpan1.innerHTML = 'attach_file';
+
+    let commentBoxHeaderRightInput = document.createElement('input');
+    commentBoxHeaderRightInput.setAttribute('type', 'submit');
+    commentBoxHeaderRightInput.setAttribute('value', 'send');
+    commentBoxHeaderRightInput.className = 'material-symbols-outlined';
+
+    commentBoxHeaderRight.appendChild(commentBoxHeaderRightTextarea);
+    commentBoxHeaderRight.appendChild(commentBoxHeaderRightSpan1);
+    commentBoxHeaderRight.appendChild(commentBoxHeaderRightInput);
+
+
+    /* Append header left and right to header */
+    commentBoxHeader.appendChild(commentBoxHeaderLeft);
+    commentBoxHeader.appendChild(commentBoxHeaderRight);
+
+    /* Append inputs  and comment box header to form */
+    commentBox.appendChild(commentBoxInput1);
+    commentBox.appendChild(commentBoxInput2);
+    commentBox.appendChild(commentBoxHeader);
+
+    commentBody.appendChild(commentBox);
+  }
+
+  comment.appendChild(img);
+  comment.appendChild(commentBody);
+
+  // If comment is a reply, append it to the parent comment. Else, append it to the post.
+  if (response.replyTo_id != null) {
+    let parent = document.querySelector('.comment[data-id="' + response.replyTo_id + '"]');
+
+    let replies = parent.querySelector('.comment-replies');
+    replies.appendChild(comment);
+  }
+  else {
+    let comments = document.querySelector('article.post[data-id="' + response.post_id + '"] .post-comments');
+    comments.appendChild(comment);
+  }
+
+  // Reset Textarea
+  let initialCommentBox = document.querySelectorAll('article.post[data-id="' + response.post_id + '"] .comment-box');
+
+  if (initialCommentBox != null) {
+    initialCommentBox.forEach(function(box) {
+      box.querySelector('textarea[name="content"]').value = '';
+      box.style.display = 'none';
+    }
+    );
+  }
+
+  // Update comment count on post
+  let commentCount = document.querySelector('article.post[data-id="' + response.post_id + '"] .post-stats .post-stat:nth-child(2) p');
+  let count = parseInt(commentCount.innerHTML);
+  count++;
+
+  commentCount.innerHTML = count + ' comments'; 
+}
 
 // comment on post
 let postCommentForms = document.querySelectorAll('article.post > form.comment-box');
@@ -487,6 +709,12 @@ if (postCommentForms != null) {
       let user_id = e.target.querySelector('input[name="user_id"]').value;
       let content = e.target.querySelector('textarea[name="content"]').value;
       let data = {post_id: post_id, user_id: user_id, content: content};
+
+      /* Handler parameters */
+      let profile_picture = e.target.closest('article.post').querySelector('.post-header-left img').src;
+      let author_url = e.target.closest('article.post').querySelector('.post-header-left a').getAttribute('href');
+
+      // pass profile_picture and author_url to handler and conserve the response
       sendAjaxRequest('POST', '/posts/comment', data, commentPostHandler);
       }
     );
@@ -500,16 +728,17 @@ let replyCommentForms = document.querySelectorAll('article.post .comment .commen
 
 if (replyCommentForms != null) {
   replyCommentForms.forEach(function(form) {
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      let post_id = e.target.closest('.post').querySelector('input[name="post_id"]').value;
-      let comment_id = e.target.closest('.comment').getAttribute('data-id');
-      let user_id = e.target.closest('.post').querySelector('input[name="user_id"]').value;
-      let content = e.target.querySelector('textarea[name="content"]').value;
-      let data = {post_id: post_id, comment_id: comment_id, user_id: user_id, content: content};
-      sendAjaxRequest('POST', '/posts/comment', data, null);
-      }
-    );
+    form.addEventListener('submit', replyCommentFormHandler);
   }
   );
+}
+
+function replyCommentFormHandler(event) {
+  event.preventDefault();
+  let post_id = this.closest('.post').querySelector('input[name="post_id"]').value;
+  let comment_id = this.closest('.comment').getAttribute('data-id');
+  let user_id = this.closest('.post').querySelector('input[name="user_id"]').value;
+  let content = this.querySelector('textarea[name="content"]').value;
+  let data = {post_id: post_id, comment_id: comment_id, user_id: user_id, content: content};
+  sendAjaxRequest('POST', '/posts/comment', data, commentPostHandler);
 }

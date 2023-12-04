@@ -32,11 +32,11 @@ class CommentController extends Controller
             DB::commit();
 
             $response = array(
-                'comment_id' => $comment->id,
+                'id' => $comment->id,
+                'post_id' => $post_id,
                 'replyTo_id' => $replyTo_id,
                 'content' => $comment->content,
-                'date' => $comment->date,
-                'author' => Auth::user()->name,
+                'author_name' => Auth::user()->name,
                 'author_id' => Auth::user()->id
             );
 
