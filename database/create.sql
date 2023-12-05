@@ -1250,7 +1250,6 @@ insert into groups (name, description, public_group, date) values ('Reinger-Laki
 
 
 /* Owns */
-
 insert into owns (user_id, group_id, date) values (489, 11, '10/30/2022');
 insert into owns (user_id, group_id, date) values (11, 12, '10/30/2022');
 insert into owns (user_id, group_id, date) values (225, 6, '11/3/2022');
@@ -1294,6 +1293,8 @@ insert into owns (user_id, group_id, date) values (264, 10, '12/30/2022');
 
 insert into is_member (user_id, group_id, date) values (601, 1, CURRENT_TIMESTAMP);
 insert into is_member (user_id, group_id, date) values (601, 2, CURRENT_TIMESTAMP);
+
+insert into owns (user_id, group_id, date) values (601, 1, '11/30/2022');
 
 /*Posts*/
 

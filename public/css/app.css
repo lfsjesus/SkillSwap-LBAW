@@ -1049,3 +1049,10 @@ form #form-group textarea {
   border-radius: 50%;
   cursor: pointer;
 }
+
+.group-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+}
