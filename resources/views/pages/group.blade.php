@@ -4,10 +4,20 @@
 
 @section('content')
  
+@if (session('success'))
+<p class="success">
+    {{ session('success') }}
+</p>
+@endif
+@if (session('error'))
+    <p class="error">
+        {{ session('error') }}
+    </p>
+@endif
 <!-- Group Section -->
-<section id="profile" class="profile-section">
+<section id="group" class="group-section">
     <!-- Group Header with Background Image -->
-    <div class="profile-header">       
+    <div class="group-header">       
         <div class="header-background">
             @if($group->banner)
             <img src="{{stream_get_contents($group->banner)}}"/>
@@ -17,7 +27,7 @@
         </div>
 
         <!-- Group Info -->
-        <div class="profile-information">
+        <div class="group-information">
             <div class="group-info">
                 <h1 class="group-name">{{ $group->name }}</h1>
                 <p class="group-description">{{ $group->description }}</p>
@@ -55,7 +65,7 @@
                             <span class="material-symbols-outlined">
                                 group_add
                             </span>
-                            Adhere to Group
+                            Join Group
                         </a>
 
                     @endif
@@ -85,7 +95,7 @@
     <section id="posts">
         <h2>Posts</h2>
         @if(Auth::user())
-        @include('partials.create-group-post', ['group' => $group])
+        @include('partials.create-post', ['group' => $group])
         @endif    
         @each('partials.post', $group->posts, 'post')
     </section>

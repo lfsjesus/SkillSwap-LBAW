@@ -11,11 +11,12 @@ class GroupOwner extends Model
     public $timestamps  = false;
     protected $table='owns';
 
-    protected $fillable = [
+    protected $primaryKey = [
         'user_id',
-        'group_id',
-        'date'
+        'group_id'
     ];
+
+    public $incrementing = false;
 
     public function group() {
         return $this->belongsTo(Group::class);
