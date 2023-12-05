@@ -21,4 +21,17 @@ class Member extends Model
         'user_id',
         'group_id'
     ];
+
+    public function group() {
+        return $this->belongsTo(Group::class);
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function is_member($user, $group)
+    {
+        return $this->group()->members()->where('user_id', $user->id)->where('group_id', $group->id)->exists();
+    }
 }

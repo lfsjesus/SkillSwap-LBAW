@@ -17,4 +17,16 @@ class GroupOwner extends Model
         'date'
     ];
 
+    public function group() {
+        return $this->belongsTo(Group::class);
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function is_owner($user, $group)
+    {
+        return $this->group()->owners()->where('user_id', $user->id)->where('group_id', $group->id)->exists();
+    }
 }
