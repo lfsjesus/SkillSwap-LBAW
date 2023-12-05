@@ -27,6 +27,7 @@
         <!-- Members Box -->
         <div class="members-box">
             <h2>Members</h2>
+                @each('partials.user', $group->get_members(), 'user')
         </div>
         <!-- Groups Box -->
         <div class="owners-box">

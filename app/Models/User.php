@@ -123,4 +123,13 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, Friend::class, 'user_id', 'friend_id');
     }
 
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, Member::class, 'user_id', 'group_id');
+    }
+
+    public function get_groups()
+    {
+        return $this->groups()->get();
+    }
 }
