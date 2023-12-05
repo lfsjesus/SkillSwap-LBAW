@@ -30,7 +30,7 @@
                                 <img src="{{ url('assets/skillswap.png') }}"/>
                         </a>
                     </div>
-            
+                    <nav>
                     <ul>
 
                         <li>
@@ -52,7 +52,7 @@
                             </li>
                         @endif    
                         <li>
-                            <a href="">
+                            <a>
                                 <span class="material-symbols-outlined">
                                 settings
                                 </span>Settings
@@ -61,6 +61,7 @@
                         @if (Auth::user())
                             <li>
                                 <a href="{{ route ('groups') }}">
+
                                     <span class="material-symbols-outlined">
                                     groups
                                     </span>Groups
@@ -68,13 +69,14 @@
                             </li>
                         @endif    
                         <li>
-                            <a href="">
+                            <a>
                                 <span class="material-symbols-outlined">
                                 expand_more
                                 </span>See More
                             </a>
                         </li>
                     </ul>
+                    </nav>
                 </div>
                 @if (Auth::check())
                     <a class="button" href="{{ url('/logout') }}"> Logout </a>
