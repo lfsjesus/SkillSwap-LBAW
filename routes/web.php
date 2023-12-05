@@ -84,6 +84,7 @@ Route::controller(AdminController::class)->group(function () {
 });
 
 Route::controller(GroupController::class)->group(function () {
+    Route::get('/groups', 'list')->name('groups');
     Route::get('/group/{id}', 'show')->name('group');
     /*
     Route::get('/groups/{id}', 'show')->name('group');

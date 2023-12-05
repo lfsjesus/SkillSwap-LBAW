@@ -60,7 +60,7 @@
                         </li>
                         @if (Auth::user())
                             <li>
-                                <a href="">
+                                <a href="{{ route ('groups') }}">
                                     <span class="material-symbols-outlined">
                                     groups
                                     </span>Groups

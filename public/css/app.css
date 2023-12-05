@@ -700,7 +700,7 @@ form #form-group textarea {
   
 }
 
-.users {
+.users, .groups{
 
   display: flex;
   flex-direction: row;
@@ -715,11 +715,11 @@ form #form-group textarea {
   scrollbar-width: none;  /* Firefox */
 }
 
-.users::-webkit-scrollbar {
+.users::-webkit-scrollbar , .groups::-webkit-scrollbar{
   display: none;
 }
 
-.user-card{
+.user-card, .group-card{
   width: 100%;
   max-width: 20em;
   border-radius: 10px;
@@ -730,13 +730,13 @@ form #form-group textarea {
   transition: 0.2s ease;
 }
 
-.user-card:hover {
+.user-card:hover , .group-card:hover{
   cursor: pointer;
 
   border: 1px solid #8d73eb;
 }
 
-.user-card img {
+.user-card img , .group-card img{
   width: 3em;
   height: 3em;
   object-fit: cover;
@@ -745,7 +745,7 @@ form #form-group textarea {
   border: 1px solid white;
 }
 
-.user-card > a {
+.user-card > a, .group-card > a{
   text-decoration: none;
   color: pink;
   margin: 0;
@@ -762,7 +762,7 @@ form #form-group textarea {
   transition: 0.2s ease;
 }
 
-.user-card > a:hover {
+.user-card > a:hover , .group-card > a:hover{
   cursor: pointer;
   color: #fff;
 }
