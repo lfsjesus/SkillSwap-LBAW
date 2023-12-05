@@ -542,7 +542,7 @@ aside .logo img {
   gap: 20px;
 }
 
-.friends-groups-grid {  
+.friends-groups-grid, .members-owners-grid {  
   width: 100%;
   display: flex;
   gap: 1.5em;
@@ -553,7 +553,7 @@ aside .logo img {
   overflow-x: hidden;
 }
 
-.friends-box, .groups-box{
+.friends-box, .groups-box, .members-box, .owners-box{
   background-color: #232a37;
   padding: 1.5em;
   border-radius: 10px;
@@ -576,8 +576,18 @@ aside .logo img {
   display: none;
 }
 
+.members-box::-webkit-scrollbar {
+  display: none;
+}
 
-.friends-box h2, .groups-box h2 {
+.owners-box::-webkit-scrollbar {
+  display: none;
+}
+
+
+
+
+.friends-box h2, .groups-box h2, .members-box h2, .owners-box h2 {
   color: white;
   margin: 0;
   font-weight: 500;
@@ -1014,19 +1024,4 @@ form #form-group textarea {
   padding: 0.3em;
   border-radius: 50%;
   cursor: pointer;
-}
-
-.members-box {
-  background-color: #232a37;
-    padding: 1.5em;
-    border-radius: 10px;
-    width: 100%;
-    max-width: 60em;
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    align-items: center;
-    overflow-y: scroll;
-    overflow-y: hidden; /* Hide vertical scrollbar */
-    -ms-overflow-style: none;  /* IE and Edge */
 }
