@@ -47,6 +47,9 @@
             @if(Auth::user())
                 @if(Auth::user()->username == $user->username)
                 <a href="{{ route('edit_profile', ['username' => Auth::user()->username]) }}" class="button">
+                    <span class='material-symbols-outlined'>
+                        edit
+                    </span>
                     Edit Profile
                 </a>
                 @endif
