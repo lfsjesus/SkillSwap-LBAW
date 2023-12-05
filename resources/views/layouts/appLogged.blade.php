@@ -32,6 +32,16 @@
                     </div>
             
                     <ul>
+
+                        <li>
+                            <a href="{{ url('/home') }}">
+                                <span class="material-symbols-outlined">
+                                home
+                                </span>Home
+                            </a>
+                        </li>
+
+                        
                         @if (Auth::user())
                             <li>
                                 <a href="{{ route('user', ['username' => Auth::user()->username]) }}" > 
