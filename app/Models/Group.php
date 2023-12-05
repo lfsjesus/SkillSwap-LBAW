@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Post;
+use App\Models\User;
+use App\Models\Member;
 
 class Group extends Model
 {
@@ -28,4 +31,23 @@ class Group extends Model
         return $this->hasMany(Post::class);
     }
 
+    public function members()
+    {
+        return $this->belongsToMany(User::class, Member::class, 'group_id', 'user_id');
+    }
+
+    public function get_members()
+    {
+        return $this->members()->get();
+    }
+
+    public function owners()
+    {
+        return $this->belongsToMany(User::class, GroupOwner::class, 'group_id', 'user_id');
+    }
+
+    public function get_owners()
+    {
+        return $this->owners()->get();
+    }
 }

@@ -4,33 +4,36 @@
 
 @section('content')
  
-<!-- Profile Section -->
+<!-- Group Section -->
 <section id="profile" class="profile-section">
-    <!-- Profile Header with Background Image -->
+    <!-- Group Header with Background Image -->
     <div class="profile-header">       
         <div class="header-background">
             <img src="{{url('assets/blob-background.jpg')}}" alt="Background Picture">
         </div>
 
-        <!-- Profile Info -->
+        <!-- Group Info -->
         <div class="group-info">
             <h1 class="group-name">{{ $group->name }}</h1>
             <p class="group-description">{{ $group->description }}</p>
-        </div>
-
-        <!-- Group Content Grid -->
-        <div class="group-content">
-            <!-- Member Box -->
-                <div class="members-box">
-                    <h2>Members</h2>
-             
-                </div>
-            </div>
-        
+        </div>        
 
     </div>
 
-       
+<!-- Group Content Grid -->
+<div class="group-content">
+    <!-- Members and Groups Grid -->
+    <div class="members-owners-grid">
+        <!-- Members Box -->
+        <div class="members-box">
+            <h2>Members</h2>
+                @each('partials.user', $group->get_members(), 'user')
+        </div>
+        <!-- Groups Box -->
+        <div class="owners-box">
+            <h2>Owners</h2>
+                @each('partials.user', $group->get_owners(), 'user')
+        </div>
     </div>
 
     <!-- Posts Section -->
@@ -41,6 +44,7 @@
         @endif    
         @each('partials.post', $group->posts, 'post')
     </section>
+</div>
 </section>
 
 @endsection
