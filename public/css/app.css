@@ -495,7 +495,7 @@ aside .logo img {
 
 
 /* Profile Section Styles */
-.profile-section {
+.profile-section, .group-section {
   width: 100%;
   max-width: 60em;
   margin: 1em;
@@ -504,7 +504,7 @@ aside .logo img {
   padding: 1em;
 }
 
-.profile-header {
+.profile-header, .group-header {
   position: relative;
   border-radius: 10px;
   background-size: cover;
@@ -616,13 +616,13 @@ aside .logo img {
 
 /* Edit Profile Page Styles */
 
-#edit-profile, #create-profile {
+#edit-profile, #create-profile, #create-group {
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-.edit-profile-section, .create-profile-section {
+.edit-profile-section, .create-profile-section, .create-group-section {
   width: 100%;
   max-width: 50em;
   margin: 0 auto;
@@ -632,7 +632,7 @@ aside .logo img {
   border-radius: 8px;
 }
 
-.edit-profile-section h1, .create-profile-section h1 {
+.edit-profile-section h1, .create-profile-section h1, .create-group-section h1 {
   text-align: center;
   color: white;
   margin-bottom: 1.25em;
@@ -674,13 +674,26 @@ form #form-group textarea:focus {
   border-color: #8d73eb;
 }
 
+form #form-group select {
+  width: 100%;
+  padding: 0.625em;
+  border: 1px solid #2e3541;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #232a37;
+  font-size: 0.9em;
+  height: 3.5em;
+}
+
 form #form-group textarea {
   height: 6.25em;
   resize: vertical;
   line-height: 1.5;
 }
 
-#admin {
+#admin, #groups {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -701,7 +714,7 @@ form #form-group textarea {
   color: #8d73eb;
 }
 
-#admin button a {
+#admin button a, #groups button a {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -830,7 +843,7 @@ form #form-group textarea {
   font-family: 'Montserrat', sans-serif;
 }
 
-.profile-information{
+.profile-information, .group-information{
   padding: 1rem 0;
   display: flex;
   flex-direction: row;

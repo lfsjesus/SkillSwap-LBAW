@@ -92,7 +92,11 @@
             <!-- Friends Box -->
             <div class="friends-box">
                 <h2>Friends</h2>
+                @if (count($user->get_friends()) == 0)
+                <p> This user does not have friends </p>
+                @else 
                 @each('partials.user', $user->get_friends(), 'user')
+                @endif
             </div>
             <!-- Groups Box -->
             <div class="groups-box">
