@@ -761,6 +761,7 @@ form #form-group textarea {
 .username{
   font-size: 1.4rem;
   color: wheat;
+  font-weight: bold;
 }
 
 .card-info {
@@ -794,7 +795,6 @@ form #form-group textarea {
   flex-direction: row;
   align-items: center;
   justify-content: baseline;
-  gap: 0.4em;
 }
 
 .user-flex  .username{
@@ -830,8 +830,16 @@ form #form-group textarea {
   gap: 0.4em;
   font-size: 1.7rem;
   color: white;
-  font-weight: bold;
   margin-bottom: 1rem;
+}
+
+.user-email span{
+  font-variation-settings:
+  'FILL' 1;
+  font-size: 1.9rem;
+  color: wheat;
+  align-items: center;
+
 }
 
 .user-description{

@@ -54,13 +54,22 @@
                 @if(Auth::user()->username != $user->username)
                     <!-- Add Friend Button -->
                     @if(Auth::user()->is_friend($user))
-                    <a href="" class="button">
-                        <span class="material-symbols-outlined">
-                            person_remove
-                        </span>
-                        Remove Friend
-                    </a>
-                   
+                        <a href="" class="button">
+                            <span class="material-symbols-outlined">
+                                person_remove
+                            </span>
+                            Remove Friend
+                        </a>
+
+                    @else
+
+                        <a href="" class="button">
+                            <span class="material-symbols-outlined">
+                                person_add
+                            </span>
+                            Add Friend
+                        </a>
+
                     @endif
                 @endif    
 

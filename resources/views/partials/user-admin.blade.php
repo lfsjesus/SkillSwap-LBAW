@@ -9,7 +9,7 @@
 
         <span class="card-info">
             {{ $user->name }}
-            <span class="username">@ {{$user->username}}</span>
+            <span class="username">&#64;{{$user->username}}</span>
         </span>
     </a>
 
