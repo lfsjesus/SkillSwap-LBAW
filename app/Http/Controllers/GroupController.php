@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Group;
 
+
 class GroupController extends Model 
 {
     public function show(int $id) {
@@ -99,4 +100,11 @@ class GroupController extends Model
 
         
     }
+
+    public function list()
+    {
+        $groups = DB::table('groups')->simplePaginate(20);
+        return view('pages.groups', ['groups' => $groups]); 
+    }
+
 }
