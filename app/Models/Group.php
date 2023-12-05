@@ -28,4 +28,9 @@ class Group extends Model
         return $this->hasMany(Post::class);
     }
 
+    public function get_members()
+    {
+        return $this->belongsToMany(User::class, Group::class, 'group_user', 'group_id', 'user_id')->get();
+    }
+
 }
