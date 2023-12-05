@@ -30,7 +30,7 @@
                                 <img src="{{ url('assets/skillswap.png') }}"/>
                         </a>
                     </div>
-            
+                    <nav>
                     <ul>
                         <li>
                             <a href="{{ route('admin')}}" > 
@@ -61,6 +61,7 @@
                             </a>
                         </li>
                     </ul>
+                    </nav>
                 </div>
                 @if (Auth::guard('webadmin')->check())
                     <a class="button" href="{{ url('admin/logout') }}"> Logout </a>
