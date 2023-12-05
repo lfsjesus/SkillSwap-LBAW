@@ -9,7 +9,11 @@
     <!-- Group Header with Background Image -->
     <div class="profile-header">       
         <div class="header-background">
+            @if($group->banner)
+            <img src="{{stream_get_contents($group->banner)}}"/>
+            @else
             <img src="{{url('assets/blob-background.jpg')}}" alt="Background Picture">
+            @endif
         </div>
 
         <!-- Group Info -->
