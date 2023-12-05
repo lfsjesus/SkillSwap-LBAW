@@ -18,6 +18,38 @@
             <p class="group-description">{{ $group->description }}</p>
         </div>        
 
+        @if(Auth::user())
+        @if(Auth::user()->is_owner($group))
+            <!-- User is the owner of the group -->
+            <a href="{{ route('edit_group', ['group_id' => $group->id]) }}" class="button">
+                <span class='material-symbols-outlined'>
+                    edit
+                </span>
+                Edit Group
+            </a>
+
+        @elseif(Auth::user()->is_member($group))
+            <!-- User is a member of the group, but not the owner -->
+            <a href="{{ route('leave_group', ['group_id' => $group->id]) }}" class="button">
+                <span class="material-symbols-outlined">
+                    exit_to_app
+                </span>
+                Exit Group
+            </a>
+
+        @else
+            <!-- User is not a member of the group -->
+            <a href="{{ route('join_group', ['group_id' => $group->id]) }}" class="button">
+                <span class="material-symbols-outlined">
+                    group_add
+                </span>
+                Adhere to Group
+            </a>
+
+        @endif
+    @endif
+
+
     </div>
 
 <!-- Group Content Grid -->
