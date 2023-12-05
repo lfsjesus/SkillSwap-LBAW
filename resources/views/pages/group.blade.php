@@ -32,6 +32,7 @@
         <!-- Groups Box -->
         <div class="owners-box">
             <h2>Owners</h2>
+                @each('partials.user', $group->get_owners(), 'user')
         </div>
     </div>
 

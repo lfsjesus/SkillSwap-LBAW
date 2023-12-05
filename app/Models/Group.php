@@ -41,5 +41,13 @@ class Group extends Model
         return $this->members()->get();
     }
 
+    public function owners()
+    {
+        return $this->belongsToMany(User::class, GroupOwner::class, 'group_id', 'user_id');
+    }
 
+    public function get_owners()
+    {
+        return $this->owners()->get();
+    }
 }
