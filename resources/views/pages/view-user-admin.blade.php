@@ -27,17 +27,35 @@
             <img src="{{ url('assets/profile-picture.png') }}"/>
             @endif
         </div>
-        <!-- Profile Info -->
-        <div class="profile-info">
-            <h1 class="user-name">{{ $user->name }}</h1>
-            <p class="user-title">{{ $user->email }}</p>
+
+        <div class="profile-information">
+            <!-- Profile Info -->
+            <div class="profile-info">
+                <div class="user-flex">
+                    <h1 class="user-name">{{ $user->name }}</h1>
+                    <span class="username"> &#64{{$user->username}} </span>
+                    
+                </div>
+                <p class="user-email">
+                    <span class="material-symbols-outlined">
+                    mail
+                    </span>
+                    {{ $user->email }}
+                </p>
+
+        
+            </div>
+            
             <a href="{{ route('edit-user-form-admin', ['username' => $user->username]) }}" class="button">
+                <span class='material-symbols-outlined'>
+                    edit
+                </span>
                 Edit Profile
             </a>
         </div>
-
-        <!-- Edit Button -->
-        
+        <p class="user-description">
+            {{ $user->description }}
+        </p>
 
     </div>
     <!-- Profile Content Grid -->
