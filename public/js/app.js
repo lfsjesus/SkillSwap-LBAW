@@ -846,9 +846,21 @@ function editCommentHandler() {
   
 }
 
+// Handle active menu based on url
+let menuItems = document.querySelectorAll('nav ul li');
+
+if (menuItems != null) {
+  menuItems.forEach(function(item) {
+    if (item.querySelector('a').href == window.location.href) {
+      item.classList.add('active');
+    }
+  }
+  );
+}
+
+// Handle Friend Requests
 
 let addFriendButton = document.querySelector('.add-friend');
-
 
 if (addFriendButton != null) {
   addFriendButton.addEventListener('click', function(e) {
