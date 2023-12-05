@@ -22,7 +22,7 @@
 
 <!-- Group Content Grid -->
 <div class="group-content">
-    <!-- Friends and Groups Grid -->
+    <!-- Members and Groups Grid -->
     <div class="members-owners-grid">
         <!-- Members Box -->
         <div class="members-box">
