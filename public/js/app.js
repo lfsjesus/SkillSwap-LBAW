@@ -846,7 +846,6 @@ function editCommentHandler() {
   
 }
 
-
 // Handle active menu based on url
 let menuItems = document.querySelectorAll('nav ul li');
 
@@ -857,4 +856,75 @@ if (menuItems != null) {
     }
   }
   );
+}
+
+// Handle Friend Requests
+
+let addFriendButton = document.querySelector('.add-friend');
+
+if (addFriendButton != null) {
+  addFriendButton.addEventListener('click', function(e) {
+    let user_id = e.target.querySelector('input[name="user_id"]').value;
+    let friend_id = e.target.querySelector('input[name="friend_id"]').value;
+    let data = {user_id: user_id, friend_id: friend_id};
+    sendAjaxRequest('POST', '/friends/add', data, addFriendHandler);
+    }
+  );
+}
+
+function addFriendHandler() {
+  //see if response wasnt null
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let addFriendButton = document.querySelector('.add-friend');
+  addFriendButton.classList.remove('add-friend');
+  addFriendButton.classList.add('cancel-friend-request');
+  addFriendButton.addEventListener('click', function(e) {
+    let user_id = e.target.querySelector('input[name="user_id"]').value;
+    let friend_id = e.target.querySelector('input[name="friend_id"]').value;
+    let data = {user_id: user_id, friend_id: friend_id};
+    sendAjaxRequest('DELETE', '/friends/delete', data, cancelFriendRequestHandler);
+    }
+  );
+
+  let iconSpan = addFriendButton.querySelector('span');
+  iconSpan.innerHTML = 'done';
+  let input1 = addFriendButton.querySelector('input[name="user_id"]');
+  let input2 = addFriendButton.querySelector('input[name="friend_id"]');
+
+  addFriendButton.innerHTML = '';
+  addFriendButton.appendChild(input1);
+  addFriendButton.appendChild(input2);
+  addFriendButton.appendChild(iconSpan);
+  addFriendButton.innerHTML += 'Request sent';
+}
+
+
+function cancelFriendRequestHandler() {
+  //see if response wasnt null
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let cancelFriendRequestButton = document.querySelector('.cancel-friend-request');
+  cancelFriendRequestButton.classList.remove('cancel-friend-request');
+  cancelFriendRequestButton.classList.add('add-friend');
+  cancelFriendRequestButton.addEventListener('click', function(e) {
+    let user_id = e.target.querySelector('input[name="user_id"]').value;
+    let friend_id = e.target.querySelector('input[name="friend_id"]').value;
+    let data = {user_id: user_id, friend_id: friend_id};
+    sendAjaxRequest('POST', '/friends/add', data, addFriendHandler);
+    }
+  );
+
+  let iconSpan = cancelFriendRequestButton.querySelector('span');
+  iconSpan.innerHTML = 'person_add';
+  let input1 = cancelFriendRequestButton.querySelector('input[name="user_id"]');
+  let input2 = cancelFriendRequestButton.querySelector('input[name="friend_id"]');
+
+  cancelFriendRequestButton.innerHTML = '';
+  cancelFriendRequestButton.appendChild(input1);
+  cancelFriendRequestButton.appendChild(input2);
+  cancelFriendRequestButton.appendChild(iconSpan);
+  cancelFriendRequestButton.innerHTML += 'Add friend';
 }
