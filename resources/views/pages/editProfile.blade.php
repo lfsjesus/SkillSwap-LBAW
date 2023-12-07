@@ -5,10 +5,15 @@
 @section('content')
 
 <!-- Edit Profile Section -->
+@if (session('error'))
+<p class="error">
+    {{ session('error') }}
+</p>
+@endif
 <section id="edit-profile" class="edit-profile-section">
     <div class="container">
         <h1>Edit Profile</h1>
-        <form action="{{ route('edit_user') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('edit_user') }}" method="POST" enctype="multipart/form-data" id="edit-profile-form">
             {{ csrf_field() }}
             @method('PUT')
             
@@ -70,7 +75,7 @@
             <!-- Birthdate -->
             <div id="form-group">
                 <label for="birthdate">Birthdate</label>
-                <input type="date" name="birth_date" id="birthdate" class="form-control" value="{{ $user->birth_date->format('d/m/Y') }}">
+                <input type="date" name="birth_date" id="birthdate" class="form-control" value="{{ $user->birth_date->format('Y-m-d') }}">
                 @if ($errors->has('birth_date'))
                 <span class="error">
                     {{ $errors->first('birth_date') }}
@@ -89,11 +94,28 @@
                 @endif
             </div>
 
-            <!-- Submit Button -->
+            <!-- Public Profile -->
             <div id="form-group">
-                <button type="submit" class="btn btn-primary">Update Profile</button>
-            </div>
+                <label for="visibility">Visibility</label>
+                <select name="visibility" id="visibility" class="form-control">
+                    <option value="1" {{ $user->public_profile ? 'selected' : '' }}>Public</option>
+                    <option value="0" {{ $user->public_profile ? '' : 'selected' }}>Private</option>
+                </select>
+                @if ($errors->has('visibility'))
+                <span class="error">
+                    {{ $errors->first('visibility') }}
+                </span>
+                @endif
+            </div>          
+
         </form>
+        <form action="{{ route('delete_user') }}" method="POST" id="delete-profile-form">
+            <input type="hidden" name="id" value="{{ $user->id }}">
+            {{ csrf_field() }}
+            @method('DELETE')
+        </form>
+        <button type="submit" form="edit-profile-form" class="btn btn-primary">Save Changes</button>
+        <button type="submit" form="delete-profile-form" class="btn btn-danger">Delete Profile</button>
     </div>
 </section>
 

@@ -60,7 +60,8 @@
                         </li>
                         @if (Auth::user())
                             <li>
-                                <a>
+                                <a href="{{ route ('groups') }}">
+
                                     <span class="material-symbols-outlined">
                                     groups
                                     </span>Groups
@@ -103,6 +104,12 @@
                         expand_more
                         </span>Notifications</li>
                 </ul>
+                <!-- notifications: TO CHANGE-->
+                <div class="notifications">
+                    @for($i = 0; $i < 10; $i++)
+                        @include('partials.notification')
+                    @endfor
+                </div>
                 <button class="button">Help</button>
             </aside>
         </main>

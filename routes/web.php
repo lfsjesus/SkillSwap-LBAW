@@ -30,6 +30,12 @@ use App\Http\Controllers\CommentController;
 Route::redirect('/', '/login');
 Route::redirect('/admin', '/admin/login');
 
+// Static pages
+Route::view('/about', 'pages.about')->name('about');
+Route::view('/contacts', 'pages.contacts')->name('contacts');
+Route::view('/mainFeatures', 'pages.mainFeatures')->name('mainFeatures');
+Route::view('/settings', 'pages.settings')->name('settings');
+
 Route::get('/home', [PostController::class, 'list'])->name('home');
 
 // Admin
@@ -42,9 +48,6 @@ Route::controller(PostController::class)->group(function () {
     Route::delete('/posts/delete', 'delete')->name('delete_post');
     Route::get('/posts', 'list')->name('posts');
     Route::get('/posts/{id}', 'show');
-
-    Route::post('/groups/{id}/create_post', 'create')->name('create_group_post');
-
 });
 
 // Authentication
@@ -71,20 +74,30 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{username}', 'show')->name('user');
     Route::get('/user/{username}/edit', 'showEditForm')->name('edit_profile');
     Route::put('/user/edit', 'edit')->name('edit_user');
+    Route::delete('/user/delete', 'userDelete')->name('delete_user');
     Route::get('/search', 'search')->name('search');
 });
 
 Route::controller(AdminController::class)->group(function () {
     Route::get('/admin/users/search', 'search')->name('admin-search');
-    Route::get('/admin/{username}', 'show_user')->name('view-user-admin');  
+    Route::get('/admin/{username}', 'showUser')->name('view-user-admin');  
     Route::get('/admin/{username}/edit', 'showEditUserForm')->name('edit-user-form-admin');
     Route::get('/admin/user/create', 'showCreateUserForm')->name('create-user-form-admin');
-    Route::post('/admin/create', 'create_user')->name('create_user_admin');
-    Route::put('/admin/edit', 'edit_user')->name('edit_profile_admin');
+    Route::post('/admin/create', 'createUser')->name('create_user_admin');
+    Route::put('/admin/edit', 'editUser')->name('edit_profile_admin');
+    Route::delete('/admin/delete', 'deleteUser')->name('delete_user_admin');
 });
 
 Route::controller(GroupController::class)->group(function () {
-    Route::get('/group/{id}', 'show')->name('group');
+    Route::get('/groups', 'list')->name('groups');
+    Route::get('/group/{id}', 'show')->where('id', '[0-9]+')->name('group');
+    Route::get('/create', 'showCreateForm')->name('create_group_form');
+    Route::get('/group/{id}/edit', 'showEditForm')->name('edit_group_form');
+    Route::post('/group/create', 'create')->name('create_group');
+    Route::put('/group/edit', 'edit')->name('edit_group');
+    Route::delete('/group/delete', 'deleteGroup')->name('delete_group');
+    
+
     /*
     Route::get('/groups/{id}', 'show')->name('group');
     Route::get('/groups/{id}/edit', 'showEditForm')->name('edit_group');

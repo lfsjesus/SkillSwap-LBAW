@@ -10,6 +10,16 @@ body {
   margin: 0;  
 }
 
+footer a {
+  text-decoration: none;
+  color: white;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+
   header {
     display: flex;
     width: 70%;

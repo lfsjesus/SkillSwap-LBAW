@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit&family=Roboto:wght@300&display=swap');
+
+html {
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  background-image: linear-gradient(to left top, #4a0a2b, #3b0d22, #2c0d1a, #1e0911, #19060e, #13040a, #0b0105, #10020a, #140310, #150415, #16061a);
+  background-attachment: fixed;
+  margin: 0;  
+}
+
+footer a {
+    text-decoration: none;
+    color: white;
+  }
+  
+footer a:hover {
+text-decoration: underline;
+}
+  
+
+  header {
+    display: flex;
+    width: 70%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em 2em;
+    color: white;
+  }
+
+  aside .logo {
+    padding: 2em 0;
+  }
+
+  .logo {
+    padding: 3em 3em;
+  }
+
+  .logo img {
+    max-width: 50%;
+  }
+
+  footer {
+    position: absolute;
+    display: flex;
+    justify-content: right;
+    gap: 1.5em;
+    padding: 0.5em 2em;
+    color: white;
+    width: 100%;
+  }
+
+  #content > .static-page {
+    width: 70%;
+    margin: 0 auto 2em auto;
+    color: white;
+    text-align: justify;
+  }
+
+    #content > .static-page > h1 {
+        text-align: center;
+        font-size: 2.5em;
+        font-weight: bold;
+        padding: 0 0 1em 0;
+    }
+
+    #content > .static-page > h2 {
+        font-size: 2em;
+        font-weight: bold;
+        padding: 1em 0;
+    }
+
+    #content > .static-page > p {
+        font-size: 1em;
+        line-height: 1.5em;
+    }
+
+.developers {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
+}
+
+.developers > .developer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.developers > .developer  > img {
+    width: 9em;
+    height: 9em;
+    border-radius: 50%;
+    object-fit:cover;
+}
+    
+
+
+
