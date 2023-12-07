@@ -18,7 +18,7 @@
                         <p> {!! $comment->content !!} </p>
                     </div>
                 </div>
-                <div class="comment-stat">
+                <div class="comment-stat @if($comment->isLikedBy(Auth::user()->id)) active @endif">
                     <span class="material-symbols-outlined">
                         thumb_up
                     </span>
@@ -28,7 +28,6 @@
             <div class="comment-actions">
                 <p> {{Carbon\Carbon::parse($comment->date)->diffForHumans()}} </p>
                 @if(Auth::user())
-                <p> @if($comment->isLikedBy(Auth::user()->id)) Unlike @else Like @endif </p>
                 <p> Reply </p>
                 @if ($comment->author->id == Auth::user()->id)
                 <p> Edit </p>
