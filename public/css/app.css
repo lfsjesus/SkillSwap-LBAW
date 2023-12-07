@@ -58,6 +58,10 @@ header {
   margin: 0;
 }
 
+.static-page {
+  padding: 1em 0;
+}
+
 main {
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
