@@ -101,19 +101,11 @@
             <!-- Groups Box -->
             <div class="groups-box">
                 <h2>Groups</h2>
-                @foreach ($groups as $group)
-                <div class="user-card">
-                    <a href="{{ route('group', ['id' => $group->id]) }}">
-                        @if($group->banner)
-                        <img src="{{stream_get_contents($group->banner)}}"/>
-                        @else
-                        <img src="{{ url('assets/group.png') }}"/>
-                        @endif
-                        {{$group->name}}
-                    </a>
-    
-                </div>
-                @endforeach
+                @if (count($user->get_groups()) == 0)
+                <p> This user does not have groups </p>
+                @else
+                @each('partials.group', $user->get_groups(), 'group')
+                @endif
             </div>
         </div>
         

@@ -3,7 +3,7 @@
          @if($group->banner)
         <img src="{{stream_get_contents($group->banner)}}"/>
         @else
-        <img src="{{url('assets/blob-background.jpg')}}" alt="Background Picture">
+        <img src="{{url('assets/group.png')}}" alt="Background Picture">
         @endif
 
         <span class="card-info">
