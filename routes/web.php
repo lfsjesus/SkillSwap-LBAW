@@ -30,6 +30,11 @@ use App\Http\Controllers\CommentController;
 Route::redirect('/', '/login');
 Route::redirect('/admin', '/admin/login');
 
+// Static pages
+Route::view('/about', 'pages.about')->name('about');
+Route::view('/contacts', 'pages.contacts')->name('contacts');
+Route::view('/mainFeatures', 'pages.mainFeatures')->name('mainFeatures');
+
 Route::get('/home', [PostController::class, 'list'])->name('home');
 
 // Admin
