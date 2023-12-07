@@ -42,7 +42,8 @@ class User extends Authenticatable
         'profile_picture',
         'description',
         'birth_date',
-        'remember_token'
+        'remember_token',
+        'public_profile'
     ];
 
     /**

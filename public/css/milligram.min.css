@@ -52,6 +52,11 @@ input[type='submit'] {
 	white-space: nowrap
 }
 
+.btn-danger {
+	background-color: rgb(108, 15, 15);
+	border-color: rgb(108, 15, 15);
+}
+
 .button:focus,
 .button:hover,
 button:focus,

@@ -4,8 +4,18 @@
 
 @section('content')
  
-<section id="admin">
 
+@if (session('success'))
+<p class="success">
+    {{ session('success') }}
+</p>
+@endif
+@if (session('error'))
+<p class="error">
+    {{ session('error') }}
+</p>
+@endif
+<section id="admin">
     <div class="greeting">
         <h3>Hello, <span class="yellow">{{$admin->username}}</span></h1>
     </div>

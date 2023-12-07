@@ -65,44 +65,31 @@
             <!-- Friends Box -->
             <div class="friends-box">
                 <h2>Friends</h2>
-                @foreach ($user->get_friends() as $user)
-                <div class="user-card">
-                    <a href="{{ route('view-user-admin', ['username' => $user->username]) }}">
-                        @if($user->profile_picture)
-                        <img src="{{stream_get_contents($user->profile_picture)}}"/>
-                        @else
-                        <img src="{{ url('assets/profile-picture.png') }}"/>
-                        @endif
-                        {{$user->username}}
-    
-                    </a>
-    
-                </div>
-                @endforeach
+                @if (count($user->get_friends()) == 0)
+                <p> This user does not have friends </p>
+                @else
+                @each('partials.user', $user->get_friends(), 'user')
+                @endif
             </div>
             <!-- Groups Box -->
             <div class="groups-box">
                 <h2>Groups</h2>
-                @foreach ($user->get_groups() as $group)
-                <div class="user-card">
-                    <a href="">
-                        @if($group->profile_picture)
-                        <img src="{{stream_get_contents($user->profile_picture)}}"/>
-                        @else
-                        <img src="{{ url('assets/group.png') }}"/>
-                        @endif
-                        {{$group->name}}
-                    </a>
-    
-                </div>
-                @endforeach
+                @if (count($user->get_groups()) == 0)
+                <p> This user does not belong to any group </p>
+                @else
+                @each('partials.group', $user->get_groups(), 'group') 
+                @endif
             </div>
         </div>
         
         <!-- Posts Section -->
         <section id="posts">
             <h2>Posts</h2>
+            @if (count($posts) == 0)
+            <p> This user does not have posts </p>
+            @else
             @each('partials.post-admin', $posts, 'post')
+            @endif
         </section>
     </div>
 </section>

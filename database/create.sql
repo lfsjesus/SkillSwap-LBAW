@@ -67,7 +67,7 @@ CREATE TABLE groups (
 
 CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     group_id INTEGER REFERENCES groups(id)  ON DELETE CASCADE,
     date TIMESTAMP NOT NULL,
     CHECK (date <= CURRENT_TIMESTAMP),
