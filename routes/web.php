@@ -82,9 +82,12 @@ Route::controller(AdminController::class)->group(function () {
 
 Route::controller(GroupController::class)->group(function () {
     Route::get('/groups', 'list')->name('groups');
-    Route::get('/group/{id}', 'show')->name('group');
+    Route::get('/group/{id}', 'show')->where('id', '[0-9]+')->name('group');
     Route::get('/create', 'showCreateForm')->name('create_group_form');
+    Route::get('/group/{id}/edit', 'showEditForm')->name('edit_group_form');
     Route::post('/group/create', 'create')->name('create_group');
+    Route::put('/group/edit', 'edit')->name('edit_group');
+    
 
     /*
     Route::get('/groups/{id}', 'show')->name('group');
