@@ -865,10 +865,9 @@ let addFriendButton = document.querySelector('.add-friend');
 
 if (addFriendButton != null) {
   addFriendButton.addEventListener('click', function(e) {
-    let user_id = e.target.querySelector('input[name="user_id"]').value;
     let friend_id = e.target.querySelector('input[name="friend_id"]').value;
-    let data = {user_id: user_id, friend_id: friend_id};
-    sendAjaxRequest('POST', '/friends/add', data, addFriendHandler);
+    let data = {friend_id: friend_id};
+    sendAjaxRequest('POST', '/friend/request', data, addFriendHandler);
     }
   );
 }

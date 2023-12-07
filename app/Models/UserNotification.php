@@ -14,4 +14,6 @@ class UserNotification extends Model
     protected $fillable = [
         'notification_type'
     ];
+
+    public $incrementing = false;
 }

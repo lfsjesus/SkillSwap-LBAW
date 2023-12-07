@@ -15,4 +15,6 @@ class CommentNotification extends Model
         'comment_id',
         'notification_type'
     ];
+
+    public $incrementing = false;
 }

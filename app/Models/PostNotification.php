@@ -15,4 +15,6 @@ class PostNotification extends Model
         'post_id',
         'notification_type'
     ];
+
+    public $incrementing = false;
 }

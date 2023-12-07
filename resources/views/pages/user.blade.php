@@ -58,7 +58,6 @@
                     <!-- Add Friend Button -->
                     @if(Auth::user()->is_friend($user))
                         <a class="button remove-friend">
-                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                             <input type="hidden" name="friend_id" value="{{ $user->id }}">
                             <span class="material-symbols-outlined">
                                 person_remove

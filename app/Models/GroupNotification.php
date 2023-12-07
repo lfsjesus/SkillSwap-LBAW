@@ -15,4 +15,6 @@ class GroupNotification extends Model
         'group_id',
         'notification_type'
     ];
+
+    public $incrementing = false;
 }

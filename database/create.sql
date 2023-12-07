@@ -429,11 +429,34 @@ FOR EACH ROW
 EXECUTE FUNCTION delete_friendship();
 
 
--- User cant send a friend request to some user which he is already friends with
+-- User cant send a friend request to some user which he already sent a request
 
 CREATE OR REPLACE FUNCTION prevent_duplicate_friend_requests()
 RETURNS TRIGGER AS $$
+DECLARE 
+    sender_id_val INT;
+    receiver_id_val INT;
 BEGIN
+
+    SELECT sender_id, receiver_id
+    INTO sender_id_val, receiver_id_val
+    FROM notifications
+    WHERE id = NEW.notification_id;
+
+    IF EXISTS (
+            SELECT 1
+            FROM user_notifications
+            JOIN notifications ON user_notifications.notification_id = notifications.id
+            WHERE notification_type = 'friend_request'
+            AND (
+                (sender_id = sender_id_val AND receiver_id = receiver_id_val)
+                OR
+                (sender_id = receiver_id_val AND receiver_id = sender_id_val)
+            )
+        ) THEN
+        RAISE EXCEPTION 'A friend request already exists';
+    END IF;
+
     IF EXISTS (
             SELECT 1
             FROM is_friend
@@ -442,14 +465,16 @@ BEGIN
         ) THEN
         RAISE EXCEPTION 'Users are already friends!';
     END IF;
+
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_prevent_duplicate_friend_requests
-BEFORE INSERT ON is_friend
+BEFORE INSERT ON user_notifications
 FOR EACH ROW
 EXECUTE FUNCTION prevent_duplicate_friend_requests();
+
 
 
 -- User cant send a join group request to a group which he is already member or he has notifcation where he was banned
