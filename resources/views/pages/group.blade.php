@@ -82,12 +82,20 @@
         <!-- Members Box -->
         <div class="members-box">
             <h2>Members</h2>
+            @if ($group->get_members()->isEmpty())
+                <p>This group has no members.</p>
+            @else
                 @each('partials.user', $group->get_members(), 'user')
+            @endif
         </div>
         <!-- Groups Box -->
         <div class="owners-box">
             <h2>Owners</h2>
+            @if ($group->get_owners()->isEmpty())
+                <p>This group has no owners.</p>
+            @else
                 @each('partials.user', $group->get_owners(), 'user')
+            @endif
         </div>
     </div>
 

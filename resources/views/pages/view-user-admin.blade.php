@@ -65,7 +65,7 @@
             <!-- Friends Box -->
             <div class="friends-box">
                 <h2>Friends</h2>
-                @if (count($user->get_friends()) == 0)
+                @if ($user->get_friends()->isEmpty())
                 <p> This user does not have friends </p>
                 @else
                 @each('partials.user', $user->get_friends(), 'user')
@@ -74,7 +74,7 @@
             <!-- Groups Box -->
             <div class="groups-box">
                 <h2>Groups</h2>
-                @if (count($user->get_groups()) == 0)
+                @if ($user->get_groups()->isEmpty())
                 <p> This user does not belong to any group </p>
                 @else
                 @each('partials.group', $user->get_groups(), 'group') 
