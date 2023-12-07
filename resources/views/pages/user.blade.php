@@ -57,7 +57,9 @@
                 @if(Auth::user()->username != $user->username)
                     <!-- Add Friend Button -->
                     @if(Auth::user()->is_friend($user))
-                        <a href="" class="button">
+                        <a class="button remove-friend">
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                            <input type="hidden" name="friend_id" value="{{ $user->id }}">
                             <span class="material-symbols-outlined">
                                 person_remove
                             </span>
@@ -66,7 +68,9 @@
 
                     @else
 
-                        <a href="" class="button">
+                        <a class="button add-friend">
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                            <input type="hidden" name="friend_id" value="{{ $user->id }}">
                             <span class="material-symbols-outlined">
                                 person_add
                             </span>
