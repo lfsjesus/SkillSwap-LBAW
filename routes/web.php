@@ -34,6 +34,7 @@ Route::redirect('/admin', '/admin/login');
 Route::view('/about', 'pages.about')->name('about');
 Route::view('/contacts', 'pages.contacts')->name('contacts');
 Route::view('/mainFeatures', 'pages.mainFeatures')->name('mainFeatures');
+Route::view('/settings', 'pages.settings')->name('settings');
 
 Route::get('/home', [PostController::class, 'list'])->name('home');
 
