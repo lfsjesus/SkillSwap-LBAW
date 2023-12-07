@@ -102,7 +102,7 @@
             <div class="groups-box">
                 <h2>Groups</h2>
                 @if (count($user->get_groups()) == 0)
-                <p> This user does not have groups </p>
+                <p> This user does not belong to any group </p>
                 @else
                 @each('partials.group', $user->get_groups(), 'group')
                 @endif
@@ -112,7 +112,11 @@
         <!-- Posts Section -->
         <section id="posts">
             <h2>Posts</h2>
+            @if (count($posts) == 0)
+            <p> This user does not have posts </p>
+            @else
             @each('partials.post', $posts, 'post')
+            @endif
         </section>
     </div>
 </section>

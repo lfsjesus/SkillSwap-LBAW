@@ -126,4 +126,16 @@ class GroupController extends Model
         }
     }
 
+    public function deleteGroup(Request $request) {
+        $group = Group::find($request->id);
+
+        if (!$group->is_owner(Auth::user())) {
+            return redirect()->route('home')->with('error', 'You cannot delete a group you do not own');
+        }
+
+        $group->delete();
+
+        return redirect()->route('groups')->with('success', 'Group deleted successfully');
+    }
+
 }

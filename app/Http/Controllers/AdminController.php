@@ -26,7 +26,7 @@ class AdminController extends Controller
         }
     }
 
-    public function show_user($username) {
+    public function showUser($username) {
         if (!(Auth::guard('webadmin')->check())) {
             return redirect('/admin/login');
         }
@@ -56,49 +56,7 @@ class AdminController extends Controller
         return view('pages.create-user-admin');
     }
 
-    public function edit_user(Request $request) {
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
-        }
-
-        $id = $request->input('user_id');
-
-        $user = User::find($id);
-
-
-        // perform validation
-        $request->validate([
-            'name' => 'required|string|max:50',
-            'email' => 'required|email|max:50|unique:users,email,' . $id,
-            'phone_number' => [
-                'nullable',
-                'regex:/^\+?\d+$/',
-                'digits_between:8,15'
-            ],
-            'description' => 'nullable|string|max:500',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
-            'username' => 'required|string|max:50|unique:users,username,' . $id,
-            'birth_date' => 'nullable|date|before:18 years ago'
-        ]);
-        
-        $user->name = ($request->input('name') != null) ? $request->input('name') : $user->name;
-        $user->username = ($request->input('username') != null) ? $request->input('username') : $user->username;
-        $user->email = ($request->input('email') != null) ? $request->input('email') : $user->email;
-        $user->phone_number = ($request->input('phone_number') != null) ? $request->input('phone_number') : $user->phone_number;
-
-        // parse date
-        $user->birth_date = ($request->input('birth_date') != null) ?  date('Y-m-d', strtotime($request->input('birth_date'))) : $user->birth_date;
-        $user->profile_picture = ($request->file('profile_picture') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('profile_picture'))) : $user->profile_picture;
-        
-        $user->description = $request->input('description');
-
-
-        $user->save();
-
-        return redirect()->route('view-user-admin', ['username' => $user->username])->withSuccess('Profile updated successfully!');
-    }
-
-    public function create_user(Request $request) {
+    public function createUser(Request $request) {
         if (!(Auth::guard('webadmin')->check())) {
             return redirect('/admin/login');
         }
@@ -139,7 +97,60 @@ class AdminController extends Controller
         }
     }
 
+    public function editUser(Request $request) {
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
 
+        $id = $request->input('user_id');
+
+        $user = User::find($id);
+
+
+        // perform validation
+        $request->validate([
+            'name' => 'required|string|max:50',
+            'email' => 'required|email|max:50|unique:users,email,' . $id,
+            'phone_number' => [
+                'nullable',
+                'regex:/^\+?\d+$/',
+                'digits_between:8,15'
+            ],
+            'description' => 'nullable|string|max:500',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'username' => 'required|string|max:50|unique:users,username,' . $id,
+            'birth_date' => 'required|date|before:18 years ago',
+            'visibility' => 'required|boolean'
+        ]);
+        
+        $user->name = $request->input('name');
+        $user->username = $request->input('username');
+        $user->email = $request->input('email');
+        $user->phone_number = ($request->input('phone_number') != null) ? $request->input('phone_number') : $user->phone_number;
+        $user->birth_date = date('Y-m-d', strtotime($request->input('birth_date')));
+        $user->profile_picture = ($request->file('profile_picture') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('profile_picture'))) : $user->profile_picture;
+        $user->description = $request->input('description');
+        $user->public_profile = $request->input('visibility');
+
+        $user->save();
+
+        return redirect()->route('view-user-admin', ['username' => $user->username])->withSuccess('Profile updated successfully!');
+    }
+
+    public function deleteUser(Request $request) {
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
+
+        $id = $request->input('id');
+        $user = User::find($id);
+
+        $user->delete();
+
+        return redirect()->route('admin')->withSuccess('User deleted successfully!');
+    }
+
+   
     //Uses full text search for name and username and exact match search for email
     public function search(Request $request)
     {   
