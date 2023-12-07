@@ -585,9 +585,6 @@ aside .logo img {
   flex-direction: column;
   gap: 1em;
   align-items: center;
-  overflow-y: scroll;
-  /*hide scroll bar*/
-  -ms-overflow-style: none;  /* IE and Edge */
 }
 
 .friends-box::-webkit-scrollbar {
