@@ -37,7 +37,7 @@
                 @if(Auth::user())
                     @if($group->is_owner(Auth::user()))
                         <!-- User is the owner of the group -->
-                        <a href="" class="button">
+                        <a href="{{ route('edit_group_form', ['id' => $group->id]) }}" class="button">
                             <span class='material-symbols-outlined'>
                                 edit
                             </span>
