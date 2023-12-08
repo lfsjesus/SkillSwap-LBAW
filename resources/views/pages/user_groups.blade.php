@@ -4,9 +4,7 @@
 
 @section('content')
 
-<div class="friends">
-    @each('partials.user', $user->get_friends(), 'user')
+<div class="groups">
+    @each('partials.group', $user->get_groups(), 'group')
 </div>
 @endsection
-
-

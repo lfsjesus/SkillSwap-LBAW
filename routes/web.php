@@ -77,6 +77,7 @@ Route::controller(UserController::class)->group(function () {
     Route::delete('/user/delete', 'userDelete')->name('delete_user');
     Route::get('/search', 'search')->name('search');
     Route::get('/user/{username}/friends', 'showFriends')->name('user_friends');
+    Route::get('/user/{username}/groups', 'showGroups')->name('user_groups');
     Route::post('/friend/request', 'sendFriendRequest')->name('send_friend_request');
     Route::delete('/friend/cancel_request', 'cancelFriendRequest')->name('cancel_friend_request');
 
@@ -100,6 +101,7 @@ Route::controller(GroupController::class)->group(function () {
     Route::post('/group/create', 'create')->name('create_group');
     Route::put('/group/edit', 'edit')->name('edit_group');
     Route::delete('/group/delete', 'deleteGroup')->name('delete_group');
+    Route::get('/group/{groupId}/members', 'showMembers')->name('group_members');
 
     /*
     Route::get('/groups/{id}', 'show')->name('group');
@@ -120,11 +122,4 @@ Route::controller(CommentController::class)->group(function () {
     Route::post('/posts/comment', 'createComment')->name('create_comment');
     Route::delete('/posts/comment/delete', 'deleteComment')->name('delete_comment');
     Route::put('/posts/comment/edit', 'editComment')->name('edit_comment');
-<<<<<<< HEAD
 });
-=======
-});
-
-
-
->>>>>>> ba837d706e4e790e2c0b0549fcacb0320b32db65

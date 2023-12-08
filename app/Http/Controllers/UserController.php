@@ -265,5 +265,12 @@ class UserController extends Model
         return view('pages.user_friends', ['user' => $user, 'friends' => $friends]);
     }
 
+    public function showGroups($username)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+       
+        return view('pages.user_groups', ['user' => $user]);
+    }
+
 
 }

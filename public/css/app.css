@@ -736,7 +736,7 @@ form #form-group textarea {
   
 }
 
-.users, .groups{
+.users, .groups, .friends{
 
   display: flex;
   flex-direction: row;
@@ -751,7 +751,7 @@ form #form-group textarea {
   scrollbar-width: none;  /* Firefox */
 }
 
-.users::-webkit-scrollbar , .groups::-webkit-scrollbar{
+.users::-webkit-scrollbar , .groups::-webkit-scrollbar, .friends::-webkit-scrollbar{
   display: none;
 }
 
@@ -1179,4 +1179,15 @@ form #form-group textarea {
 
 .spacer {
   height: 20px; /* Adjust this value as needed to create more space */
+}
+
+.see-more-button {
+  background-color: #663FA4;;
+  border: none;
+  margin: 0;
+  padding: 1em 1.5em; 
+  font-size: 1em; 
+  color: white;
+  cursor: pointer;
+  border-radius: 10px;
 }
