@@ -138,4 +138,9 @@ class User extends Authenticatable
                        ->where('user_notifications.notification_type', 'friend_request')
                        ->exists();
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'receiver_id');
+    }
 }

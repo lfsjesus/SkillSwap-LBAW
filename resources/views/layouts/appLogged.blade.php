@@ -104,12 +104,17 @@
                         expand_more
                         </span>Notifications</li>
                 </ul>
-                <!-- notifications: TO CHANGE-->
-                <div class="notifications">
-                    @for($i = 0; $i < 10; $i++)
-                        @include('partials.notification')
-                    @endfor
-                </div>
+                @if (Auth::check())
+                    <div class="notifications">
+                        @each('partials.notification', Auth::user()->notifications, 'notification')
+                    </div>
+
+                @else
+
+                    <p>Login to check your notifications</p>
+
+                @endif
+                
                 <button class="button">Help</button>
             </aside>
         </main>
