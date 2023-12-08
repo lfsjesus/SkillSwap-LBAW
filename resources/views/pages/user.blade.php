@@ -45,49 +45,65 @@
             </div>
             
             @if(Auth::user())
-                @if(Auth::user()->username == $user->username)
-                <a href="{{ route('edit_profile', ['username' => Auth::user()->username]) }}" class="button">
-                    <span class='material-symbols-outlined'>
-                        edit
-                    </span>
-                    Edit Profile
-                </a>
-                @endif
 
-                @if(Auth::user()->username != $user->username)
-                    <!-- Add Friend Button -->
-                    @if(Auth::user()->is_friend($user))
+                @if(Auth::user()->id == $user->id)
+
+                    <a href="{{ route('edit_profile', ['username' => Auth::user()->username]) }}" class="button">
+                        <span class='material-symbols-outlined'>
+                            edit
+                        </span>
+                        Edit Profile
+                    </a>
+                    
+                @else
+                    
+                    @if(Auth::user()->isFriendWith($user->id))
+                        <!-- Button for removing a friend -->
                         <a class="button remove-friend">
-                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                             <input type="hidden" name="friend_id" value="{{ $user->id }}">
-                            <span class="material-symbols-outlined">
-                                person_remove
-                            </span>
+                            <span class="material-symbols-outlined">person_remove</span>
                             Remove Friend
                         </a>
 
                     @else
 
-                        <a class="button add-friend">
-                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                            <input type="hidden" name="friend_id" value="{{ $user->id }}">
-                            <span class="material-symbols-outlined">
-                                person_add
-                            </span>
-                            Add Friend
-                        </a>
 
+                        @if(Auth::user()->sentFriendRequestTo($user))
+                            <!-- Button for cancelling a sent friend request -->
+                            <a class="button cancel-friend-request">
+                                <input type="hidden" name="friend_id" value="{{ $user->id }}">
+                                <span class="material-symbols-outlined">done</span>
+                                Request Sent
+                            </a>
+
+                        @elseif($user->sentFriendRequestTo(Auth::user()))
+                            <!-- Button for accepting a received friend request -->
+                            <a class="button accept-friend-request">
+                                <input type="hidden" name="friend_id" value="{{ $user->id }}">
+                                <span class="material-symbols-outlined">person_add</span>
+                                Accept Request
+                            </a>
+
+                        @else
+                            <!-- Button for sending a new friend request -->
+                            <a class="button add-friend">
+                                <input type="hidden" name="friend_id" value="{{ $user->id }}">
+                                <span class="material-symbols-outlined">person_add</span>
+                                Add Friend
+                            </a>
+
+                        @endif
+                        
                     @endif
-                @endif    
+
+                @endif
 
             @endif
         </div>
         <p class="user-description">
             {{ $user->description }}
         </p>
-        <!-- Edit Button -->
         
-
     </div>
     <!-- Profile Content Grid -->
     <div class="profile-content">

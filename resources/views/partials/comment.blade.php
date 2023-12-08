@@ -18,7 +18,7 @@
                         <p> {!! $comment->content !!} </p>
                     </div>
                 </div>
-                <div class="comment-stat @if($comment->isLikedBy(Auth::user()->id)) active @endif">
+                <div class="comment-stat @if(Auth::check() && $comment->isLikedBy(Auth::user()->id)) active @endif">
                     <span class="material-symbols-outlined">
                         thumb_up
                     </span>
