@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Group;
+use App\Models\Member;
+use App\Models\GroupOwner;
 
 
 class GroupController extends Model 
@@ -17,94 +19,123 @@ class GroupController extends Model
         return view('pages.group', ['group' => $group]);
     }
 
-
-    public function showEditForm($username) {
-        //Check if user is group owner
-        return view('pages.editGroup', ['group' => $group]);
-    }
-
-    public function edit(Request $request) {
-        $user = User::find(Auth::user()->id);
-
-        
-        if (Auth::user()->id != $user->id) {
-            return redirect()->back()->with('error', 'You cannot edit this user');
-        }
-
-        $user->name = ($request->input('name') != null) ? $request->input('name') : $user->name;
-        $user->username = ($request->input('username') != null) ? $request->input('username') : $user->username;
-        $user->email = ($request->input('email') != null) ? $request->input('email') : $user->email;
-        $user->phone_number = ($request->input('phone_number') != null) ? $request->input('phone_number') : $user->phone_number;
-        $user->birth_date = ($request->input('birth_date') != null) ? $request->input('birth_date') : $user->birth_date;
-        $user->profile_picture = ($request->file('profile_picture') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('profile_picture'))) : $user->profile_picture;
-        
-        $user->description = $request->input('description');
-
-
-        $user->save();
-        return redirect()->route('user', ['username' => $user->username])->with('success', 'Profile edited successfully');
-    }
-
-    //Uses full text search for name and username and exact match search for email
-    public function search(Request $request)
-    {
+    public function showCreateForm() {
         if (!Auth::check()) {
-            $query = trim($request->input('q'));
-
-            if (str_contains($query, '@')) {
-                // Use the local scope for public profiles
-                $users = User::publicProfile()
-                            ->orWhere('email', 'like', '%' . $request->input('q') . '%')
-                            ->get();
-                $viewName = 'pages.search';
-            } else {
-                // Use the local scope for public profiles in full-text search
-                $users = User::publicProfile()
-                            ->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$query])
-                            ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$query])
-                            ->get();
-                $viewName = 'pages.search';
-            }
-
-            return view($viewName, ['users' => $users, 'query' => $query]);
-        } else {
-            $query = trim($request->input('q'));
-            $currentUser = Auth::user();
-
-            // Fetch public users
-            $publicUsers = User::where('public_profile', true)
-                            ->where(function ($query) use ($request) {
-                                $query->where('name', 'ILIKE', $request->input('q') . '%')
-                                        ->orWhere('username', 'ILIKE', $request->input('q') . '%')
-                                        ->orWhere('email', 'ILIKE', $request->input('q') . '%')
-                                        ->orWhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                                        ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')]);
-
-                            })
-                            ->get();
-
-            // Fetch friends of the current user
-            $friends = $currentUser->get_friends_helper()->where(function ($query) use ($request) {
-                                                            $query->where('name', 'ILIKE', $request->input('q') . '%')
-                                                                    ->orWhere('username', 'ILIKE', '%' . $request->input('q') . '%')
-                                                                    ->orWhere('email', 'ILIKE', '%' . $request->input('q') . '%')
-                                                                    ->orWhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                                                                    ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')]);
-                                                                })
-                                                                ->get();
-            // Combine and remove duplicates
-            $users = $publicUsers->merge($friends)->unique('id');
-
-            return view('pages.search', ['users' => $users, 'query' => $query]);
+            return redirect()->route('home')->with('error', 'You cannot create a group');
         }
 
-        
+        return view('pages.createGroup');
+    }
+
+    public function showEditForm($id) {
+        if (!Auth::check()) {
+            return redirect()->route('home')->with('error', 'You cannot edit a group');
+        }
+
+        $group = Group::find($id);
+
+        if (!$group->is_owner(Auth::user())) {
+            return redirect()->route('home')->with('error', 'You cannot edit a group you do not own');
+        }
+
+        return view('pages.editGroup', ['group' => $group]);
     }
 
     public function list()
     {
         $groups = DB::table('groups')->simplePaginate(20);
         return view('pages.groups', ['groups' => $groups]); 
+    }
+
+
+    public function create(Request $request) {
+        if (!Auth::check()) {
+            return redirect()->route('home')->with('error', 'You cannot create a group');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:50',
+            'description' => 'required|string|max:255',
+            'visibility' => 'required|boolean',
+            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $group = new Group();
+            $group->name = $request->name;
+            $group->banner = ($request->file('banner') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('banner'))) : null;
+            $group->description = $request->description;
+            $group->public_group = $request->visibility;
+            $group->date = date('Y-m-d H:i:s');
+
+            $group->save();
+
+            // Add user as member
+            $groupMember = new Member();
+            $groupMember->user_id = Auth::user()->id;
+            $groupMember->group_id = $group->id;
+            $groupMember->date = date('Y-m-d H:i:s');
+            $groupMember->save();
+            
+
+            // Add user as owner 
+            $groupOwner = new GroupOwner();
+            $groupOwner->user_id = Auth::user()->id;
+            $groupOwner->group_id = $group->id;
+            $groupOwner->date = date('Y-m-d H:i:s');
+            $groupOwner->save();
+
+            DB::commit();
+
+            return redirect()->route('group', ['id' => $group->id])->with('success', 'Group created successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('groups')->with('error', 'Group creation failed');
+        }
+
+    }
+
+    public function edit(Request $request) {
+        $request->validate([
+            'name' => 'required|string|max:50',
+            'description' => 'required|string|max:255',
+            'visibility' => 'required|boolean',
+            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $group = Group::find($request->id);
+            $group->name = $request->name;
+            $group->banner = ($request->file('banner') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('banner'))) : null;
+            $group->description = $request->description;
+            $group->public_group = $request->visibility;
+            $group->date = date('Y-m-d H:i:s');
+
+            $group->save();
+
+            DB::commit();
+
+            return redirect()->route('group', ['id' => $group->id])->with('success', 'Group edited successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('groups')->with('error', 'Group edit failed');
+        }
+    }
+
+    public function deleteGroup(Request $request) {
+        $group = Group::find($request->id);
+
+        if (!$group->is_owner(Auth::user())) {
+            return redirect()->route('home')->with('error', 'You cannot delete a group you do not own');
+        }
+
+        $group->delete();
+
+        return redirect()->route('groups')->with('success', 'Group deleted successfully');
     }
 
 }

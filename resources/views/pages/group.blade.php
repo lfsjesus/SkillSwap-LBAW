@@ -4,10 +4,20 @@
 
 @section('content')
  
+@if (session('success'))
+<p class="success">
+    {{ session('success') }}
+</p>
+@endif
+@if (session('error'))
+    <p class="error">
+        {{ session('error') }}
+    </p>
+@endif
 <!-- Group Section -->
-<section id="profile" class="profile-section">
+<section id="group" class="group-section">
     <!-- Group Header with Background Image -->
-    <div class="profile-header">       
+    <div class="group-header">       
         <div class="header-background">
             @if($group->banner)
             <img src="{{stream_get_contents($group->banner)}}"/>
@@ -17,7 +27,7 @@
         </div>
 
         <!-- Group Info -->
-        <div class="profile-information">
+        <div class="group-information">
             <div class="group-info">
                 <h1 class="group-name">{{ $group->name }}</h1>
                 <p class="group-description">{{ $group->description }}</p>
@@ -27,7 +37,7 @@
                 @if(Auth::user())
                     @if($group->is_owner(Auth::user()))
                         <!-- User is the owner of the group -->
-                        <a href="" class="button">
+                        <a href="{{ route('edit_group_form', ['id' => $group->id]) }}" class="button">
                             <span class='material-symbols-outlined'>
                                 edit
                             </span>
@@ -55,7 +65,7 @@
                             <span class="material-symbols-outlined">
                                 group_add
                             </span>
-                            Adhere to Group
+                            Join Group
                         </a>
 
                     @endif
@@ -72,12 +82,20 @@
         <!-- Members Box -->
         <div class="members-box">
             <h2>Members</h2>
+            @if ($group->get_members()->isEmpty())
+                <p>This group has no members.</p>
+            @else
                 @each('partials.user', $group->get_members(), 'user')
+            @endif
         </div>
         <!-- Groups Box -->
         <div class="owners-box">
             <h2>Owners</h2>
+            @if ($group->get_owners()->isEmpty())
+                <p>This group has no owners.</p>
+            @else
                 @each('partials.user', $group->get_owners(), 'user')
+            @endif
         </div>
     </div>
 
@@ -85,7 +103,7 @@
     <section id="posts">
         <h2>Posts</h2>
         @if(Auth::user())
-        @include('partials.create-group-post', ['group' => $group])
+        @include('partials.create-post', ['group' => $group])
         @endif    
         @each('partials.post', $group->posts, 'post')
     </section>

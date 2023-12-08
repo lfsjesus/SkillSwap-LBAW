@@ -22,6 +22,8 @@ class Member extends Model
         'group_id'
     ];
 
+    public $incrementing = false;
+
     public function group() {
         return $this->belongsTo(Group::class);
     }

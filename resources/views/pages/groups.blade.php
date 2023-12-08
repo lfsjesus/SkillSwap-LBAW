@@ -1,11 +1,21 @@
-@extends('layouts.appLoggedAdmin')
+@extends('layouts.appLogged')
 
-@section('title', 'User')
+@section('title', 'Groups')
 
 @section('content')
- 
-<section id="admin">
-    <button><a href="{{route('create-user-form-admin')}}"><span class='material-symbols-outlined'>add_circle</span> user</a></button>
+
+<section id="groups">
+    @if (session('success'))
+    <p class="success">
+        {{ session('success') }}
+    </p>
+    @endif
+    @if (session('error'))
+        <p class="error">
+            {{ session('error') }}
+        </p>
+    @endif
+    <button><a href="{{route('create_group_form')}}"><span class='material-symbols-outlined'>add_circle</span> group</a></button>
     <div class="users">
         @each('partials.group', $groups, 'group')
     </div>

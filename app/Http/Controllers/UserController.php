@@ -62,22 +62,41 @@ class UserController extends Model
             'description' => 'nullable|string|max:500',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'username' => 'required|string|max:50|unique:users,username,' . Auth::user()->id,
-            'birth_date' => 'nullable|date|before:18 years ago'
+            'birth_date' => 'required|date|before:18 years ago',
+            'visibility' => 'required|boolean'
         ]);
         
 
-        $user->name = ($request->input('name') != null) ? $request->input('name') : $user->name;
-        $user->username = ($request->input('username') != null) ? $request->input('username') : $user->username;
-        $user->email = ($request->input('email') != null) ? $request->input('email') : $user->email;
+        $user->name = $request->input('name');
+        $user->username = $request->input('username');
+        $user->email = $request->input('email');
         $user->phone_number = ($request->input('phone_number') != null) ? $request->input('phone_number') : $user->phone_number;
-        $user->birth_date = ($request->input('birth_date') != null) ? $request->input('birth_date') : $user->birth_date;
+        $user->birth_date = $request->input('birth_date');
         $user->profile_picture = ($request->file('profile_picture') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('profile_picture'))) : $user->profile_picture;
-        
         $user->description = $request->input('description');
+        $user->public_profile = $request->input('visibility');
 
 
         $user->save();
         return redirect()->route('user', ['username' => $user->username])->withSuccess('Profile updated successfully!');
+    }
+
+    public function userDelete(Request $request) { 
+        if (!Auth::check()) {
+            return redirect()->route('home')->with('error', 'You cannot delete this user');
+        }
+
+        $user = User::find($request->input('id'));
+
+        if (Auth::user()->id != $user->id) {
+            return redirect()->back()->with('error', 'You cannot delete this user');
+        }
+
+        $user->delete();
+
+        Auth::logout();
+        
+        return redirect()->route('home')->with('success', 'User deleted successfully!');
     }
 
 

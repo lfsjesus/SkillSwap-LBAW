@@ -58,6 +58,10 @@ header {
   margin: 0;
 }
 
+.static-page {
+  padding: 1em 0;
+}
+
 main {
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
@@ -68,7 +72,6 @@ main > aside {
   margin: 1rem;
   display:flex;
   flex-direction: column;
-  padding: 1.5em 2.5em;
   color: white;
   justify-content: space-between;
   height: 100%;
@@ -152,6 +155,7 @@ main > aside ul > li > a:hover {
 }
 
 main > aside#left-bar {
+  padding: 1.5em 2.5em;
   grid-column: 1;
   /*background: linear-gradient(to right, #000000,#050505, #0e030e, rgba(22,6,26, 0.1));
   */
@@ -159,6 +163,8 @@ main > aside#left-bar {
 }
 
 main > aside#right-bar {
+  padding: 1.5em 0.5em;
+  overflow-y: scroll;
   grid-column: 3;
   /*
   background: linear-gradient(to bottom left, #000000,#050505, #0e030e, rgba(22,6,26, 0.1));
@@ -495,7 +501,7 @@ aside .logo img {
 
 
 /* Profile Section Styles */
-.profile-section {
+.profile-section, .group-section {
   width: 100%;
   max-width: 60em;
   margin: 1em;
@@ -504,7 +510,7 @@ aside .logo img {
   padding: 1em;
 }
 
-.profile-header {
+.profile-header, .group-header {
   position: relative;
   border-radius: 10px;
   background-size: cover;
@@ -579,9 +585,6 @@ aside .logo img {
   flex-direction: column;
   gap: 1em;
   align-items: center;
-  overflow-y: scroll;
-  /*hide scroll bar*/
-  -ms-overflow-style: none;  /* IE and Edge */
 }
 
 .friends-box::-webkit-scrollbar {
@@ -616,13 +619,13 @@ aside .logo img {
 
 /* Edit Profile Page Styles */
 
-#edit-profile, #create-profile {
+#edit-profile, #create-profile, #create-group, #edit-group {
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-.edit-profile-section, .create-profile-section {
+.edit-profile-section, .create-profile-section, .create-group-section, .edit-group-section {
   width: 100%;
   max-width: 50em;
   margin: 0 auto;
@@ -632,7 +635,7 @@ aside .logo img {
   border-radius: 8px;
 }
 
-.edit-profile-section h1, .create-profile-section h1 {
+.edit-profile-section h1, .create-profile-section h1, .create-group-section h1, .edit-group-section h1 {
   text-align: center;
   color: white;
   margin-bottom: 1.25em;
@@ -674,13 +677,26 @@ form #form-group textarea:focus {
   border-color: #8d73eb;
 }
 
+form #form-group select {
+  width: 100%;
+  padding: 0.625em;
+  border: 1px solid #2e3541;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #232a37;
+  font-size: 0.9em;
+  height: 3.5em;
+}
+
 form #form-group textarea {
   height: 6.25em;
   resize: vertical;
   line-height: 1.5;
 }
 
-#admin {
+#admin, #groups {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -701,7 +717,7 @@ form #form-group textarea {
   color: #8d73eb;
 }
 
-#admin button a {
+#admin button a, #groups button a {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -830,7 +846,7 @@ form #form-group textarea {
   font-family: 'Montserrat', sans-serif;
 }
 
-.profile-information{
+.profile-information, .group-information{
   padding: 1rem 0;
   display: flex;
   flex-direction: row;
@@ -1004,6 +1020,13 @@ form #form-group textarea {
   text-decoration: underline;
 }
 
+
+.comment-actions p:nth-child(3) {
+  font-weight: bold;
+  color: #8d73eb;
+  cursor: pointer;
+}
+
 .comment-actions p:nth-child(3):hover {
   text-decoration: underline;
 }
@@ -1018,16 +1041,6 @@ form #form-group textarea {
   text-decoration: underline;
 }
 
-.comment-actions p:nth-child(5) {
-  font-weight: bold;
-  color: #8d73eb;
-  cursor: pointer;
-}
-
-.comment-actions p:nth-child(5):hover {
-  text-decoration: underline;
-}
-
 .comment-stat {
   display: flex;
   gap: 0.5em;
@@ -1038,6 +1051,11 @@ form #form-group textarea {
   border-radius: 12px;
   background-color: #2e3541;
   cursor: pointer;
+}
+
+.comment-stat.active {
+  background-color: #8d73eb;
+  color: white;
 }
 
 .comment-stat span {
@@ -1055,4 +1073,56 @@ form #form-group textarea {
   flex-direction: row;
   align-items: center;
   gap: 1em;
+}
+
+.notifications {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  width: 100%;
+}
+
+.notification {
+  display: flex;
+  background-color: #232a37;
+  border-radius: 10px;
+  width: 100%;
+  padding: 1em;
+  flex-direction: row;
+  align-items: center;
+  font-size: 0.8em;
+  gap: 1em;
+}
+
+.notification .notification-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.notification img {
+  width: 2em;
+  height: 2em;
+  object-fit: cover;
+  border-radius: 50%;
+  image-rendering: pixelated;
+}
+
+.notification .notification-answer {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+}
+
+.notification .notification-answer button {
+  border: none;
+  margin: 0;
+  padding: 0.1em 1.2em;
+  font-size: 0.7em;
+  color: white;
+  cursor: pointer;
+}
+
+.notification p {
+  margin: 0;
 }

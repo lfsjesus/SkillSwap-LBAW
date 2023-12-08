@@ -391,21 +391,20 @@ function likeCommentHandler() {
   if (item == null) return;
 
   let element = document.querySelector('.comment[data-id="' + item.comment_id + '"]');
-  let button = element.querySelector('.comment-actions p:nth-child(2)');
+  let button = element.querySelector('.comment-stat');
 
   // To update like count
-  let likeStat = element.querySelector('.comment-stat p');
+  
+  let likeStat = button.querySelector('p');
   let likeCount = parseInt(likeStat.innerHTML);
   
   if (item.liked) {
     button.classList.add('active');
     likeCount++;
-    button.innerHTML = 'Unlike';
   }
   else {
     button.classList.remove('active');
     likeCount--;
-    button.innerHTML = 'Like';
   }
   
   likeStat.innerHTML = likeCount;    
@@ -413,7 +412,7 @@ function likeCommentHandler() {
 }
 
 
-let commentLikeButtons = document.querySelectorAll('article.post .comment .comment-actions p:nth-child(2)');
+let commentLikeButtons = document.querySelectorAll('article.post .comment .comment-stat');
 
 if (commentLikeButtons != null) {
   commentLikeButtons.forEach(function(button) {
@@ -467,7 +466,7 @@ function commentButtonHandler() {
 
 
 
-let replyButtons = document.querySelectorAll('article.post .comment .comment-actions p:nth-child(3)');
+let replyButtons = document.querySelectorAll('article.post .comment .comment-actions p:nth-child(2)');
 if (replyButtons != null) {
   replyButtons.forEach(function(button) {
     button.addEventListener('click', function(e) {
@@ -521,7 +520,7 @@ function commentPostHandler() {
   }
   // Update comment count on post
   let commentCount = document.querySelector('article.post[data-id="' + response.post_id + '"] .post-stats .post-stat:nth-child(2) p');
-  let count = parseInt(commentCount.innerHTML);
+  let count = parseInt(commentCount.innerHTML) || 0;
   count++;
 
   commentCount.innerHTML = count + ' comments'; 
@@ -598,14 +597,19 @@ function deleteCommentHandler() {
 
   comment.remove();
 
-  let count = parseInt(commentCount.innerHTML);
+  let count = parseInt(commentCount.innerHTML) || 0;
   count--;
 
+  if (count == 0) {
+    commentCount.innerHTML = '';
+  }
+  else {
   commentCount.innerHTML = count + ' comments';
+  }
 }
 
 
-let editCommentButtons = document.querySelectorAll('article.post .comment .comment-actions p:nth-child(4)');
+let editCommentButtons = document.querySelectorAll('article.post .comment .comment-actions p:nth-child(3)');
 if (editCommentButtons != null) {
   editCommentButtons.forEach(function(button) {
     button.addEventListener('click', function(e) {
@@ -686,6 +690,13 @@ function createComment(id, post_id, author_name, content, replyTo_id) {
   commentStatSpan.className = 'material-symbols-outlined';
   commentStatSpan.innerHTML = 'thumb_up';
 
+  commentStat.addEventListener('click', function(e) {
+    let id = e.target.closest('.comment').getAttribute('data-id');
+    let data = {comment_id: id};
+    sendAjaxRequest('POST', '/comments/like', data, likeCommentHandler);
+    }
+  );
+
   let commentStatP = document.createElement('p');
   commentStatP.innerHTML = '0';
 
@@ -705,29 +716,20 @@ function createComment(id, post_id, author_name, content, replyTo_id) {
   commentActionsP1.innerHTML = 'Just now'; 
 
   let commentActionsP2 = document.createElement('p');
-  commentActionsP2.innerHTML = 'Like'; 
-  commentActionsP2.addEventListener('click', function(e) {
-    let id = e.target.closest('.comment').getAttribute('data-id');
-    let data = {comment_id: id};
-    sendAjaxRequest('POST', '/comments/like', data, likeCommentHandler);
-    }
-  );
+  commentActionsP2.innerHTML = 'Reply'; 
+  commentActionsP2.addEventListener('click', commentButtonHandler);
 
   let commentActionsP3 = document.createElement('p');
-  commentActionsP3.innerHTML = 'Reply'; 
-  commentActionsP3.addEventListener('click', commentButtonHandler);
-
-  let commentActionsP4 = document.createElement('p');
-  commentActionsP4.innerHTML = 'Edit';
-  commentActionsP4.addEventListener('click', function(e) {
+  commentActionsP3.innerHTML = 'Edit';
+  commentActionsP3.addEventListener('click', function(e) {
     let id = e.target.closest('.comment').getAttribute('data-id');
     editComment(id);
     }
   );
 
-  let commentActionsP5 = document.createElement('p');
-  commentActionsP5.innerHTML = 'Delete';
-  commentActionsP5.addEventListener('click', function(e) {
+  let commentActionsP4 = document.createElement('p');
+  commentActionsP4.innerHTML = 'Delete';
+  commentActionsP4.addEventListener('click', function(e) {
     let id = e.target.closest('.comment').getAttribute('data-id');
     let data = {id: id};
     sendAjaxRequest('DELETE', '/posts/comment/delete', data, deleteCommentHandler);
@@ -739,7 +741,6 @@ function createComment(id, post_id, author_name, content, replyTo_id) {
   commentActions.appendChild(commentActionsP2);
   commentActions.appendChild(commentActionsP3);
   commentActions.appendChild(commentActionsP4);
-  commentActions.appendChild(commentActionsP5);
 
   // Comment body
   let commentReplies = document.createElement('div');
@@ -846,7 +847,6 @@ function editCommentHandler() {
   
 }
 
-
 // Handle active menu based on url
 let menuItems = document.querySelectorAll('nav ul li');
 
@@ -857,4 +857,75 @@ if (menuItems != null) {
     }
   }
   );
+}
+
+// Handle Friend Requests
+
+let addFriendButton = document.querySelector('.add-friend');
+
+if (addFriendButton != null) {
+  addFriendButton.addEventListener('click', function(e) {
+    let user_id = e.target.querySelector('input[name="user_id"]').value;
+    let friend_id = e.target.querySelector('input[name="friend_id"]').value;
+    let data = {user_id: user_id, friend_id: friend_id};
+    sendAjaxRequest('POST', '/friends/add', data, addFriendHandler);
+    }
+  );
+}
+
+function addFriendHandler() {
+  //see if response wasnt null
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let addFriendButton = document.querySelector('.add-friend');
+  addFriendButton.classList.remove('add-friend');
+  addFriendButton.classList.add('cancel-friend-request');
+  addFriendButton.addEventListener('click', function(e) {
+    let user_id = e.target.querySelector('input[name="user_id"]').value;
+    let friend_id = e.target.querySelector('input[name="friend_id"]').value;
+    let data = {user_id: user_id, friend_id: friend_id};
+    sendAjaxRequest('DELETE', '/friends/delete', data, cancelFriendRequestHandler);
+    }
+  );
+
+  let iconSpan = addFriendButton.querySelector('span');
+  iconSpan.innerHTML = 'done';
+  let input1 = addFriendButton.querySelector('input[name="user_id"]');
+  let input2 = addFriendButton.querySelector('input[name="friend_id"]');
+
+  addFriendButton.innerHTML = '';
+  addFriendButton.appendChild(input1);
+  addFriendButton.appendChild(input2);
+  addFriendButton.appendChild(iconSpan);
+  addFriendButton.innerHTML += 'Request sent';
+}
+
+
+function cancelFriendRequestHandler() {
+  //see if response wasnt null
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let cancelFriendRequestButton = document.querySelector('.cancel-friend-request');
+  cancelFriendRequestButton.classList.remove('cancel-friend-request');
+  cancelFriendRequestButton.classList.add('add-friend');
+  cancelFriendRequestButton.addEventListener('click', function(e) {
+    let user_id = e.target.querySelector('input[name="user_id"]').value;
+    let friend_id = e.target.querySelector('input[name="friend_id"]').value;
+    let data = {user_id: user_id, friend_id: friend_id};
+    sendAjaxRequest('POST', '/friends/add', data, addFriendHandler);
+    }
+  );
+
+  let iconSpan = cancelFriendRequestButton.querySelector('span');
+  iconSpan.innerHTML = 'person_add';
+  let input1 = cancelFriendRequestButton.querySelector('input[name="user_id"]');
+  let input2 = cancelFriendRequestButton.querySelector('input[name="friend_id"]');
+
+  cancelFriendRequestButton.innerHTML = '';
+  cancelFriendRequestButton.appendChild(input1);
+  cancelFriendRequestButton.appendChild(input2);
+  cancelFriendRequestButton.appendChild(iconSpan);
+  cancelFriendRequestButton.innerHTML += 'Add friend';
 }

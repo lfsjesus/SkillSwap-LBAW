@@ -57,7 +57,9 @@
                 @if(Auth::user()->username != $user->username)
                     <!-- Add Friend Button -->
                     @if(Auth::user()->is_friend($user))
-                        <a href="" class="button">
+                        <a class="button remove-friend">
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                            <input type="hidden" name="friend_id" value="{{ $user->id }}">
                             <span class="material-symbols-outlined">
                                 person_remove
                             </span>
@@ -66,7 +68,9 @@
 
                     @else
 
-                        <a href="" class="button">
+                        <a class="button add-friend">
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                            <input type="hidden" name="friend_id" value="{{ $user->id }}">
                             <span class="material-symbols-outlined">
                                 person_add
                             </span>
@@ -92,31 +96,31 @@
             <!-- Friends Box -->
             <div class="friends-box">
                 <h2>Friends</h2>
+                @if ($user->get_friends()->isEmpty())
+                <p> This user does not have friends </p>
+                @else 
                 @each('partials.user', $user->get_friends(), 'user')
+                @endif
             </div>
             <!-- Groups Box -->
             <div class="groups-box">
                 <h2>Groups</h2>
-                @foreach ($groups as $group)
-                <div class="user-card">
-                    <a href="{{ route('group', ['id' => $group->id]) }}">
-                        @if($group->banner)
-                        <img src="{{stream_get_contents($group->banner)}}"/>
-                        @else
-                        <img src="{{ url('assets/group.png') }}"/>
-                        @endif
-                        {{$group->name}}
-                    </a>
-    
-                </div>
-                @endforeach
+                @if ($user->get_groups()->isEmpty())
+                <p> This user does not belong to any group </p>
+                @else
+                @each('partials.group', $user->get_groups(), 'group')
+                @endif
             </div>
         </div>
         
         <!-- Posts Section -->
         <section id="posts">
             <h2>Posts</h2>
+            @if (count($posts) == 0)
+            <p> This user does not have posts </p>
+            @else
             @each('partials.post', $posts, 'post')
+            @endif
         </section>
     </div>
 </section>

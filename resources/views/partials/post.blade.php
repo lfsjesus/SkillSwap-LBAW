@@ -48,9 +48,11 @@
             <p> {{$post->getLikesCount()}} </p>
         </div>
         <div class="post-stat">
+            <p>
             @if($post->getCommentsCount() > 0)
-            <p> {{$post->getCommentsCount()}} comments </p>
+            {{$post->getCommentsCount()}} comments 
             @endif
+            </p>
         </div>
     </div>
     @include('partials.post-actions')
