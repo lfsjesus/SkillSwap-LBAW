@@ -736,7 +736,7 @@ form #form-group textarea {
   
 }
 
-.users, .groups{
+.users, .groups, .friends{
 
   display: flex;
   flex-direction: row;
@@ -751,7 +751,7 @@ form #form-group textarea {
   scrollbar-width: none;  /* Firefox */
 }
 
-.users::-webkit-scrollbar , .groups::-webkit-scrollbar{
+.users::-webkit-scrollbar , .groups::-webkit-scrollbar, .friends::-webkit-scrollbar{
   display: none;
 }
 
