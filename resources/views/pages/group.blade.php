@@ -86,6 +86,10 @@
                 <p>This group has no members.</p>
             @else
                 @each('partials.user', $group->get_members(), 'user')
+                <div class="spacer"></div>
+                <div class="see-more-container">
+                    <button class="see-more">See More</button>
+                </div>
             @endif
         </div>
         <!-- Groups Box -->
@@ -95,6 +99,10 @@
                 <p>This group has no owners.</p>
             @else
                 @each('partials.user', $group->get_owners(), 'user')
+                <div class="spacer"></div>
+                <div class="see-more-container">
+                    <button class="see-more">See More</button>
+                </div>
             @endif
         </div>
     </div>
