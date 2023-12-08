@@ -138,4 +138,11 @@ class GroupController extends Model
         return redirect()->route('groups')->with('success', 'Group deleted successfully');
     }
 
+    public function showMembers($groupId)
+    {
+        $group = Group::findOrFail($groupId);
+        $members = Member::where('group_id', $groupId)->get(); 
+
+        return view('pages.group_members', ['group' => $group, 'members' => $members]);
+    }
 }
