@@ -100,6 +100,10 @@
                 <p> This user does not have friends </p>
                 @else 
                 @each('partials.user', $user->get_friends(), 'user')
+                <div class="spacer"></div>
+                <div class="see-more-container">
+                    <button class="see-more">See More</button>
+                </div>
                 @endif
             </div>
             <!-- Groups Box -->
@@ -109,6 +113,10 @@
                 <p> This user does not belong to any group </p>
                 @else
                 @each('partials.group', $user->get_groups(), 'group')
+                <div class="spacer"></div>
+                <div class="see-more-container">
+                    <button class="see-more">See More</button>
+                </div>
                 @endif
             </div>
         </div>
