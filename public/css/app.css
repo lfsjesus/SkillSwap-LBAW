@@ -1138,7 +1138,7 @@ form #form-group textarea {
   display: none;
   position: absolute;
   background-color: #2e3541;
-  min-width: 200px;
+  min-width: 13.75em;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
@@ -1151,7 +1151,7 @@ form #form-group textarea {
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #2e3541}
+.dropdown-content a:hover {background-color: #65676a}
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
@@ -1160,5 +1160,5 @@ form #form-group textarea {
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
-  background-color: transparent;
+  background-color: #242526;
 }
