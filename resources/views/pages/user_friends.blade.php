@@ -3,11 +3,10 @@
 @section('title', 'User')
 
 @section('content')
- 
-<section id="profile" class="profile-section">
-    @each('partials.user', $user->get_friends(), 'user')
-</section>
 
+<div class="users">
+    @each('partials.user', $user->get_friends(), 'user')
+</div>
 @endsection
 
 
