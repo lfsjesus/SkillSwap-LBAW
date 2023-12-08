@@ -101,6 +101,7 @@ Route::controller(GroupController::class)->group(function () {
     Route::post('/group/create', 'create')->name('create_group');
     Route::put('/group/edit', 'edit')->name('edit_group');
     Route::delete('/group/delete', 'deleteGroup')->name('delete_group');
+    Route::get('/group/{groupId}/members', 'showMembers')->name('group_members');
 
     /*
     Route::get('/groups/{id}', 'show')->name('group');
