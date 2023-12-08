@@ -145,4 +145,12 @@ class GroupController extends Model
 
         return view('pages.group_members', ['group' => $group, 'members' => $members]);
     }
+
+    public function showOwners($groupId)
+    {
+        $group = Group::findOrFail($groupId);
+        $owners = $group->owners()->get(); 
+
+        return view('pages.group_owners', ['group' => $group, 'owners' => $owners]);
+    }
 }
