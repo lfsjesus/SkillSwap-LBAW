@@ -102,7 +102,7 @@
                 @each('partials.user', $user->get_friends(), 'user')
                 <div class="spacer"></div>
                 <div class="see-more-container">
-                    <button class="see-more">See More</button>
+                    <a href="{{ route('user.friends', 'username') }}" class="see-more-button">See More</a>
                 </div>
                 @endif
             </div>
@@ -115,7 +115,7 @@
                 @each('partials.group', $user->get_groups(), 'group')
                 <div class="spacer"></div>
                 <div class="see-more-container">
-                    <button class="see-more">See More</button>
+                    <a href="{{ route('user.friends', 'username') }}" class="see-more-button">See More</a>
                 </div>
                 @endif
             </div>

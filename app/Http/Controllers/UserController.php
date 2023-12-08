@@ -184,4 +184,13 @@ class UserController extends Model
         
     }
 
+    public function showFriends($username)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+        $friends = $user->friends; 
+
+        return view('friends', ['friends' => $friends]); 
+    }
+
+
 }
