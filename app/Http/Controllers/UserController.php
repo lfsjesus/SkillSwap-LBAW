@@ -257,7 +257,6 @@ class UserController extends Model
         
     }
 
-<<<<<<< HEAD
     public function showFriends($username)
     {
         $user = User::where('username', $username)->firstOrFail();
@@ -265,8 +264,6 @@ class UserController extends Model
 
         return view('pages.user_friends', ['user' => $user, 'friends' => $friends]);
     }
-=======
->>>>>>> ba837d706e4e790e2c0b0549fcacb0320b32db65
 
 
 }
