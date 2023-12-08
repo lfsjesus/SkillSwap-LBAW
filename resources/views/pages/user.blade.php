@@ -116,6 +116,10 @@
                 <p> This user does not have friends </p>
                 @else 
                 @each('partials.user', $user->get_friends(), 'user')
+                <div class="spacer"></div>
+                <div class="see-more-container">
+                    <a href="{{ route('user_friends', ['username' => $user->username]) }}" class="see-more-button">See More</a>
+                </div>
                 @endif
             </div>
             <!-- Groups Box -->
@@ -125,6 +129,10 @@
                 <p> This user does not belong to any group </p>
                 @else
                 @each('partials.group', $user->get_groups(), 'group')
+                <div class="spacer"></div>
+                <div class="see-more-container">
+                   
+                </div>
                 @endif
             </div>
         </div>

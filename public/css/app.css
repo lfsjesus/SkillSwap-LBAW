@@ -585,6 +585,10 @@ aside .logo img {
   flex-direction: column;
   gap: 1em;
   align-items: center;
+
+  position: relative;
+  /* Your existing styles here */
+  padding-bottom: 60px; /* Add padding to the bottom to make space for the see more button */
 }
 
 .friends-box::-webkit-scrollbar {
@@ -1163,3 +1167,16 @@ form #form-group textarea {
 }
 
 
+.see-more-container {
+  background-color: transparent;
+  position: absolute;
+  padding-top: 10px;
+  bottom: 10px; /* Adjust this value to match the desired distance from the bottom */
+  width: 100%; /* This makes the div span the entire width of the box */
+  display: flex;
+  justify-content: center; /* This will center the button in the container */
+}
+
+.spacer {
+  height: 20px; /* Adjust this value as needed to create more space */
+}

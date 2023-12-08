@@ -76,8 +76,10 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/user/edit', 'edit')->name('edit_user');
     Route::delete('/user/delete', 'userDelete')->name('delete_user');
     Route::get('/search', 'search')->name('search');
+    Route::get('/user/{username}/friends', 'showFriends')->name('user_friends');
     Route::post('/friend/request', 'sendFriendRequest')->name('send_friend_request');
     Route::delete('/friend/cancel_request', 'cancelFriendRequest')->name('cancel_friend_request');
+
 });
 
 Route::controller(AdminController::class)->group(function () {
@@ -118,7 +120,11 @@ Route::controller(CommentController::class)->group(function () {
     Route::post('/posts/comment', 'createComment')->name('create_comment');
     Route::delete('/posts/comment/delete', 'deleteComment')->name('delete_comment');
     Route::put('/posts/comment/edit', 'editComment')->name('edit_comment');
+<<<<<<< HEAD
+});
+=======
 });
 
 
 
+>>>>>>> ba837d706e4e790e2c0b0549fcacb0320b32db65
