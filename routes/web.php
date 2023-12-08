@@ -102,6 +102,7 @@ Route::controller(GroupController::class)->group(function () {
     Route::put('/group/edit', 'edit')->name('edit_group');
     Route::delete('/group/delete', 'deleteGroup')->name('delete_group');
     Route::get('/group/{groupId}/members', 'showMembers')->name('group_members');
+    Route::get('/group/{groupId}/owners', 'showOwners')->name('group_owners');
 
     /*
     Route::get('/groups/{id}', 'show')->name('group');
