@@ -77,6 +77,7 @@
                             </a>
                             <div class="dropdown-content">
                                 <a href="#">Link 1</a>
+                                <a href="{{ route('about') }}">About</a>
                                 <a href="#">Link 2</a>
                                 <a href="#">Link 3</a>
                                 <!-- Add more links here as needed -->
