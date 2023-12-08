@@ -158,6 +158,49 @@ class UserController extends Model
     }
 
 
+    public function cancelFriendRequest(Request $request) {
+        if (!Auth::check()) {
+            return redirect()->route('home')->with('error', 'You cannot cancel a friend request');
+        }
+
+        $user = User::find($request->input('friend_id'));
+
+        if (Auth::user()->id == $user->id) {
+            return redirect()->back()->with('error', 'You cannot cancel a friend request to yourself');
+        }
+
+        /*
+        if (!Auth::user()->has_pending_friend_request_from($user)) {
+            return redirect()->back()->with('error', 'You do not have a pending friend request from this user');
+        }
+        */
+
+        try {
+            DB::beginTransaction();
+
+            $notification_join = Notification::join('user_notifications', 'notifications.id', '=', 'user_notifications.notification_id')
+                                        ->where('notifications.sender_id', Auth::user()->id)
+                                        ->where('notifications.receiver_id', $user->id)
+                                        ->where('user_notifications.notification_type', 'friend_request')
+                                        ->firstOrFail();
+
+            $notification_id = $notification_join->id;
+
+            //delete the notification
+            $notification = Notification::find($notification_id);
+
+            $notification->delete();
+
+            
+            DB::commit();
+
+            return json_encode(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error while cancelling friend request. Try again!');
+        }
+    }
+
     //Uses full text search for name and username and exact match search for email
     public function search(Request $request)
     {

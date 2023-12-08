@@ -68,7 +68,6 @@
                     @else
 
                         <a class="button add-friend">
-                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                             <input type="hidden" name="friend_id" value="{{ $user->id }}">
                             <span class="material-symbols-outlined">
                                 person_add

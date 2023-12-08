@@ -860,7 +860,7 @@ if (menuItems != null) {
 }
 
 // Handle Friend Requests
-
+/*
 let addFriendButton = document.querySelector('.add-friend');
 
 if (addFriendButton != null) {
@@ -881,20 +881,17 @@ function addFriendHandler() {
   addFriendButton.classList.remove('add-friend');
   addFriendButton.classList.add('cancel-friend-request');
   addFriendButton.addEventListener('click', function(e) {
-    let user_id = e.target.querySelector('input[name="user_id"]').value;
     let friend_id = e.target.querySelector('input[name="friend_id"]').value;
-    let data = {user_id: user_id, friend_id: friend_id};
-    sendAjaxRequest('DELETE', '/friends/delete', data, cancelFriendRequestHandler);
+    let data = {friend_id: friend_id};
+    sendAjaxRequest('DELETE', '/friend/cancel_request', data, cancelFriendRequestHandler);
     }
   );
 
   let iconSpan = addFriendButton.querySelector('span');
   iconSpan.innerHTML = 'done';
-  let input1 = addFriendButton.querySelector('input[name="user_id"]');
   let input2 = addFriendButton.querySelector('input[name="friend_id"]');
 
   addFriendButton.innerHTML = '';
-  addFriendButton.appendChild(input1);
   addFriendButton.appendChild(input2);
   addFriendButton.appendChild(iconSpan);
   addFriendButton.innerHTML += 'Request sent';
@@ -910,21 +907,73 @@ function cancelFriendRequestHandler() {
   cancelFriendRequestButton.classList.remove('cancel-friend-request');
   cancelFriendRequestButton.classList.add('add-friend');
   cancelFriendRequestButton.addEventListener('click', function(e) {
-    let user_id = e.target.querySelector('input[name="user_id"]').value;
     let friend_id = e.target.querySelector('input[name="friend_id"]').value;
-    let data = {user_id: user_id, friend_id: friend_id};
+    let data = {friend_id: friend_id};
     sendAjaxRequest('POST', '/friends/add', data, addFriendHandler);
     }
   );
 
   let iconSpan = cancelFriendRequestButton.querySelector('span');
   iconSpan.innerHTML = 'person_add';
-  let input1 = cancelFriendRequestButton.querySelector('input[name="user_id"]');
   let input2 = cancelFriendRequestButton.querySelector('input[name="friend_id"]');
 
   cancelFriendRequestButton.innerHTML = '';
-  cancelFriendRequestButton.appendChild(input1);
   cancelFriendRequestButton.appendChild(input2);
   cancelFriendRequestButton.appendChild(iconSpan);
   cancelFriendRequestButton.innerHTML += 'Add friend';
+}
+*/
+
+
+// Handle Friend Requests using Event Delegation
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.add-friend')) {
+      handleAddFriendClick(e);
+  } else if (e.target.closest('.cancel-friend-request')) {
+      handleCancelFriendRequestClick(e);
+  }
+});
+
+function handleAddFriendClick(e) {
+  let friend_id = e.target.closest('.add-friend').querySelector('input[name="friend_id"]').value;
+  let data = { friend_id: friend_id };
+  sendAjaxRequest('POST', '/friend/request', data, addFriendHandler);
+}
+
+function handleCancelFriendRequestClick(e) {
+  let friend_id = e.target.closest('.cancel-friend-request').querySelector('input[name="friend_id"]').value;
+  let data = { friend_id: friend_id };
+  sendAjaxRequest('DELETE', '/friend/cancel_request', data, cancelFriendRequestHandler);
+}
+
+function addFriendHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let button = document.querySelector('.add-friend');
+  button.classList.remove('add-friend');
+  button.classList.add('cancel-friend-request');
+  let iconSpan = button.querySelector('span');
+  iconSpan.innerHTML = 'done';
+  let input2 = button.querySelector('input[name="friend_id"]');
+  button.innerHTML = '';
+  button.appendChild(input2);
+  button.appendChild(iconSpan);
+  button.innerHTML += 'Request sent';
+}
+
+function cancelFriendRequestHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let button = document.querySelector('.cancel-friend-request');
+  button.classList.remove('cancel-friend-request');
+  button.classList.add('add-friend');
+  let iconSpan = button.querySelector('span');
+  iconSpan.innerHTML = 'person_add';
+  let input2 = button.querySelector('input[name="friend_id"]');
+  button.innerHTML = '';
+  button.appendChild(input2);
+  button.appendChild(iconSpan);
+  button.innerHTML += 'Add friend';
 }
