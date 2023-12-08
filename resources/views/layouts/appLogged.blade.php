@@ -68,13 +68,21 @@
                                 </a>
                             </li>
                         @endif    
-                        <li>
-                            <a>
+                        
+                        <li class="dropdown">
+                            <a href="javascript:void(0)" class="dropbtn">
                                 <span class="material-symbols-outlined">
                                 expand_more
                                 </span>See More
                             </a>
+                            <div class="dropdown-content">
+                                <a href="#">Link 1</a>
+                                <a href="#">Link 2</a>
+                                <a href="#">Link 3</a>
+                                <!-- Add more links here as needed -->
+                            </div>
                         </li>
+                        
                     </ul>
                     </nav>
                 </div>
