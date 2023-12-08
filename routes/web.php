@@ -77,6 +77,7 @@ Route::controller(UserController::class)->group(function () {
     Route::delete('/user/delete', 'userDelete')->name('delete_user');
     Route::get('/search', 'search')->name('search');
     Route::get('/user/{username}/friends', 'showFriends')->name('user_friends');
+    Route::get('/user/{username}/groups', 'showGroups')->name('user_groups');
     Route::post('/friend/request', 'sendFriendRequest')->name('send_friend_request');
     Route::delete('/friend/cancel_request', 'cancelFriendRequest')->name('cancel_friend_request');
 
