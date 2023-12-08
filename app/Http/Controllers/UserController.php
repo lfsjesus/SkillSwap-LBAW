@@ -269,7 +269,6 @@ class UserController extends Model
     {
         $user = User::where('username', $username)->firstOrFail();
        
-
         return view('pages.user_groups', ['user' => $user]);
     }
 

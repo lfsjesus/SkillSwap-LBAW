@@ -115,7 +115,7 @@
                 @if ($user->get_friends()->isEmpty())
                 <p> This user does not have friends </p>
                 @else 
-                @each('partials.user', $user->get_friends(), 'user')
+                @each('partials.user', $user->get_friends()->take(2), 'user')
                 <div class="spacer"></div>
                 <div class="see-more-container">
                     <a href="{{ route('user_friends', ['username' => $user->username]) }}" class="see-more-button">See More</a>
@@ -128,7 +128,7 @@
                 @if ($user->get_groups()->isEmpty())
                 <p> This user does not belong to any group </p>
                 @else
-                @each('partials.group', $user->get_groups(), 'group')
+                @each('partials.group', $user->get_groups()->take(2), 'group')
                 <div class="spacer"></div>
                 <div class="see-more-container">
                     <a href="{{ route('user_groups', ['username' => $user->username]) }}" class="see-more-button">See More</a>
