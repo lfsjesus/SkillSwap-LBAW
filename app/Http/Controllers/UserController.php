@@ -139,7 +139,7 @@ class UserController extends Model
             $notification->date = date('Y-m-d H:i:s');
             
             $notification->save();
-
+            
             $friendRequest = new UserNotification();
             
             $friendRequest->notification_id = $notification->id;

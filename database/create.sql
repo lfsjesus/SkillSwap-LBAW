@@ -460,8 +460,8 @@ BEGIN
     IF EXISTS (
             SELECT 1
             FROM is_friend
-            WHERE user_id = NEW.user_id
-            AND friend_id = NEW.friend_id
+            WHERE user_id = sender_id_val
+            AND friend_id = receiver_id_val
         ) THEN
         RAISE EXCEPTION 'Users are already friends!';
     END IF;
