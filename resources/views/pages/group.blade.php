@@ -88,7 +88,7 @@
                 @each('partials.user', $group->get_members()->take(2), 'user')
                 <div class="spacer"></div>
                 <div class="see-more-container">
-                    <a href="{{ route('group_members', ['groupId' => $group->id]) }}" class="see-more-button">See More</a>
+                    <a href="{{ route('group_members', ['groupId' => $group->id]) }}" class="see-more-button">See All Members</a>
                 </div>
             @endif
         </div>
@@ -101,7 +101,8 @@
                 @each('partials.user', $group->get_owners()->take(2), 'user')
                 <div class="spacer"></div>
                 <div class="see-more-container">
-                    <button class="see-more">See More</button>
+                    <a href="{{ route('group_owners', ['groupId' => $group->id]) }}" class="see-more-button">See All Owners</a>
+
                 </div>
             @endif
         </div>
