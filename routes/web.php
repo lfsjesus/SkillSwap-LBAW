@@ -76,9 +76,7 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/user/edit', 'edit')->name('edit_user');
     Route::delete('/user/delete', 'userDelete')->name('delete_user');
     Route::get('/search', 'search')->name('search');
-    Route::get('/user/{username}/friends', 'showFriends')->name('friends');
-
-
+    Route::get('/user/{username}/friends', 'showFriends')->name('user_friends');
 });
 
 Route::controller(AdminController::class)->group(function () {
