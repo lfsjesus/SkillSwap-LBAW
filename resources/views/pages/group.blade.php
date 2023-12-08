@@ -85,7 +85,7 @@
             @if ($group->get_members()->isEmpty())
                 <p>This group has no members.</p>
             @else
-                @each('partials.user', $group->get_members(), 'user')
+                @each('partials.user', $group->get_members()->take(2), 'user')
                 <div class="spacer"></div>
                 <div class="see-more-container">
                     <a href="{{ route('group_members', ['groupId' => $group->id]) }}" class="see-more-button">See More</a>
@@ -98,7 +98,7 @@
             @if ($group->get_owners()->isEmpty())
                 <p>This group has no owners.</p>
             @else
-                @each('partials.user', $group->get_owners(), 'user')
+                @each('partials.user', $group->get_owners()->take(2), 'user')
                 <div class="spacer"></div>
                 <div class="see-more-container">
                     <button class="see-more">See More</button>
