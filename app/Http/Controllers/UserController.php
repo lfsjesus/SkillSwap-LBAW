@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\Notification;
+use App\Models\UserNotification;
 
 class UserController extends Model 
 {
@@ -99,34 +101,105 @@ class UserController extends Model
         return redirect()->route('home')->with('success', 'User deleted successfully!');
     }
 
+    public function sendFriendRequest(Request $request) {
+        if (!Auth::check()) {
+            return redirect()->route('home')->with('error', 'You cannot send a friend request');
+        }
+        
 
-    /*
+        $user = User::find($request->input('friend_id'));
+        
 
-    public function exactMatchSearch(Request $request)
-    {
-        $query = $request->input('q');
+        if (Auth::user()->id == $user->id) {
+            return redirect()->back()->with('error', 'You cannot send a friend request to yourself');
+        }
 
-        // Performing an exact match search
-        $users = User::where('username', '=', $query)
-                    ->orWhere('email', '=', $query)
-                    ->get();
+        // WE DONT NEED TO CHECK EXISTING NOTIFICATION. TRIGGER DOES THAT.
+        // PROBABLY THE SAME WITH ALREADY FRIENDS (if trigger is working)
+        // WE CAN ADD THE BLOCKED CONDITION TO THE TRIGGER
+        
+        /*
+        if (Auth::user()->is_friends_with($user)) {
+            return redirect()->back()->with('error', 'You are already friends with this user');
+        }
 
-        return view('pages.exactMatchSearchResults', ['users' => $users, 'query' => $query]);
+
+        if (Auth::user()->has_blocked($user) || $user->has_blocked(Auth::user())) {
+            return redirect()->back()->with('error', 'You cannot send a friend request to this user');
+        }
+
+        */
+        try {
+            DB::beginTransaction();
+
+            $notification = new Notification();
+            
+            $notification->sender_id = Auth::user()->id;
+            $notification->receiver_id = $user->id;
+            $notification->date = date('Y-m-d H:i:s');
+            
+            $notification->save();
+            
+            $friendRequest = new UserNotification();
+            
+            $friendRequest->notification_id = $notification->id;
+            $friendRequest->notification_type = 'friend_request';
+            
+            $friendRequest->save();
+
+            DB::commit();
+
+            return json_encode(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error while sending friend request. Try again!');
+        }
 
     }
 
-    public function fullTextSearch(Request $request)
-    {
-        $query = trim($request->input('q')); // Trim spaces from the beginning and end
 
-        $users = User::query()
-            ->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$query])
-            ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$query])
-            ->get();
+    public function cancelFriendRequest(Request $request) {
+        if (!Auth::check()) {
+            return redirect()->route('home')->with('error', 'You cannot cancel a friend request');
+        }
 
-        return view('pages.fullTextSearchResults', ['users' => $users, 'query' => $query]);
+        $user = User::find($request->input('friend_id'));
+
+        if (Auth::user()->id == $user->id) {
+            return redirect()->back()->with('error', 'You cannot cancel a friend request to yourself');
+        }
+
+        /*
+        if (!Auth::user()->has_pending_friend_request_from($user)) {
+            return redirect()->back()->with('error', 'You do not have a pending friend request from this user');
+        }
+        */
+
+        try {
+            DB::beginTransaction();
+
+            $notification_join = Notification::join('user_notifications', 'notifications.id', '=', 'user_notifications.notification_id')
+                                        ->where('notifications.sender_id', Auth::user()->id)
+                                        ->where('notifications.receiver_id', $user->id)
+                                        ->where('user_notifications.notification_type', 'friend_request')
+                                        ->firstOrFail();
+
+            $notification_id = $notification_join->id;
+
+            //delete the notification
+            $notification = Notification::find($notification_id);
+
+            $notification->delete();
+
+            
+            DB::commit();
+
+            return json_encode(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error while cancelling friend request. Try again!');
+        }
     }
-    */
 
     //Uses full text search for name and username and exact match search for email
     public function search(Request $request)
@@ -183,5 +256,7 @@ class UserController extends Model
 
         
     }
+
+
 
 }

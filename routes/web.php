@@ -76,6 +76,8 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/user/edit', 'edit')->name('edit_user');
     Route::delete('/user/delete', 'userDelete')->name('delete_user');
     Route::get('/search', 'search')->name('search');
+    Route::post('/friend/request', 'sendFriendRequest')->name('send_friend_request');
+    Route::delete('/friend/cancel_request', 'cancelFriendRequest')->name('cancel_friend_request');
 });
 
 Route::controller(AdminController::class)->group(function () {
@@ -96,7 +98,6 @@ Route::controller(GroupController::class)->group(function () {
     Route::post('/group/create', 'create')->name('create_group');
     Route::put('/group/edit', 'edit')->name('edit_group');
     Route::delete('/group/delete', 'deleteGroup')->name('delete_group');
-    
 
     /*
     Route::get('/groups/{id}', 'show')->name('group');
@@ -118,7 +119,6 @@ Route::controller(CommentController::class)->group(function () {
     Route::delete('/posts/comment/delete', 'deleteComment')->name('delete_comment');
     Route::put('/posts/comment/edit', 'editComment')->name('edit_comment');
 });
-
 
 
 

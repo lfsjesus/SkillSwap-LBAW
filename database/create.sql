@@ -429,27 +429,52 @@ FOR EACH ROW
 EXECUTE FUNCTION delete_friendship();
 
 
--- User cant send a friend request to some user which he is already friends with
+-- User cant send a friend request to some user which he already sent a request
 
 CREATE OR REPLACE FUNCTION prevent_duplicate_friend_requests()
 RETURNS TRIGGER AS $$
+DECLARE 
+    sender_id_val INT;
+    receiver_id_val INT;
 BEGIN
+
+    SELECT sender_id, receiver_id
+    INTO sender_id_val, receiver_id_val
+    FROM notifications
+    WHERE id = NEW.notification_id;
+
+    IF EXISTS (
+            SELECT 1
+            FROM user_notifications
+            JOIN notifications ON user_notifications.notification_id = notifications.id
+            WHERE notification_type = 'friend_request'
+            AND (
+                (sender_id = sender_id_val AND receiver_id = receiver_id_val)
+                OR
+                (sender_id = receiver_id_val AND receiver_id = sender_id_val)
+            )
+        ) THEN
+        RAISE EXCEPTION 'A friend request already exists';
+    END IF;
+
     IF EXISTS (
             SELECT 1
             FROM is_friend
-            WHERE user_id = NEW.user_id
-            AND friend_id = NEW.friend_id
+            WHERE user_id = sender_id_val
+            AND friend_id = receiver_id_val
         ) THEN
         RAISE EXCEPTION 'Users are already friends!';
     END IF;
+
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_prevent_duplicate_friend_requests
-BEFORE INSERT ON is_friend
+BEFORE INSERT ON user_notifications
 FOR EACH ROW
 EXECUTE FUNCTION prevent_duplicate_friend_requests();
+
 
 
 -- User cant send a join group request to a group which he is already member or he has notifcation where he was banned
@@ -1225,6 +1250,7 @@ insert into users (name, username, email, password, phone_number, profile_pictur
 insert into users (name, username, email, password, phone_number, profile_picture, description, birth_date, public_profile) values ('Antonie Seamon', 'aseamongm', 'aseamongm@gov.uk', 'mL4''Js0`~hOF', '867-802-5946', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALCSURBVDjLlZJ7SJNRGMaF/i3on/6wUDfbvsLpUiO1tItamRUISdmFYEYaGQaikNlIvIdOp9JSI0ssXOrmdH5ONzek29AmanPenU2H5rYyNZqa5dP3CY1EQzrwcHjhPL/3Oee8TgCc/kfDjQTZJ2Uvt4vcZXS9uUFO7BiUEx6UcfugnJ1hIn1hazqO5gzm8qYAYzNRRhknBmTEHNX114TiALRC5oo23xNSPqPxnwDKyB5REAuW7ngsWtVYsigx25kAa2MwDKXekKcyUv+c3cgcaWo7CFt/Ln5YFZjruoCZNyGwyDiYrvfHdEsoFOmMwXUAyuhMqXVKdxHfTNVYNFdiTncaX98G47PmEGwt+2ElubCqw9FZwFp2AEZIgk0Zp6i7rth672N5VofvxkzYtGGwaI5gsskfo1VeMEs8YamnUihPoS3LfckBGJCy1Tb9eSxNl8M+ngz7YDQWes/B+ioYIzU+6H/GwYcSAibxntVrTClOoj6FMeEA6CtYk/PGm5g3puP9C0/01Higr9oPo5QsLX7QFbHQVbgb5ioWbKoTGJcEoTrJTeIAdDx0fzxMBmFmiA9DXQTItABoio9BncfERwkXM0pv6IuZeFkWiKRHUYgtiMDlzKP28GQu3/GIrwuY2m6xL5UiBbI7XNhNAnzpSUZLric68l1RWxmEtNpokAYReqZUELbGIUroBf9bzgLHL6iymUPtFT5ofxqFMU0i7GPpGCYvoejqNvByQtHQW4iG/mLQS6COgVB9gwYsrJkBakDqNAX7oBIEQJbMgbYkBKIrW3H2ng8Uhif4e8n1IhqwfgqlKYww6V03aKmJM7efwad3YTh8exfyVNeQo+KtmnOUvI0T/C1xolu6OMEVmjwOsrIJRAr2Il91fbUzvdP1mjfYSM/jXbeUx7rwS6NdLLyYnfbAOOefdGxK85Qe0Gd+Azr0uSlwBNX8AAAAAElFTkSuQmCC', 'Phasellus in felis. Donec semper sapien a libero. Nam dui.', '9/29/1933', false);
 insert into users (name, username, email, password, phone_number, profile_picture, description, birth_date, public_profile) values ('Brynna Bims', 'bbimsgn', 'bbimsgn@exblog.jp', 'iW8*JBW~FbReJGK6', '275-560-6670', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAE8SURBVDjLpVM9SwNREJzTpx4JaGMn/oJrRMtU/g2xsLD1F/gDbK0lpaAgNmJnI1YWasBOELs0QgQDfsQ4Mxb3vEvgipwuLAsLszszb19iG/+JsHf6dDU3g9WXdzdtABIsAQZowjJkwSRkwyQoYX52+PYx8F0w0FrPFqfuuwP0P1W5ZW2hi9vXpViXsXOyieOtw+b1zUMr2T16tGnYBizYhqR8a2QjquxRkAjJsIhgGhsrg4q9CYDpmGWMerZ//oxgC1mW/clAnl0gIE6UqvXbLlIqJTYaDeibCBRrAX97ACAKwXIt4KgHEhEUGdQBlgOE4Khd0sTAMQZkzoDkxMBiAI1g5gzSNK39jJYQJKHT6SBN00KGpDFGVfJ6vR5kIyQetg8uh9tiH+IIMNb8hPOzNV2cuATAX+3kv9/5B7T5iPkmloFJAAAAAElFTkSuQmCC', 'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', '7/28/1914', false);
 insert into users (name, username, email, password, phone_number, profile_picture, description, birth_date, public_profile) values ('Test', 'test123', 'test@gmail.com', '$2a$12$EGM4kav8Sos/aSDAsXheWeivgZwpmKH6ObvItDzoxjGfmbPEcmFxy', '275-560-6670', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAE8SURBVDjLpVM9SwNREJzTpx4JaGMn/oJrRMtU/g2xsLD1F/gDbK0lpaAgNmJnI1YWasBOELs0QgQDfsQ4Mxb3vEvgipwuLAsLszszb19iG/+JsHf6dDU3g9WXdzdtABIsAQZowjJkwSRkwyQoYX52+PYx8F0w0FrPFqfuuwP0P1W5ZW2hi9vXpViXsXOyieOtw+b1zUMr2T16tGnYBizYhqR8a2QjquxRkAjJsIhgGhsrg4q9CYDpmGWMerZ//oxgC1mW/clAnl0gIE6UqvXbLlIqJTYaDeibCBRrAX97ACAKwXIt4KgHEhEUGdQBlgOE4Khd0sTAMQZkzoDkxMBiAI1g5gzSNK39jJYQJKHT6SBN00KGpDFGVfJ6vR5kIyQetg8uh9tiH+IIMNb8hPOzNV2cuATAX+3kv9/5B7T5iPkmloFJAAAAAElFTkSuQmCC', 'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', '7/28/1914', true);
+insert into users (name, username, email, password, phone_number, profile_picture, description, birth_date, public_profile) values ('Test2', 'test2', 'test2@gmail.com', '$2a$12$EGM4kav8Sos/aSDAsXheWeivgZwpmKH6ObvItDzoxjGfmbPEcmFxy', '275-560-6671', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALCSURBVDjLlZJ7SJNRGMaF/i3on/6wUDfbvsLpUiO1tItamRUISdmFYEYaGQaikNlIvIdOp9JSI0ssXOrmdH5ONzek29AmanPenU2H5rYyNZqa5dP3CY1EQzrwcHjhPL/3Oee8TgCc/kfDjQTZJ2Uvt4vcZXS9uUFO7BiUEx6UcfugnJ1hIn1hazqO5gzm8qYAYzNRRhknBmTEHNX114TiALRC5oo23xNSPqPxnwDKyB5REAuW7ngsWtVYsigx25kAa2MwDKXekKcyUv+c3cgcaWo7CFt/Ln5YFZjruoCZNyGwyDiYrvfHdEsoFOmMwXUAyuhMqXVKdxHfTNVYNFdiTncaX98G47PmEGwt+2ElubCqw9FZwFp2AEZIgk0Zp6i7rth672N5VofvxkzYtGGwaI5gsskfo1VeMEs8YamnUihPoS3LfckBGJCy1Tb9eSxNl8M+ngz7YDQWes/B+ioYIzU+6H/GwYcSAibxntVrTClOoj6FMeEA6CtYk/PGm5g3puP9C0/01Higr9oPo5QsLX7QFbHQVbgb5ioWbKoTGJcEoTrJTeIAdDx0fzxMBmFmiA9DXQTItABoio9BncfERwkXM0pv6IuZeFkWiKRHUYgtiMDlzKP28GQu3/GIrwuY2m6xL5UiBbI7XNhNAnzpSUZLric68l1RWxmEtNpokAYReqZUELbGIUroBf9bzgLHL6iymUPtFT5ofxqFMU0i7GPpGCYvoejqNvByQtHQW4iG/mLQS6COgVB9gwYsrJkBakDqNAX7oBIEQJbMgbYkBKIrW3H2ng8Uhif4e8n1IhqwfgqlKYww6V03aKmJM7efwad3YTh8exfyVNeQo+KtmnOUvI0T/C1xolu6OMEVmjwOsrIJRAr2Il91fbUzvdP1mjfYSM/jXbeUx7rwS6NdLLyYnfbAOOefdGxK85Qe0Gd+Azr0uSlwBNX8AAAAAElFTkSuQmCC', 'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', '7/28/1914', true);
 
 /* Groups */
 
@@ -1370,3 +1396,9 @@ INSERT INTO likes (user_id, post_id, comment_id, date) VALUES (97, 7, NULL, CURR
 INSERT INTO likes (user_id, post_id, comment_id, date) VALUES (49, 8, NULL, CURRENT_TIMESTAMP);
 INSERT INTO likes (user_id, post_id, comment_id, date) VALUES (330, 9, NULL, CURRENT_TIMESTAMP);
 INSERT INTO likes (user_id, post_id, comment_id, date) VALUES (159, 10, NULL, CURRENT_TIMESTAMP);
+
+
+/* Notifications */
+INSERT INTO notifications (sender_id, receiver_id, date) VALUES (10, 601, CURRENT_TIMESTAMP);
+
+INSERT INTO user_notifications (notification_id, notification_type) VALUES (1, 'friend_request');

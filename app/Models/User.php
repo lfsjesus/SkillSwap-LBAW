@@ -127,4 +127,20 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, Friend::class, 'user_id', 'friend_id');
     }
+
+    public function sentFriendRequestTo($user): bool
+    {
+        $userId = $user instanceof User ? $user->id : $user;
+
+        return Notification::join('user_notifications', 'notifications.id', '=', 'user_notifications.notification_id')
+                       ->where('notifications.sender_id', $this->id)
+                       ->where('notifications.receiver_id', $userId)
+                       ->where('user_notifications.notification_type', 'friend_request')
+                       ->exists();
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'receiver_id');
+    }
 }
