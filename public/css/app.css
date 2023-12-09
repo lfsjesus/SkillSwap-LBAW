@@ -999,6 +999,11 @@ form #form-group textarea {
   gap: 1em;
 }
 
+.comment.highlight  .inner-comment {
+  background-color: #663FA4;
+  transition: 0.2s ease;
+}
+
 .comment p {
   margin: 0;
 }
@@ -1019,6 +1024,7 @@ form #form-group textarea {
   align-items: center;
   gap: 1em;
   padding: 1em;
+  transition: 0.2s ease;
 }
 
 .comment-body {

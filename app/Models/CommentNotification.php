@@ -22,4 +22,9 @@ class CommentNotification extends Model
     {
         return $this->belongsTo(Notification::class, 'notification_id');
     }
+
+    public function comment()
+    {
+        return $this->belongsTo(Comment::class, 'comment_id');
+    }
 }
