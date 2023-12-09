@@ -17,7 +17,9 @@
             <span class="name"> {{ $sender->name }} </span>
             <span class="username">&#64;{{ $sender->username }}</span>
         </div>
-
+        <p class="notification-text">  Sent you a friend request </p>
+            <!-- Notification Date -->
+        <p class="notification-date"> {{Carbon\Carbon::parse($notification->date)->diffForHumans()}} </p>
         <div class="notification-answer">
             <button class="button accept-friend-request-notification">
                 <input type="hidden" name="sender_id" value="{{ $sender->id }}">
@@ -30,6 +32,5 @@
         </div>
     </div>
 
-    <!-- Notification Date -->
-    <p class="notification-date"> {{Carbon\Carbon::parse($notification->date)->diffForHumans()}} </p>
+
 </div>
