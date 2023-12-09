@@ -37,36 +37,53 @@
                 @if(Auth::user())
                     @if($group->is_owner(Auth::user()))
                         <!-- User is the owner of the group -->
-                        <a href="{{ route('edit_group_form', ['id' => $group->id]) }}" class="button">
+                        <a href="{{ route('edit_group_form', ['id' => $group->id]) }}" class="button edit-group">
                             <span class='material-symbols-outlined'>
                                 edit
                             </span>
                             Edit Group
                         </a>
-                        <a href="" class="button">
+                        <a class="button leave-group">
+                            <input type="hidden" name="group_id" value="{{ $group->id }}">
                             <span class="material-symbols-outlined">
                                 exit_to_app
                             </span>
-                            Exit Group
+                            Leave Group
                         </a>
 
                     @elseif($group->is_member(Auth::user()))
                         <!-- User is a member of the group, but not the owner -->
-                        <a href="" class="button">
+                        <a class="button leave-group">
+                            <input type="hidden" name="group_id" value="{{ $group->id }}">
                             <span class="material-symbols-outlined">
                                 exit_to_app
                             </span>
-                            Exit Group
+                            Leave Group
                         </a>
 
                     @else
-                        <!-- User is not a member of the group -->
-                        <a href="" class="button">
-                            <span class="material-symbols-outlined">
-                                group_add
-                            </span>
-                            Join Group
-                        </a>
+
+                        @if($group->userHasSentJoinRequest(Auth::user()))
+                            <!-- User has sent a join request -->
+                            <a class="button cancel-join-request">
+                                <input type="hidden" name="group_id" value="{{ $group->id }}">
+                                <span class="material-symbols-outlined">
+                                done
+                                </span>
+                                Request Sent
+                            </a>
+                        @else 
+                            
+                            <!-- User is not a member of the group -->
+                            <a class="button join-group">
+                                <input type="hidden" name="group_id" value="{{ $group->id }}">
+                                <span class="material-symbols-outlined">
+                                    group_add
+                                </span>
+                                Join Group
+                            </a>
+
+                        @endif
 
                     @endif
                 @endif

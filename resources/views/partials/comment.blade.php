@@ -1,9 +1,11 @@
 <div class="comment" data-id="{{$comment->id}}">
-        @if($comment->author->profile_picture)
-        <img src="{{stream_get_contents($comment->author->profile_picture)}}"/>
-        @else
-        <img src="{{ url('assets/profile-picture.png') }}"/>
-        @endif
+        <a href="{{ route('user', ['username' => $comment->author->username]) }}">
+            @if($comment->author->profile_picture)
+            <img src="{{stream_get_contents($comment->author->profile_picture)}}"/>
+            @else
+            <img src="{{ url('assets/profile-picture.png') }}"/>
+            @endif
+        </a>    
         <div class="comment-body">
             <div class="comment-main">
                 <div class="inner-comment">

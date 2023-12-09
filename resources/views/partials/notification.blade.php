@@ -26,7 +26,7 @@
                 <input type="hidden" name="sender_id" value="{{ $sender->id }}">
                 Accept
             </button>
-            <button class="button reject-friend-request-notification">
+            <button class="button btn-danger reject-friend-request-notification">
                 <input type="hidden" name="sender_id" value="{{ $sender->id }}">
                 Decline
             </button>
