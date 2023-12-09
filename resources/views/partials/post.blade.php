@@ -9,12 +9,22 @@
             @endif
             </a>
             <div class="author-date">
+                <div class="author-date-left">
                 <a class="flex" href="{{ route('user', ['username' => $post->author->username]) }}">
                     <p> {{$post->author->name}}</p>
                     <span class="username">
                         &#64;{{$post->author->username}}
                     </span>
                 </a>
+                
+                @if($post->group) 
+                <a class="flex" href="{{ route('group', ['id' => $post->group->id]) }}">
+                    <span class="groupname">
+                        | &nbsp <span class="material-symbols-outlined">group</span> {{$post->group->name}}
+                    </span>
+                </a>
+                @endif
+                </div>
                 <p> {{Carbon\Carbon::parse($post->date)->diffForHumans()}} </p>
             </div>
         </div>

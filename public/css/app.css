@@ -326,6 +326,13 @@ aside .logo img {
   color: #d1d1e1;
 }
 
+.post .post-header .author-date-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+}
+
 .post-header img {
   width: 3em;
   height: 3em;
@@ -835,10 +842,12 @@ form #form-group textarea {
 }
 
 
-.username{
+.username, .groupname{
   font-size: 1.4rem;
   color: wheat;
   font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
 .card-info {
