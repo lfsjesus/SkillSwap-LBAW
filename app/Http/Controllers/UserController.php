@@ -170,6 +170,8 @@ class UserController extends Model
         }
 
         /*
+        MIGHT NOT NEED THIS -- CHECK
+
         if (!Auth::user()->has_pending_friend_request_from($user)) {
             return redirect()->back()->with('error', 'You do not have a pending friend request from this user');
         }
@@ -198,6 +200,52 @@ class UserController extends Model
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Unexpected error while cancelling friend request. Try again!');
+        }
+    }
+
+    public function acceptFriendRequest(Request $request) {
+        if (!Auth::check()) {
+            return redirect()->route('home')->with('error', 'You cannot accept a friend request');
+        }
+
+        $user = User::find($request->input('sender_id'));
+
+        if (!$user->sentFriendRequestTo(Auth::user())) {
+            return redirect()->back()->with('error', 'You do not have a pending friend request from this user');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $notification_join = Notification::join('user_notifications', 'notifications.id', '=', 'user_notifications.notification_id')
+                                        ->where('notifications.sender_id', $user->id)
+                                        ->where('notifications.receiver_id', Auth::user()->id)
+                                        ->where('user_notifications.notification_type', 'friend_request')
+                                        ->firstOrFail();
+
+            $notification_id = $notification_join->id;
+
+            //delete the notification
+            $notification = Notification::find($notification_id);
+
+            $notification->delete();
+
+            //add the friendship
+            $is_friend = new Friend();
+            
+            $is_friend->user_id = Auth::user()->id;
+            $is_friend->friend_id = $friendId;
+            $is_friend->date = date('Y-m-d H:i:s');
+
+            $is_friend->save();
+
+
+            DB::commit();
+
+            return json_encode(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error while accepting friend request. Try again!');
         }
     }
 
