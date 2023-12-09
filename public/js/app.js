@@ -93,7 +93,7 @@ async function editPost(id) {
   let post = document.querySelector('.post[data-id="' + id + '"]');
   let profile_picture = post.querySelector('.post-header-left img');
   let files = post.querySelectorAll('.post-body a img'); // TO CHANGE AFTER MODIFYING IMAGES VIEW
-  
+  let public_post = post.getAttribute('data-public');
   let content = post.querySelector('.post-body p');
   /* Elements to create */
   let create_post = document.createElement('div');
@@ -149,14 +149,39 @@ async function editPost(id) {
   textarea.setAttribute('name', 'description');
 
   textarea.value = (content == null) ? '' : filterContent(content.innerHTML);
+  
+  let createPostFooter = document.createElement('div');
+  createPostFooter.className = 'create-post-footer';
+
+  let inputCheckBox = document.createElement('input');
+  inputCheckBox.setAttribute('type', 'checkbox');
+  inputCheckBox.setAttribute('name', 'visibility');
+  inputCheckBox.setAttribute('value', '1');
+
+  if (public_post == 1) {
+    inputCheckBox.setAttribute('checked', 'checked');
+  }
+
+  let checkboxLabel = document.createElement('label');
+  checkboxLabel.setAttribute('for', 'visibility');
+  checkboxLabel.innerHTML = 'Public';
+
+  let checkboxDiv = document.createElement('div');
+
+  checkboxDiv.appendChild(inputCheckBox);
+  checkboxDiv.appendChild(checkboxLabel);
 
   let button = document.createElement('button');
   button.className = 'edit-button';
-  button.innerHTML = 'Edit';
+  button.innerHTML = 'Save';
   button.setAttribute('type', 'submit');
   form.innerHTML += '<input type="hidden" name="_token" value="' + document.querySelector('meta[name="csrf-token"]').content + '">';
+  
+  createPostFooter.appendChild(button);
+  createPostFooter.appendChild(checkboxDiv);
+
   form.appendChild(textarea);
-  form.appendChild(button);
+  form.appendChild(createPostFooter);
   
   // add hidden input with method PUT
   let method = document.createElement('input');
@@ -183,13 +208,10 @@ async function editPost(id) {
   // replace article with create_post div
   post.replaceWith(create_post);
 
-
-
-
-   let realInput = create_post.querySelector('input[type="file"]');
-   console.log(realInput);
-   
-   await fetchFiles(realInput, files);
+  let realInput = create_post.querySelector('input[type="file"]');
+  console.log(realInput);
+  
+  await fetchFiles(realInput, files);
 
    //console.log(realInput.files);
 

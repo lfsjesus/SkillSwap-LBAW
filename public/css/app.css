@@ -470,6 +470,31 @@ aside .logo img {
   image-rendering: optimizeSpeed;
 }
 
+#content .create-post-footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+#content .create-post-footer div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5em;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+
+#content .create-post-footer label {
+  font-size: 1em;
+  margin: 0;
+}
+
+#content .create-post-footer input[type="checkbox"] {
+  margin: 0;
+}
 
 #content .create-post form {
   margin: 0;

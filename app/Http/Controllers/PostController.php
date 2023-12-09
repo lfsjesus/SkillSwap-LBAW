@@ -40,7 +40,7 @@ class PostController extends Controller
             $post->group_id = $request->input('group_id', null);
             $post->description = nl2br($request->input('description'));
             $post->date = date('Y-m-d H:i:s');
-            $post->public_post = $request->input('public_post', true);
+            $post->public_post = $request->input('visibility', false);
             
             $post->save();
 
@@ -113,7 +113,8 @@ class PostController extends Controller
             
 
             $post->description = nl2br($content);
-
+            $post->public_post = $request->input('visibility', false);
+            
             $toDelete = array_diff($postFilesNames, $requestFilesNames);
             
             $toDeleteFromDB = [];

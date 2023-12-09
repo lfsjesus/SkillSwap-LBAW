@@ -1,4 +1,4 @@
-<article class="post" data-id="{{ $post->id }}">
+<article class="post" data-id="{{ $post->id }}" data-public = "{{ $post->public_post ? '1' : '0' }}">
     <div class="post-header">
         <div class="post-header-left">
             <a href="{{ route('user', ['username' => $post->author->username]) }}">
