@@ -106,6 +106,7 @@ Route::controller(GroupController::class)->group(function () {
     Route::delete('/group/delete', 'deleteGroup')->name('delete_group');
     Route::get('/group/{groupId}/members', 'showMembers')->name('group_members');
     Route::get('/group/{groupId}/owners', 'showOwners')->name('group_owners');
+    Route::post('/group/join-request', 'sendJoinGroupRequest')->name('join_group_request');
 
     /*
     Route::get('/groups/{id}', 'show')->name('group');

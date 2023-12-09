@@ -757,7 +757,11 @@ function createComment(id, post_id, author_name, content, replyTo_id) {
     commentBody.appendChild(commentBox);
   }
 
-  comment.appendChild(img);
+  let imgHref = document.createElement('a');
+  imgHref.setAttribute('href', author_url);
+  imgHref.appendChild(img);
+
+  comment.appendChild(imgHref);
   comment.appendChild(commentBody);
 
   return comment;
@@ -1004,6 +1008,40 @@ function rejectFriendRequestNotificationHandler() {
     notification.remove();
   }
 }
+
+
+//Hande group requests with event delegation
+
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.join-group')) {
+      handleJoinGroupRequestClick(e);
+  } 
+}
+);
+
+function handleJoinGroupRequestClick(e) {
+  let group_id = e.target.closest('.join-group').querySelector('input[name="group_id"]').value;
+  let data = { group_id: group_id };
+  sendAjaxRequest('POST', '/group/join-request', data, joinGroupRequestHandler);
+}
+
+
+function joinGroupRequestHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let button = document.querySelector('.join-group');
+  button.classList.remove('join-group');
+  button.classList.add('cancel-join-request');
+  let iconSpan = button.querySelector('span');
+  iconSpan.innerHTML = 'done';
+  let input2 = button.querySelector('input[name="group_id"]');
+  button.innerHTML = '';
+  button.appendChild(input2);
+  button.appendChild(iconSpan);
+  button.innerHTML += 'Request sent';
+}
+
 
 // Get all elements with class="dropbtn" and attach a click event listener
 document.querySelectorAll('.dropbtn').forEach(dropbtn => {

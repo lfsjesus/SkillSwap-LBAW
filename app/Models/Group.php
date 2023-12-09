@@ -60,4 +60,15 @@ class Group extends Model
     {
         return $this->members()->where('user_id', $user->id)->exists();
     }
+
+    public function userHasSentJoinRequest($user) : bool
+    {
+        $userId = $user->id;
+        return Notification::join('group_notifications', 'notifications.id', '=', 'group_notifications.notification_id')
+                       ->where('notifications.sender_id', $userId)
+                       ->where('group_notifications.notification_type', 'join_request')
+                       ->exists();
+                    
+    }
+
 }
