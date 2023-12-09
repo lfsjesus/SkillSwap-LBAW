@@ -490,11 +490,11 @@ aside .logo img {
 
 
 
-#content .create-post textarea:focus {
+#content textarea:focus {
   border: 1px solid pink;
 }
 
-#content .create-post textarea::placeholder {
+#content textarea::placeholder {
   font-family: 'Montserrat', sans-serif;
 }
 
