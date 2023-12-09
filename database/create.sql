@@ -546,6 +546,38 @@ EXECUTE FUNCTION prevent_duplicate_join_requests();
 
 
 
+CREATE OR REPLACE FUNCTION delete_parent_notification()
+RETURNS TRIGGER AS $$
+BEGIN
+    DELETE FROM notifications
+    WHERE notifications.id = OLD.notification_id;
+    
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER delete_parent_notification_after_user
+AFTER DELETE ON user_notifications
+FOR EACH ROW
+EXECUTE FUNCTION delete_parent_notification();
+
+CREATE TRIGGER delete_parent_notification_after_group
+AFTER DELETE ON group_notifications
+FOR EACH ROW
+EXECUTE FUNCTION delete_parent_notification();
+
+CREATE TRIGGER delete_parent_notification_after_comment
+AFTER DELETE ON comment_notifications
+FOR EACH ROW
+EXECUTE FUNCTION delete_parent_notification();
+
+CREATE TRIGGER delete_parent_notification_after_post
+AFTER DELETE ON post_notifications
+FOR EACH ROW
+EXECUTE FUNCTION delete_parent_notification();
+
+
 
 /**
 * INDEXES

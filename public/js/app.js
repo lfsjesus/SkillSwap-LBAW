@@ -1117,3 +1117,22 @@ window.onclick = function(event) {
       }
   }
 };
+
+
+// TO FIX
+
+if (window.location.hash) {
+  let hash = window.location.hash.substring(1).split('-')[1];
+  let scrollContainer = document.querySelector('#content');
+  let comment = document.querySelector('.comment[data-id="' + hash + '"]');
+
+  if (comment) {
+    scrollContainer.scrollTop = comment.offsetTop;
+    // Temporary highlight
+    comment.classList.add('highlight');
+    setTimeout(function() {
+      comment.classList.remove('highlight');
+    }, 1000);
+
+  }
+}

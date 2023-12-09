@@ -9,6 +9,10 @@ if($subNotification instanceof App\Models\PostNotification) {
     $href = route('post', ['id' => $subNotification->post_id]);
 }
 
+if($subNotification instanceof App\Models\CommentNotification) {
+    $href = route('post', ['id' => $subNotification->comment->post_id]) . '#comment-' . $subNotification->comment->id;
+}
+
 @endphp
 <a class="notification-href" href="{{ $href }}">
     <div class="notification @if(!$notification->viewed) active @endif" data-id="{{ $notification->id }}" data-type="{{ $notificationType }}" 
@@ -31,6 +35,10 @@ if($subNotification instanceof App\Models\PostNotification) {
                 <p class="notification-text">  Sent you a friend request </p>
             @elseif($notificationType == 'like_post')
                 <p class="notification-text">  Liked your post </p>
+            @elseif($notificationType == 'like_comment')
+                <p class="notification-text">  Liked your comment </p>
+            @elseif($notificationType == 'new_comment')
+                <p class="notification-text">  Commented on your post </p>
             @endif
 
             <p class="notification-date"> {{Carbon\Carbon::parse($notification->date)->diffForHumans()}} </p>

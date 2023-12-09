@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Comment;
+use App\Models\Notification;
+use App\Models\CommentNotification;
 
 class CommentController extends Controller
 {
@@ -29,6 +31,21 @@ class CommentController extends Controller
             $comment->content = nl2br($content);
             $comment->date = date('Y-m-d H:i:s');
             $comment->save();
+
+            $notification = new Notification();
+            $notification->sender_id = Auth::user()->id;
+            $notification->receiver_id = $comment->post->user_id;
+            $notification->date = date('Y-m-d H:i:s');
+
+            $notification->save();
+
+            $commentNotification = new CommentNotification();
+            $commentNotification->notification_id = $notification->id;
+            $commentNotification->comment_id = $comment->id;
+            $commentNotification->notification_type = 'new_comment';
+
+            $commentNotification->save();
+
             DB::commit();
 
             $response = array(
@@ -53,15 +70,19 @@ class CommentController extends Controller
             return redirect()->back()->withError('Unexpected error while deleting comment. Try again!');
         }
 
+        $comment = Comment::find($id);
+
         try {
             DB::beginTransaction();
-            $comment = Comment::find($id);
 
             if ($comment->user_id != Auth::user()->id) {
                 return redirect()->back()->withError('You are not authorized to delete this comment!');
             }
 
             $comment->delete();
+
+            // There is a trigger that removes notification.
+
             DB::commit();
 
             $response = array(
