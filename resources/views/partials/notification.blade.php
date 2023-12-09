@@ -1,5 +1,5 @@
-<div class="notification">
-    <input type="checkbox" id="notification-{{ $notification->id }}" />
+<div class="notification" data-id="{{ $notification->id }}" data-type="{{ $notification->subNotification()->notification_type }}">
+    <input type="checkbox"/>
     
     <!-- Sender Profile Picture -->
     @php

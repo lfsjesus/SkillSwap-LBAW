@@ -245,7 +245,7 @@ class UserController extends Model
 
             DB::commit();
 
-            return json_encode(['success' => true]);
+            return json_encode(['success' => true, 'notification_id' => $notification_id]);
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Unexpected error while accepting friend request. Try again!');
@@ -281,7 +281,7 @@ class UserController extends Model
 
             DB::commit();
 
-            return json_encode(['success' => true]);
+            return json_encode(['success' => true, 'notification_id' => $notification_id]);
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Unexpected error while rejecting friend request. Try again!');

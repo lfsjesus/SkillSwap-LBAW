@@ -962,6 +962,9 @@ function acceptFriendRequestHandler() {
   button.appendChild(input2);
   button.appendChild(iconSpan);
   button.innerHTML += 'Remove Friend';
+
+  // If there is a visible notification, remove it.
+  acceptFriendRequestNotificationHandler.call(this);
 }
 
 function removeFriendHandler() {
@@ -984,16 +987,22 @@ function acceptFriendRequestNotificationHandler() {
   let response = JSON.parse(this.responseText);
   if (response == null) return;
 
-  let button = document.querySelector('.accept-friend-request-notification');
-  button.remove();
+  let notification_id = response.notification_id;
+  let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
+  if (notification) {
+    notification.remove();
+  }
 }
 
 function rejectFriendRequestNotificationHandler() {
   let response = JSON.parse(this.responseText);
   if (response == null) return;
 
-  let button = document.querySelector('.reject-friend-request-notification');
-  button.remove();
+  let notification_id = response.notification_id;
+  let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
+  if (notification) {
+    notification.remove();
+  }
 }
 
 // Get all elements with class="dropbtn" and attach a click event listener
