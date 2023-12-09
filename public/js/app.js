@@ -883,8 +883,8 @@ function handleCancelFriendRequestClick(e) {
 }
 
 function handleAcceptFriendRequestClick(e) {
-  let friend_id = e.target.closest('.accept-friend-request').querySelector('input[name="friend_id"]').value;
-  let data = { friend_id: friend_id };
+  let sender_id = e.target.closest('.accept-friend-request').querySelector('input[name="sender_id"]').value;
+  let data = { sender_id: sender_id };
   sendAjaxRequest('POST', '/friend/accept_request', data, acceptFriendRequestHandler);
 }
 
@@ -929,7 +929,7 @@ function acceptFriendRequestHandler() {
   button.classList.add('remove-friend');
   let iconSpan = button.querySelector('span');
   iconSpan.innerHTML = 'person_remove';
-  let input2 = button.querySelector('input[name="friend_id"]');
+  let input2 = button.querySelector('input[name="sender_id"]');
   button.innerHTML = '';
   button.appendChild(input2);
   button.appendChild(iconSpan);

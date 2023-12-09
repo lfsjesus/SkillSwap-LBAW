@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Notification;
 use App\Models\UserNotification;
+use App\Models\Friend;
 
 class UserController extends Model 
 {
@@ -207,7 +208,6 @@ class UserController extends Model
         if (!Auth::check()) {
             return redirect()->route('home')->with('error', 'You cannot accept a friend request');
         }
-
         $user = User::find($request->input('sender_id'));
 
         if (!$user->sentFriendRequestTo(Auth::user())) {
@@ -216,7 +216,6 @@ class UserController extends Model
 
         try {
             DB::beginTransaction();
-
             $notification_join = Notification::join('user_notifications', 'notifications.id', '=', 'user_notifications.notification_id')
                                         ->where('notifications.sender_id', $user->id)
                                         ->where('notifications.receiver_id', Auth::user()->id)
@@ -230,12 +229,17 @@ class UserController extends Model
 
             $notification->delete();
 
+
+            $friendId = $user->id;  //the id of the user that sent the friend request
             //add the friendship
             $is_friend = new Friend();
             
+
             $is_friend->user_id = Auth::user()->id;
             $is_friend->friend_id = $friendId;
             $is_friend->date = date('Y-m-d H:i:s');
+
+           
 
             $is_friend->save();
 
