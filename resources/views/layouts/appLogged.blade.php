@@ -106,21 +106,26 @@
             </section>
             
             <aside id="right-bar">
-                <ul>
-                    <li><span class="material-symbols-outlined">
-                        expand_more
-                        </span>Notifications</li>
-                </ul>
-                @if (Auth::check())
+                <div class="notifications-bar">
+                    <ul>
+                        <li>
+                            <a id="notifications">
+                                <span class="material-symbols-outlined">
+                                    expand_more
+                                </span>
+                                Notifications
+                            </a>
+                        </li>
+                    </ul>
+
                     <div class="notifications">
-                        @each('partials.notification', Auth::user()->notifications, 'notification')
+                        @if (Auth::check())
+                            @each('partials.notification', Auth::user()->notifications->sortByDesc('date'), 'notification')
+                        @else
+                            <p>Login to check your notifications</p>
+                        @endif
                     </div>
-
-                @else
-
-                    <p>Login to check your notifications</p>
-
-                @endif
+                </div>
                 
                 <button class="button">Help</button>
             </aside>

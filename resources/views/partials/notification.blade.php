@@ -13,10 +13,20 @@
     @endif
 
     <div class="notification-inner">
-        <p>{{ $sender->name }} ({{ $sender->username }}) wants to be your friend</p>
+        <div class="card-info">
+            <span class="name"> {{ $sender->name }} </span>
+            <span class="username">&#64;{{ $sender->username }}</span>
+        </div>
+
         <div class="notification-answer">
-            <button class="button">Accept</button>
-            <button class="button">Decline</button>
+            <button class="button accept-friend-request-notification">
+                <input type="hidden" name="sender_id" value="{{ $sender->id }}">
+                Accept
+            </button>
+            <button class="button reject-friend-request-notification">
+                <input type="hidden" name="sender_id" value="{{ $sender->id }}">
+                Decline
+            </button>
         </div>
     </div>
 
