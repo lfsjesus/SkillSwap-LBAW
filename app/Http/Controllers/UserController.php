@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Notification;
 use App\Models\UserNotification;
+use App\Models\Friend;
 
 class UserController extends Model 
 {
@@ -170,6 +171,8 @@ class UserController extends Model
         }
 
         /*
+        MIGHT NOT NEED THIS -- CHECK
+
         if (!Auth::user()->has_pending_friend_request_from($user)) {
             return redirect()->back()->with('error', 'You do not have a pending friend request from this user');
         }
@@ -200,6 +203,92 @@ class UserController extends Model
             return redirect()->back()->with('error', 'Unexpected error while cancelling friend request. Try again!');
         }
     }
+
+    public function acceptFriendRequest(Request $request) {
+        if (!Auth::check()) {
+            return redirect()->route('home')->with('error', 'You cannot accept a friend request');
+        }
+        $user = User::find($request->input('sender_id'));
+
+        if (!$user->sentFriendRequestTo(Auth::user())) {
+            return redirect()->back()->with('error', 'You do not have a pending friend request from this user');
+        }
+
+        try {
+            DB::beginTransaction();
+            $notification_join = Notification::join('user_notifications', 'notifications.id', '=', 'user_notifications.notification_id')
+                                        ->where('notifications.sender_id', $user->id)
+                                        ->where('notifications.receiver_id', Auth::user()->id)
+                                        ->where('user_notifications.notification_type', 'friend_request')
+                                        ->firstOrFail();
+
+            $notification_id = $notification_join->id;
+
+            //delete the notification
+            $notification = Notification::find($notification_id);
+
+            $notification->delete();            
+
+            $friendId = $user->id;  //the id of the user that sent the friend request
+            //add the friendship
+            $is_friend = new Friend();
+            
+
+            $is_friend->user_id = Auth::user()->id;
+            $is_friend->friend_id = $friendId;
+            $is_friend->date = date('Y-m-d H:i:s');
+
+           
+
+            $is_friend->save();
+
+
+            DB::commit();
+
+            return json_encode(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error while accepting friend request. Try again!');
+        }
+    }
+
+    //remove friend
+    public function removeFriend(Request $request){
+        if (!Auth::check()) {
+            return redirect()->route('home')->with('error', 'You cannot remove a friend');
+        }
+
+        $user = User::find($request->input('friend_id'));
+        
+
+        if (!Auth::user()->is_friend($user)) {
+            return redirect()->back()->with('error', 'You are not friends with this user');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Delete the friendship in both directions
+            DB::table('is_friend')
+                ->where('user_id', Auth::user()->id)
+                ->where('friend_id', $user->id)
+                ->delete();
+    
+            DB::table('is_friend')
+                ->where('user_id', $user->id)
+                ->where('friend_id', Auth::user()->id)
+                ->delete();
+    
+            DB::commit();
+
+            return json_encode(['success' => true]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error while removing friend. Try again!');
+        }
+    }
+
 
     //Uses full text search for name and username and exact match search for email
     public function search(Request $request)

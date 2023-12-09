@@ -79,7 +79,7 @@
                         @elseif($user->sentFriendRequestTo(Auth::user()))
                             <!-- Button for accepting a received friend request -->
                             <a class="button accept-friend-request">
-                                <input type="hidden" name="friend_id" value="{{ $user->id }}">
+                                <input type="hidden" name="sender_id" value="{{ $user->id }}">
                                 <span class="material-symbols-outlined">person_add</span>
                                 Accept Request
                             </a>
