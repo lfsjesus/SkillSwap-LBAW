@@ -992,6 +992,16 @@ function acceptFriendRequestNotificationHandler() {
   if (notification) {
     notification.remove();
   }
+
+  // Get the friend button on profile page
+  let button = document.querySelector(' .accept-friend-request');
+  if (button) {
+    let check_notification = button.querySelector('input[name="sender_id"]');
+    if (check_notification.value == response.sender_id) {
+      acceptFriendRequestHandler.call(this);
+    }
+  }
+
 }
 
 function rejectFriendRequestNotificationHandler() {
@@ -1002,6 +1012,29 @@ function rejectFriendRequestNotificationHandler() {
   let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
   if (notification) {
     notification.remove();
+  }
+
+  // Maybe it's better to create handler for this
+  let button = document.querySelector('.accept-friend-request');
+  if (button) {
+    let check_notification = button.querySelector('input[name="sender_id"]');
+    if (check_notification.value == response.sender_id) {
+      button.classList.remove('accept-friend-request');
+      button.classList.add('add-friend');
+
+      let iconSpan = button.querySelector('span');
+      iconSpan.innerHTML = 'person_add';
+
+      let input2 = button.querySelector('input[name="sender_id"]');
+      input2.setAttribute('name', 'friend_id');
+
+      button.innerHTML = '';
+
+      button.appendChild(input2);
+      button.appendChild(iconSpan);
+
+      button.innerHTML += 'Add friend';
+    }
   }
 }
 

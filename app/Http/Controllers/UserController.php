@@ -226,6 +226,7 @@ class UserController extends Model
 
             //delete the notification
             $notification = Notification::find($notification_id);
+            $notification_sender = $notification->sender_id;
 
             $notification->delete();            
 
@@ -245,7 +246,7 @@ class UserController extends Model
 
             DB::commit();
 
-            return json_encode(['success' => true, 'notification_id' => $notification_id]);
+            return json_encode(['success' => true, 'notification_id' => $notification_id, 'sender_id' => $notification_sender]);
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Unexpected error while accepting friend request. Try again!');
@@ -273,6 +274,7 @@ class UserController extends Model
                                         ->firstOrFail();
 
             $notification_id = $notification_join->id;
+            $notification_sender = $notification_join->sender_id;
 
             //delete the notification
             $notification = Notification::find($notification_id);
@@ -281,7 +283,7 @@ class UserController extends Model
 
             DB::commit();
 
-            return json_encode(['success' => true, 'notification_id' => $notification_id]);
+            return json_encode(['success' => true, 'notification_id' => $notification_id, 'sender_id' => $notification_sender]);
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Unexpected error while rejecting friend request. Try again!');
