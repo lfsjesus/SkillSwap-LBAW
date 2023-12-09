@@ -227,8 +227,7 @@ class UserController extends Model
             //delete the notification
             $notification = Notification::find($notification_id);
 
-            $notification->delete();
-
+            $notification->delete();            
 
             $friendId = $user->id;  //the id of the user that sent the friend request
             //add the friendship
@@ -252,6 +251,44 @@ class UserController extends Model
             return redirect()->back()->with('error', 'Unexpected error while accepting friend request. Try again!');
         }
     }
+
+    //remove friend
+    public function removeFriend(Request $request){
+        if (!Auth::check()) {
+            return redirect()->route('home')->with('error', 'You cannot remove a friend');
+        }
+
+        $user = User::find($request->input('friend_id'));
+        
+
+        if (!Auth::user()->is_friend($user)) {
+            return redirect()->back()->with('error', 'You are not friends with this user');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Delete the friendship in both directions
+            DB::table('is_friend')
+                ->where('user_id', Auth::user()->id)
+                ->where('friend_id', $user->id)
+                ->delete();
+    
+            DB::table('is_friend')
+                ->where('user_id', $user->id)
+                ->where('friend_id', Auth::user()->id)
+                ->delete();
+    
+            DB::commit();
+
+            return json_encode(['success' => true]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error while removing friend. Try again!');
+        }
+    }
+
 
     //Uses full text search for name and username and exact match search for email
     public function search(Request $request)

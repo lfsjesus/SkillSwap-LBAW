@@ -81,6 +81,7 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/friend/request', 'sendFriendRequest')->name('send_friend_request');
     Route::delete('/friend/cancel_request', 'cancelFriendRequest')->name('cancel_friend_request');
     Route::post('/friend/accept_request', 'acceptFriendRequest')->name('accept_friend_request');
+    Route::delete('/friend/remove', 'removeFriend')->name('remove_friend');
 
 });
 
