@@ -304,17 +304,11 @@ class UserController extends Model
         try {
             DB::beginTransaction();
 
-            // Delete the friendship in both directions
             DB::table('is_friend')
                 ->where('user_id', Auth::user()->id)
                 ->where('friend_id', $user->id)
                 ->delete();
-    
-            DB::table('is_friend')
-                ->where('user_id', $user->id)
-                ->where('friend_id', Auth::user()->id)
-                ->delete();
-    
+
             DB::commit();
 
             return json_encode(['success' => true]);

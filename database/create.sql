@@ -353,6 +353,25 @@ CREATE TRIGGER add_friend
 
 
 
+CREATE OR REPLACE FUNCTION delete_friend() RETURNS TRIGGER AS $$
+BEGIN
+    -- Check if the trigger was called by the DELETE operation
+    IF (TG_OP = 'DELETE' AND OLD.user_id <> OLD.friend_id) THEN
+        -- Perform the DELETE only if it's not a recursive call
+        DELETE FROM is_friend
+        WHERE user_id = OLD.friend_id AND friend_id = OLD.user_id;
+    END IF;
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER delete_friend
+    AFTER DELETE ON is_friend
+    FOR EACH ROW
+    WHEN (OLD.user_id <> OLD.friend_id)
+    EXECUTE FUNCTION delete_friend();
+
 
 CREATE OR REPLACE FUNCTION check_file_format()
 RETURNS TRIGGER AS $$
