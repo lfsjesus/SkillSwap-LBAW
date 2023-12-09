@@ -11,6 +11,20 @@ use App\Models\File;
 
 class PostController extends Controller
 {
+
+    public function show($id) {
+        $post = Post::find($id);
+        if ($post == null) {
+            return redirect()->back()->with('error', 'Post not found');
+        }
+
+        if ($post->user_id != Auth::user()->id && !$post->public_post && !Auth::user()->isFriend($post->user_id)) {
+            return redirect()->back()->with('error', 'You are not authorized to view this post');
+        }
+
+        return view('pages.post', ['post' => $post]);
+    }
+    
     public function list() {
         if (!Auth::check()) {
             $posts = Post::publicPosts()->get()->sortByDesc('date');

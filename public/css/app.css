@@ -1119,7 +1119,20 @@ form #form-group textarea {
   gap: 1em;
 }
 
+.notification-href {
+  text-decoration: none;
+  color: white;
+}
 
+.notification-href:hover {
+  color: white;
+}
+
+.notifications {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
 
 .notification {
   display: flex;
