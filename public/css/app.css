@@ -999,7 +999,7 @@ form #form-group textarea {
   gap: 1em;
 }
 
-.comment.highlight  .inner-comment {
+.comment.highlight > .comment-body > .comment-main > .inner-comment {
   background-color: #663FA4;
   transition: 0.2s ease;
 }
