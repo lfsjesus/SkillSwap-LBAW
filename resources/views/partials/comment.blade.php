@@ -32,8 +32,8 @@
                 @if(Auth::user())
                 <p> Reply </p>
                 @if ($comment->author->id == Auth::user()->id)
-                <p> Edit </p>
-                <p> Delete </p>
+                <p class="edit-comment"> Edit </p>
+                <p class="delete-comment"> Delete </p>
                 @endif
                 @endif
             </div>

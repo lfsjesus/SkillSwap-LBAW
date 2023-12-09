@@ -596,7 +596,7 @@ function editCommentFormHandler(event) {
 }
 
 // delete comment
-let deleteCommentButtons = document.querySelectorAll('article.post .comment .comment-actions p:last-child');
+let deleteCommentButtons = document.querySelectorAll('article.post .comment .comment-actions .delete-comment');
 
 if (deleteCommentButtons != null) {
   deleteCommentButtons.forEach(function(button) {
@@ -631,7 +631,7 @@ function deleteCommentHandler() {
 }
 
 
-let editCommentButtons = document.querySelectorAll('article.post .comment .comment-actions p:nth-child(3)');
+let editCommentButtons = document.querySelectorAll('article.post .comment .comment-actions .edit-comment');
 if (editCommentButtons != null) {
   editCommentButtons.forEach(function(button) {
     button.addEventListener('click', function(e) {
@@ -742,6 +742,7 @@ function createComment(id, post_id, author_name, content, replyTo_id) {
   commentActionsP2.addEventListener('click', commentButtonHandler);
 
   let commentActionsP3 = document.createElement('p');
+  commentActionsP3.className = 'edit-comment';
   commentActionsP3.innerHTML = 'Edit';
   commentActionsP3.addEventListener('click', function(e) {
     let id = e.target.closest('.comment').getAttribute('data-id');
@@ -750,6 +751,7 @@ function createComment(id, post_id, author_name, content, replyTo_id) {
   );
 
   let commentActionsP4 = document.createElement('p');
+  commentActionsP4.className = 'delete-comment';
   commentActionsP4.innerHTML = 'Delete';
   commentActionsP4.addEventListener('click', function(e) {
     let id = e.target.closest('.comment').getAttribute('data-id');
