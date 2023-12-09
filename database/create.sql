@@ -481,15 +481,25 @@ EXECUTE FUNCTION prevent_duplicate_friend_requests();
 
 CREATE OR REPLACE FUNCTION prevent_duplicate_join_requests()
 RETURNS TRIGGER AS $$
+DECLARE 
+    sender_id_val INT;
+    receiver_id_val INT;
 BEGIN
+
+    SELECT sender_id, receiver_id
+    INTO sender_id_val, receiver_id_val
+    FROM notifications
+    WHERE id = NEW.notification_id;
+
     IF EXISTS (
             SELECT 1
-            FROM is_member
-            WHERE user_id = NEW.user_id
-            AND group_id = NEW.group_id)
-
-            THEN
-            RAISE EXCEPTION 'User is already a member of the group!';
+            FROM group_notifications
+            JOIN notifications ON group_notifications.notification_id = notifications.id
+            WHERE notification_type = 'join_request'
+            AND sender_id = sender_id_val AND receiver_id = receiver_id_val AND group_id = NEW.group_id
+            
+        ) THEN
+        RAISE EXCEPTION 'A join group request from this user already exists';
     END IF;
            
     IF EXISTS(
@@ -498,10 +508,10 @@ BEGIN
             JOIN notifications ON group_notifications.notification_id = notifications.id
             WHERE notification_type = 'ban'
             AND group_id = NEW.group_id
-            AND receiver_id = NEW.user_id)
+            AND sender_id = sender_id_val AND receiver_id = receiver_id_val AND group_id = NEW.group_id
 
-            THEN
-            RAISE EXCEPTION 'User is already a member of the group!';
+            ) THEN
+            RAISE EXCEPTION 'User can not send a request to this group since he was banned!';
 
     END IF;
 
@@ -511,7 +521,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_prevent_duplicate_join_requests
-BEFORE INSERT ON is_member
+BEFORE INSERT ON group_notifications
 FOR EACH ROW
 EXECUTE FUNCTION prevent_duplicate_join_requests();
 
