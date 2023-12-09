@@ -252,6 +252,42 @@ class UserController extends Model
         }
     }
 
+    public function rejectFriendRequest(Request $request) {
+        if (!Auth::check()) {
+            return redirect()->route('home')->with('error', 'You cannot reject a friend request');
+        }
+
+        $user = User::find($request->input('sender_id'));
+
+        if (!$user->sentFriendRequestTo(Auth::user())) {
+            return redirect()->back()->with('error', 'You do not have a pending friend request from this user');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $notification_join = Notification::join('user_notifications', 'notifications.id', '=', 'user_notifications.notification_id')
+                                        ->where('notifications.sender_id', $user->id)
+                                        ->where('notifications.receiver_id', Auth::user()->id)
+                                        ->where('user_notifications.notification_type', 'friend_request')
+                                        ->firstOrFail();
+
+            $notification_id = $notification_join->id;
+
+            //delete the notification
+            $notification = Notification::find($notification_id);
+
+            $notification->delete();
+
+            DB::commit();
+
+            return json_encode(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error while rejecting friend request. Try again!');
+        }
+    }
+
     //remove friend
     public function removeFriend(Request $request){
         if (!Auth::check()) {

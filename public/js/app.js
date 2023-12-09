@@ -869,6 +869,10 @@ document.addEventListener('click', function(e) {
       handleAcceptFriendRequestClick(e);
   } else if (e.target.closest('.remove-friend')) {
       handleRemoveFriendClick(e);
+  } else if (e.target.closest('.accept-friend-request-notification')){
+      handleAcceptFriendRequestNotificationClick(e);
+  } else if (e.target.closest('.reject-friend-request-notification')){
+      handleRejectFriendRequestNotificationClick(e);
   }
 });
 
@@ -895,6 +899,19 @@ function handleRemoveFriendClick(e) {
   let data = { friend_id: friend_id };
   sendAjaxRequest('DELETE', '/friend/remove', data, removeFriendHandler);
 }
+
+function handleAcceptFriendRequestNotificationClick(e) {
+  let sender_id = e.target.closest('.accept-friend-request-notification').querySelector('input[name="sender_id"]').value;
+  let data = { sender_id: sender_id };
+  sendAjaxRequest('POST', '/friend/accept_request', data, acceptFriendRequestNotificationHandler);
+}
+
+function handleRejectFriendRequestNotificationClick(e) {
+  let sender_id = e.target.closest('.reject-friend-request-notification').querySelector('input[name="sender_id"]').value;
+  let data = { sender_id: sender_id };
+  sendAjaxRequest('DELETE', '/friend/reject_request', data, rejectFriendRequestNotificationHandler);
+}
+
 
 function addFriendHandler() {
   let response = JSON.parse(this.responseText);
@@ -961,6 +978,22 @@ function removeFriendHandler() {
   button.appendChild(input2);
   button.appendChild(iconSpan);
   button.innerHTML += 'Add friend';
+}
+
+function acceptFriendRequestNotificationHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let button = document.querySelector('.accept-friend-request-notification');
+  button.remove();
+}
+
+function rejectFriendRequestNotificationHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let button = document.querySelector('.reject-friend-request-notification');
+  button.remove();
 }
 
 // Get all elements with class="dropbtn" and attach a click event listener
