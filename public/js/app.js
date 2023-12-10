@@ -22,10 +22,17 @@ function sendAjaxRequest(method, url, data, handler) {
 }
 
 function postDeletedHandler() {
-  if (this.status != 200) window.location = window.location.href;
-  let item = JSON.parse(this.responseText);
-  let element = document.querySelector('.post[data-id="' + item.id + '"]');
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let element = document.querySelector('.post[data-id="' + response.id + '"]');
   element.remove();
+
+  let content = document.querySelector('#content');
+
+  if (content.children.length == 1) {
+    window.location = '/';
+  }
 }
 
 
@@ -56,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   if (postDeleteButtons != null) {
     postDeleteButtons.forEach(function(button) {
+      event.preventDefault();
       button.addEventListener('click', function(e) {
         let id = e.target.parentNode.parentNode.parentNode.getAttribute('data-id');
         let data = {post_id: id};

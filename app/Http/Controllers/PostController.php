@@ -89,7 +89,12 @@ class PostController extends Controller
             FileController::deleteFilesFromStorage($files);
 
             DB::commit();
-            return redirect()->back()->with('success', 'Post deleted successfully');
+
+            $response = [
+                'success' => true,
+                'id' => $post_id
+            ];
+            return json_encode($response);
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Error in deleting post');
