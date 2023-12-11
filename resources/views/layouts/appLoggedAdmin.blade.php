@@ -40,25 +40,30 @@
                             </a>
                         </li>
                         <li>
-                            <a href="">
+                            <a>
                                 <span class="material-symbols-outlined">
                                 settings
                                 </span>Settings
                             </a>
                         </li>
                         <li>
-                            <a href="">
+                            <a href="{{ route('admin-groups') }}">
                                 <span class="material-symbols-outlined">
                                 groups
                                 </span>Groups
                             </a>
                         </li>
-                        <li>
-                            <a href="">
+                        <li class="dropdown">
+                            <a href="javascript:void(0)" class="dropbtn">
                                 <span class="material-symbols-outlined">
                                 expand_more
                                 </span>See More
                             </a>
+                            <div class="dropdown-content">
+                                <a href="{{ route('mainFeatures') }}">Main Features</a>
+                                <a href="{{ route('about') }}">About Us</a>
+                                <a href="{{ route('about') }}">Contact Us</a>
+                            </div>
                         </li>
                     </ul>
                     </nav>
