@@ -14,7 +14,7 @@ class UserBan extends Model
     protected $fillable = [
         'user_id',
         'administrator_id',
-        'days',
         'date'
     ];
+
 }

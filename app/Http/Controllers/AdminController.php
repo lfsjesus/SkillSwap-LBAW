@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Administrator;
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
+use App\Models\UserBan;
 
 class AdminController extends Controller
 {
@@ -24,6 +25,15 @@ class AdminController extends Controller
             $users = DB::table('users')->simplePaginate(20);
             return view('pages.admin', ['admin' => $admin, 'users' => $users]);
         }
+    }
+
+    public function listGroups() {
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
+
+        $groups = DB::table('groups')->simplePaginate(20);
+        return view('pages.groups', ['groups' => $groups]);        
     }
 
     public function showUser($username) {
@@ -150,6 +160,75 @@ class AdminController extends Controller
         return redirect()->route('admin')->withSuccess('User deleted successfully!');
     }
 
+    public function banUser(Request $request) {
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $id = $request->input('username');
+            $user = User::where('username', $id)->firstOrFail();
+
+            $userBan = new UserBan();
+            $userBan->user_id = $user->id;
+            $userBan->administrator_id = Auth::guard('webadmin')->user()->id;
+            $userBan->date = date('Y-m-d H:i:s');
+
+            $userBan->save();
+
+            $response = [
+                'success' => true,
+                'username' => $user->username
+            ];
+
+            DB::commit();
+            return json_encode($response);
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+            $response = [
+                'success' => false
+            ];
+
+            return json_encode($response);
+        }
+    }
+
+
+    public function unbanUser(Request $request) {
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $id = $request->input('username');
+            $user = User::where('username', $id)->firstOrFail();
+
+            $userBan = UserBan::where('user_id', $user->id)->firstOrFail();
+
+            $userBan->delete();
+
+            $response = [
+                'success' => true,
+                'username' => $user->username
+            ];
+
+            DB::commit();
+            return json_encode($response);
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+            $response = [
+                'success' => false
+            ];
+
+            return json_encode($response);
+        }
+    }
    
     //Uses full text search for name and username and exact match search for email
     public function search(Request $request)

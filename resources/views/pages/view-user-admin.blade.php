@@ -45,13 +45,29 @@
 
         
             </div>
-            
-            <a href="{{ route('edit-user-form-admin', ['username' => $user->username]) }}" class="button">
-                <span class='material-symbols-outlined'>
-                    edit
-                </span>
-                Edit Profile
-            </a>
+            <div class="profile-buttons">
+                <a href="{{ route('edit-user-form-admin', ['username' => $user->username]) }}" class="button">
+                    <span class='material-symbols-outlined'>
+                        edit
+                    </span>
+                    Edit Profile
+                </a>
+                @if ($user->isBanned())
+                <a class="button unban-user" href="javascript:void(0);">
+                    <span class='material-symbols-outlined'>
+                        person_add_disabled
+                    </span>
+                    Unban
+                </a>
+                @else
+                <a class="button ban-user" href="javascript:void(0);">
+                    <span class='material-symbols-outlined'>
+                        block
+                    </span>
+                    Ban
+                </a>
+                @endif
+            </div>
         </div>
         <p class="user-description">
             {{ $user->description }}
@@ -67,8 +83,12 @@
                 <h2>Friends</h2>
                 @if ($user->get_friends()->isEmpty())
                 <p> This user does not have friends </p>
-                @else
-                @each('partials.user', $user->get_friends(), 'user')
+                @else 
+                @each('partials.user', $user->get_friends()->take(2), 'user')
+                <div class="spacer"></div>
+                <div class="see-more-container">
+                    <a href="{{ route('user_friends', ['username' => $user->username]) }}" class="see-more-button">See All Friends</a>
+                </div>
                 @endif
             </div>
             <!-- Groups Box -->
@@ -77,7 +97,11 @@
                 @if ($user->get_groups()->isEmpty())
                 <p> This user does not belong to any group </p>
                 @else
-                @each('partials.group', $user->get_groups(), 'group') 
+                @each('partials.group', $user->get_groups()->take(2), 'group')
+                <div class="spacer"></div>
+                <div class="see-more-container">
+                    <a href="{{ route('user_groups', ['username' => $user->username]) }}" class="see-more-button">See All Groups</a>
+                </div>
                 @endif
             </div>
         </div>
@@ -88,7 +112,7 @@
             @if (count($posts) == 0)
             <p> This user does not have posts </p>
             @else
-            @each('partials.post-admin', $posts, 'post')
+            @each('partials.post', $posts, 'post')
             @endif
         </section>
     </div>

@@ -16,6 +16,7 @@ use App\Models\Post;
 use App\Models\Group;
 use App\Models\Friend;
 use App\Models\Member;
+use App\Models\UserBan;
 
 
 class User extends Authenticatable
@@ -142,5 +143,9 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class, 'receiver_id');
+    }
+
+    public function isBanned() {
+        return UserBan::where('user_id', $this->id)->exists();
     }
 }

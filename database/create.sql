@@ -161,10 +161,8 @@ CREATE TABLE administrators (
 
 CREATE TABLE user_ban (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     administrator_id INTEGER NOT NULL REFERENCES administrators(id),
-    days INTEGER NOT NULL,
-    CHECK (days > 0),
     date TIMESTAMP NOT NULL,
     CHECK (date <= CURRENT_TIMESTAMP)
 );

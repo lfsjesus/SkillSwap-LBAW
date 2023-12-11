@@ -595,6 +595,12 @@ aside .logo img {
   color: white;
 }
 
+.profile-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+}
+
 .profile-content {
   display: flex;
   flex-direction: column;

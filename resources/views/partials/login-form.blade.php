@@ -28,4 +28,9 @@
             {{ session('success') }}
         </p>
     @endif
+    @if($errors->has('banned'))
+    <span class="error">
+        {{ $errors->first('banned') }}
+    </span>
+    @endif
 </form>
