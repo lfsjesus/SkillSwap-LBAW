@@ -513,14 +513,6 @@ if (replyButtons != null) {
       else {
         commentBox.style.display = 'none';
       }  
-
-      let inputReply = document.createElement('input');
-      inputReply.setAttribute('type', 'hidden');
-      inputReply.setAttribute('name', 'replyTo_id');
-      inputReply.setAttribute('value', id);
-
-      commentBox.appendChild(inputReply);
-
       }
     );
   }
@@ -596,7 +588,7 @@ if (replyCommentForms != null) {
 function replyCommentFormHandler(event) {
   event.preventDefault();
   let post_id = this.closest('.post').querySelector('input[name="post_id"]').value;
-  let comment_id = this.querySelector('input[name="replyTo_id"]').value;
+  let comment_id = this.closest('.comment').getAttribute('data-id');
   let content = this.querySelector('textarea[name="content"]').value;
   let data = {post_id: post_id, comment_id: comment_id, content: content};
   sendAjaxRequest('POST', '/posts/comment', data, commentPostHandler);
