@@ -488,7 +488,7 @@ function commentButtonHandler() {
 
 
 
-let replyButtons = document.querySelectorAll('article.post .comment .comment-actions p:nth-child(2)');
+let replyButtons = document.querySelectorAll('article.post .comment .comment-actions .reply-comment');
 if (replyButtons != null) {
   replyButtons.forEach(function(button) {
     button.addEventListener('click', function(e) {
@@ -747,6 +747,7 @@ function createComment(id, post_id, author_name, content, replyTo_id) {
 
   let commentActionsP2 = document.createElement('p');
   commentActionsP2.innerHTML = 'Reply'; 
+  commentActionsP2.className = 'reply-comment';
   commentActionsP2.addEventListener('click', commentButtonHandler);
 
   let commentActionsP3 = document.createElement('p');

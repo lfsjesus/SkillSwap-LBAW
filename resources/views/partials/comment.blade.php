@@ -30,7 +30,7 @@
             <div class="comment-actions">
                 <p> {{Carbon\Carbon::parse($comment->date)->diffForHumans()}} </p>
                 @if(Auth::user())
-                <p> Reply </p>
+                <p class="reply-comment"> Reply </p>
                 @if ($comment->author->id == Auth::user()->id)
                 <p class="edit-comment"> Edit </p>
                 <p class="delete-comment"> Delete </p>
