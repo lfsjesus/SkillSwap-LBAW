@@ -28,8 +28,8 @@
                 <p> {{Carbon\Carbon::parse($post->date)->diffForHumans()}} </p>
             </div>
         </div>
-        @if(Auth::user())
-            @if ($post->author->id == Auth::user()->id)
+        @if(Auth::check() || Auth::guard('webadmin')->check())
+            @if (Auth::guard('webadmin')->check() || $post->author->id == Auth::user()->id)
             <div class="post-header-right">
                 <span class='material-symbols-outlined'>edit</span>
                 <span class='material-symbols-outlined'>delete</span>

@@ -70,6 +70,11 @@ class PostController extends Controller
 
     public function delete(Request $request) {
         $post_id = $request->input('post_id');
+        $post = Post::find($post_id);
+
+        if (!(Auth::guard('webadmin')->check() || $post->user_id == Auth::user()->id)) {
+            return redirect()->back()->with('error', 'You are not authorized to delete this post');
+        }
 
         if (!isset($post_id)) {
             return redirect()->back()->with('error', 'Post not found');
@@ -77,12 +82,8 @@ class PostController extends Controller
 
         try {
             DB::beginTransaction();
-            $post = Post::find($post_id);
+
             $files = $post->files();
-            
-            if ($post->user_id != Auth::user()->id) {
-                return redirect()->back()->with('error', 'You are not authorized to delete this post');
-            }
 
             $post->delete();
             
@@ -105,6 +106,11 @@ class PostController extends Controller
 
         $post_id = $request->input('post_id');
         $content = $request->input('description');
+        $post = Post::find($post_id);
+
+        if (!(Auth::guard('webadmin')->check() || $post->user_id == Auth::user()->id)) {
+            return redirect()->back()->with('error', 'You are not authorized to edit this post');
+        }
 
         
         if (!isset($post_id)) {
@@ -118,7 +124,6 @@ class PostController extends Controller
         try {
             DB::beginTransaction();
             
-            $post = Post::find($post_id);
             $postFiles = $post->files();
 
             $requestFilesNames = ($request->file('files') != null) ? array_map(function ($file) {

@@ -47,13 +47,7 @@ class UserController extends Model
 
     public function edit(Request $request) {
         $user = User::find(Auth::user()->id);
-
-        
-        if (Auth::user()->id != $user->id) {
-            return redirect()->back()->with('error', 'You cannot edit this user');
-        }
-
-        
+       
         $request->validate([
             'name' => 'required|string|max:50',
             'email' => 'required|email|max:50|unique:users,email,' . Auth::user()->id,
