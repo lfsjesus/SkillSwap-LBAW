@@ -1293,38 +1293,41 @@ main > aside#right-bar .notifications-bar {
 .help-icon {
   cursor: pointer;
   display: inline-block;
-  position: relative; /* Necessary for absolute positioning of child elements */
+  position: relative; 
+  padding-bottom: 0.5em;
 }
 
 .help-icon::after {
-  content: '?'; /* This will be your 'icon' */
+  content: '?'; 
   display: inline-block;
   margin-left: 0.5em;
-  color: #007bff; /* Or any color of your choice */
-  font-size: 0.8em; /* Adjust the size of your icon */
+  color: #663FA4; 
+  font-size: 0.8em; 
 }
 
 .help-tooltip {
-  display: none; /* Initially hidden */
-  margin-top: 0.3em; /* Space between icon and tooltip */
+  border-radius: 10px;
+  display: none; 
+  margin-top: 0.3em; 
   background-color: #663FA4;
-  padding: 0.3em 0.6em;
-  color: black;
+  padding: 0.2em 0.4em;
+  margin-bottom: 0.5em;
+  color: white;
   white-space: nowrap;
-  z-index: 1000;
-  font-size: 0.9em; /* Adjust font size as needed */
+  font-size: 0.9em; 
 }
 
 .field-title {
   display: flex;
-  align-items: center; /* Aligns items vertically in the center */
+  align-items: center; 
+  margin-bottom: 0.7em;
 }
 
 .help-icon {
   cursor: pointer;
   display: inline-block;
   margin-left: 0.5em;
-  color: #007bff; 
+  color: #663FA4; 
 
 }
 
