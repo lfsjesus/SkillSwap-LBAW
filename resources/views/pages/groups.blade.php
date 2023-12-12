@@ -15,7 +15,9 @@
             {{ session('error') }}
         </p>
     @endif
+    @if(Auth::user())
     <button><a href="{{route('create_group_form')}}"><span class='material-symbols-outlined'>add_circle</span> group</a></button>
+    @endif
     <div class="users">
         @each('partials.group', $groups, 'group')
     </div>

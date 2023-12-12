@@ -47,21 +47,22 @@ class UserController extends Model
 
     public function edit(Request $request) {
         $user = User::find(Auth::user()->id);
-
-        
-        if (Auth::user()->id != $user->id) {
-            return redirect()->back()->with('error', 'You cannot edit this user');
-        }
-
-        
+       
         $request->validate([
             'name' => 'required|string|max:50',
             'email' => 'required|email|max:50|unique:users,email,' . Auth::user()->id,
             'phone_number' => [
                 'nullable',
-                'regex:/^\+?\d+$/',
-                'digits_between:8,15'
+                function ($attribute, $value, $fail) {
+                    if (!empty($value)) {
+                        $cleanedValue = preg_replace('/[^0-9\+]/', '', $value);
+                        if (strlen($cleanedValue) < 8 || strlen($cleanedValue) > 15) {
+                            $fail('Phone value is invalid.');
+                        }
+                    }
+                },
             ],
+            
             'description' => 'nullable|string|max:500',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'username' => 'required|string|max:50|unique:users,username,' . Auth::user()->id,

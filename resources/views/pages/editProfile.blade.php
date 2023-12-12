@@ -1,4 +1,4 @@
-@extends('layouts.appLogged')
+@extends(Auth::guard('webadmin')->check() ? 'layouts.appLoggedAdmin' : 'layouts.appLogged')
 
 @section('title', 'Edit Profile')
 
@@ -13,10 +13,10 @@
 <section id="edit-profile" class="edit-profile-section">
     <div class="container">
         <h1>Edit Profile</h1>
-        <form action="{{ route('edit_user') }}" method="POST" enctype="multipart/form-data" id="edit-profile-form">
+        <form action="{{ Auth::guard('webadmin')->check() ? route('edit_user_admin') : route('edit_user') }}" method="POST" id="edit-profile-form" enctype="multipart/form-data">
             {{ csrf_field() }}
             @method('PUT')
-            
+            <input type="hidden" name="user_id" value="{{ $user->id }}">
             <!-- Profile Picture -->
             <div id="form-group">
                 <div class="field-title">
@@ -29,9 +29,9 @@
 
                 <input type="file" name="profile_picture" id="profile_picture" class="form-control">
                 @if ($errors->has('profile_picture'))
-                <span class="error">
-                    {{ $errors->first('profile_picture') }}
-                </span>
+                    <span class="error">
+                        {{ $errors->first('profile_picture') }}
+                    </span>
                 @endif
             </div>
 
@@ -46,9 +46,9 @@
                 </div>
                 <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}">
                 @if ($errors->has('name'))
-                <span class="error">
-                    {{ $errors->first('name') }}
-                </span>
+                    <span class="error">
+                        {{ $errors->first('name') }}
+                    </span>
                 @endif
             </div>
                         
@@ -64,9 +64,9 @@
                 </div>
                 <input type="email" name="email" id="email" class="form-control" value="{{ $user->email }}">
                 @if ($errors->has('email'))
-                <span class="error">
-                    {{ $errors->first('email') }}
-                </span>
+                    <span class="error">
+                        {{ $errors->first('email') }}
+                    </span>
                 @endif
             </div>
 
@@ -82,9 +82,9 @@
                 
                 <input type="text" name="username" id="username" class="form-control" value="{{ $user->username }}">
                 @if ($errors->has('username'))
-                <span class="error">
-                    {{ $errors->first('username') }}
-                </span>
+                    <span class="error">
+                        {{ $errors->first('username') }}
+                    </span>
                 @endif
             </div>
 
@@ -100,9 +100,9 @@
                 
                 <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ $user->phone_number }}">
                 @if ($errors->has('phone_number'))
-                <span class="error">
-                    {{ $errors->first('phone_number') }}
-                </span>
+                    <span class="error">
+                        {{ $errors->first('phone_number') }}
+                    </span>
                 @endif
             </div>
 
@@ -118,9 +118,9 @@
 
                 <input type="date" name="birth_date" id="birthdate" class="form-control" value="{{ $user->birth_date->format('Y-m-d') }}">
                 @if ($errors->has('birth_date'))
-                <span class="error">
-                    {{ $errors->first('birth_date') }}
-                </span>
+                    <span class="error">
+                        {{ $errors->first('birth_date') }}
+                    </span>
                 @endif
             </div>
 
@@ -136,9 +136,9 @@
     
                 <textarea name="description" id="description" class="form-control">{{ $user->description }}</textarea>
                 @if ($errors->has('description'))
-                <span class="error">
-                    {{ $errors->first('description') }}
-                </span>
+                    <span class="error">
+                        {{ $errors->first('description') }}
+                    </span>
                 @endif
             </div>
 
@@ -156,14 +156,14 @@
                     <option value="0" {{ $user->public_profile ? '' : 'selected' }}>Private</option>
                 </select>
                 @if ($errors->has('visibility'))
-                <span class="error">
-                    {{ $errors->first('visibility') }}
-                </span>
+                    <span class="error">
+                        {{ $errors->first('visibility') }}
+                    </span>
                 @endif
             </div>          
 
         </form>
-        <form action="{{ route('delete_user') }}" method="POST" id="delete-profile-form">
+        <form action="{{ Auth::guard('webadmin')->check() ? route('delete_user_admin') : route('delete_user') }}" method="POST" id="delete-profile-form">
             <input type="hidden" name="id" value="{{ $user->id }}">
             {{ csrf_field() }}
             @method('DELETE')

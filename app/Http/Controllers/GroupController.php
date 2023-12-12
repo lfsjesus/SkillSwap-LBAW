@@ -99,18 +99,25 @@ class GroupController extends Model
 
     }
 
-    public function edit(Request $request) {
+    static public function edit(Request $request) {
         $request->validate([
+            'id' => 'required|integer',
             'name' => 'required|string|max:50',
             'description' => 'required|string|max:255',
             'visibility' => 'required|boolean',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
+        
+        $group = Group::find($request->id);
+
+        if (!(Auth::guard('webadmin')->check() || $group->is_owner(Auth::user()))) {
+            return redirect()->back()->with('error', 'You are not authorized to edit this post');
+        }
+
         try {
             DB::beginTransaction();
 
-            $group = Group::find($request->id);
             $group->name = $request->name;
             $group->banner = ($request->file('banner') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('banner'))) : null;
             $group->description = $request->description;
@@ -128,11 +135,15 @@ class GroupController extends Model
         }
     }
 
-    public function deleteGroup(Request $request) {
+    static public function deleteGroup(Request $request) {
+        $request->validate([
+            'id' => 'required|integer'
+        ]);
+
         $group = Group::find($request->id);
 
-        if (!$group->is_owner(Auth::user())) {
-            return redirect()->route('home')->with('error', 'You cannot delete a group you do not own');
+        if (!(Auth::guard('webadmin')->check() || $group->is_owner(Auth::user()))) {
+            return redirect()->route('home')->with('error', 'You do not have permission to delete this group');
         }
 
         $group->delete();

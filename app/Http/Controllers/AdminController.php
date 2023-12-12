@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\GroupController;
+
 use App\Models\Administrator;
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
 use App\Models\UserBan;
+use App\Models\Group;
 
 class AdminController extends Controller
 {
@@ -54,7 +57,7 @@ class AdminController extends Controller
         }
         
         $user = User::where('username', $username)->firstOrFail();
-        return view('pages.edit-user-admin', ['user' => $user]);
+        return view('pages.editProfile', ['user' => $user]);
     }
 
     public function showCreateUserForm() {
@@ -64,6 +67,25 @@ class AdminController extends Controller
         }
 
         return view('pages.create-user-admin');
+    }
+
+    public function showGroup($id) {
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
+
+        $group = Group::find($id);
+        $posts = $group->posts()->get();
+        return view('pages.view-group-admin', ['group' => $group, 'posts' => $posts]);
+    }
+
+    public function showEditGroupForm($id) {
+        if (!(Auth::guard('webadmin')->check())) {
+            return redirect('/admin/login');
+        }
+
+        $group = Group::find($id);
+        return view('pages.editGroup', ['group' => $group]);
     }
 
     public function createUser(Request $request) {
@@ -158,6 +180,22 @@ class AdminController extends Controller
         $user->delete();
 
         return redirect()->route('admin')->withSuccess('User deleted successfully!');
+    }
+
+    public function editGroup(Request $request) {
+        if (GroupController::edit($request)) {
+            return redirect()->route('view-group-admin', ['id' => $request->input('id')])->withSuccess('Group updated successfully!');
+        } else {
+            return redirect()->route('view-group-admin', ['id' => $request->input('id')])->withError('Unexpected error occurred while updating group!');
+        }
+    }
+
+    public function deleteGroup(Request $request) {
+        if (GroupController::deleteGroup($request)) {
+            return redirect()->route('admin-groups')->withSuccess('Group deleted successfully!');
+        } else {
+            return redirect()->route('admin-groups')->withError('Unexpected error occurred while deleting group!');
+        }
     }
 
     public function banUser(Request $request) {

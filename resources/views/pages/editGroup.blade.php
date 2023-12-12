@@ -1,4 +1,4 @@
-@extends('layouts.appLogged')
+@extends(Auth::guard('webadmin')->check() ? 'layouts.appLoggedAdmin' : 'layouts.appLogged')
 
 @section('title', 'Create Group')
 
@@ -8,7 +8,7 @@
 <section id="edit-group" class="edit-group-section">
     <div class="container">
         <h1>Edit Group</h1>
-        <form action="{{ route('edit_group') }}" method="POST" enctype="multipart/form-data" id="edit-group-form">
+        <form action="{{ Auth::guard('webadmin')->check() ? route('edit_group_admin') : route('edit_group') }}" method="POST" id="edit-group-form" enctype="multipart/form-data">
             @method('PUT')
             {{ csrf_field() }}            
             <input type="hidden" name="id" value="{{ $group->id }}">
@@ -59,13 +59,13 @@
                 @endif
             </div>
         </form>
-        <form action="{{ route('delete_group') }}" method="POST" id="delete-group-form">
+        <form action="{{ Auth::guard('webadmin')->check() ? route('delete_group_admin') : route('delete_group') }}" method="POST" id="delete-group-form">
             <input type="hidden" name="id" value="{{ $group->id }}">
             {{ csrf_field() }}
             @method('DELETE')
         </form>
         <button type="submit" form="edit-group-form" class="btn btn-primary">Save Changes</button>
-        <button type="submit" form="delete-group-form" class="btn btn-danger">Delete Profile</button>
+        <button type="submit" form="delete-group-form" class="btn btn-danger">Delete Group</button>
     </div>
 </section>
 
