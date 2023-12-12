@@ -34,6 +34,10 @@
 
             <!-- Name -->
             <div id="form-group">
+                <span class="help-icon"></span>
+                <div class="help-tooltip">
+                    "Enter your full name as you'd like it to appear on your profile. This is the name that will be visible to other users."
+                </div>
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}">
                 @if ($errors->has('name'))
@@ -46,6 +50,10 @@
 
             <!-- Email -->
             <div id="form-group">
+                <span class="help-icon"></span>
+                <div class="help-tooltip">
+                    "Provide a valid email address. This will be used for account notifications and password recovery. It won't be publicly displayed."
+                </div>
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" class="form-control" value="{{ $user->email }}">
                 @if ($errors->has('email'))
@@ -57,6 +65,10 @@
 
             <!-- Username -->
             <div id="form-group">
+                <span class="help-icon"></span>
+                <div class="help-tooltip">
+                    "Choose a unique username for your profile. This will be your identity on the platform and can be used for logging in."
+                </div>
                 <label for="username">Username</label>
                 <input type="text" name="username" id="username" class="form-control" value="{{ $user->username }}">
                 @if ($errors->has('username'))
@@ -68,6 +80,10 @@
 
             <!-- Phone Number -->
             <div id="form-group">
+                <span class="help-icon"></span>
+                <div class="help-tooltip">
+                    "Add your phone number. It can be used for account recovery and important notifications. Format: +[Country Code][Number]."
+                </div>
                 <label for="phone_number">Phone Number</label>
                 <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ $user->phone_number }}">
                 @if ($errors->has('phone_number'))
@@ -79,6 +95,10 @@
 
             <!-- Birthdate -->
             <div id="form-group">
+                <span class="help-icon"></span>
+                <div class="help-tooltip">
+                    "Enter your birthdate in the format YYYY-MM-DD. Your age may affect the accessibility of certain features or content."
+                </div>
                 <label for="birthdate">Birthdate</label>
                 <input type="date" name="birth_date" id="birthdate" class="form-control" value="{{ $user->birth_date->format('Y-m-d') }}">
                 @if ($errors->has('birth_date'))
@@ -90,6 +110,10 @@
 
             <!-- Description -->
             <div id="form-group">
+                <span class="help-icon"></span>
+                <div class="help-tooltip">
+                    "Write a brief description about yourself. This could include your interests, what you do, or what you're looking for on this platform."
+                </div>
                 <label for="description">Description</label>
                 <textarea name="description" id="description" class="form-control">{{ $user->description }}</textarea>
                 @if ($errors->has('description'))
@@ -101,6 +125,10 @@
 
             <!-- Public Profile -->
             <div id="form-group">
+                <span class="help-icon"></span>
+                <div class="help-tooltip">
+                    "Choose 'Public' to allow everyone to see your profile details. Select 'Private' if you want only approved users to view your profile details."
+                </div>
                 <label for="visibility">Visibility</label>
                 <select name="visibility" id="visibility" class="form-control">
                     <option value="1" {{ $user->public_profile ? 'selected' : '' }}>Public</option>
