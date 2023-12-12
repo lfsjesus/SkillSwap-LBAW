@@ -1274,3 +1274,37 @@ function unbanUserHandler() {
   button.classList.remove('unban-user');
   button.classList.add('ban-user');
 }
+
+
+let markAsRead = document.querySelectorAll('.mark-as-read');
+
+if (markAsRead != null) {
+  markAsRead.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      let notificationCheckboxes = document.querySelectorAll('.notification-checkbox:checked');
+      notificationCheckboxes.forEach(function(checkbox) {
+        let id = checkbox.value;
+        let data = {notification_id: id};
+        sendAjaxRequest('PUT', '/notifications/markAsRead', data, markAsReadHandler);
+      }
+      );
+      }
+    );
+  }
+  );
+}
+
+function markAsReadHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response.success == false) return;
+
+  let notification = document.querySelector('.notification[data-id="' + response.id + '"]');
+  
+  if (notification) {
+    notification.classList.remove('active');
+    notification.querySelector('.notification-checkbox').checked = false;
+  }
+
+
+}

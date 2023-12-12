@@ -109,7 +109,7 @@
                 <div class="notifications-bar">
                     <ul>
                         <li>
-                            <a id="notifications">
+                            <a id="notifications" href="javascript:void(0)">
                                 <span class="material-symbols-outlined">
                                     expand_more
                                 </span>
@@ -127,7 +127,7 @@
                     </div>
                 </div>
                 
-                <button class="button">Help</button>
+                <button class="button mark-as-read">Mark As Read</button>
             </aside>
         </main>
     </body>

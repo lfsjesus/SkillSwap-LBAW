@@ -21,7 +21,7 @@ if($subNotification instanceof App\Models\UserNotification) {
 <a class="notification-href" href="{{ $href }}">
     <div class="notification @if(!$notification->viewed) active @endif" data-id="{{ $notification->id }}" data-type="{{ $notificationType }}" 
         data-sender-id="{{ $notification->sender->id }}" data-receiver-id="{{ $notification->receiver->id }}">
-        <input type="checkbox"/>
+        <input type="checkbox" name="id" value="{{ $notification->id }}" class="notification-checkbox">
 
         @if($sender->profile_picture) 
             <img src="{{stream_get_contents($sender->profile_picture)}}"/>
