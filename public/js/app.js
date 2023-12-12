@@ -1109,14 +1109,12 @@ function joinGroupRequestHandler() {
 }
 
 
-// Get all elements with class="dropbtn" and attach a click event listener
 document.querySelectorAll('.dropbtn').forEach(dropbtn => {
   dropbtn.onclick = function() {
       this.nextElementSibling.classList.toggle("show");
   }
 });
 
-// Close the dropdown if the user clicks outside of it
 window.onclick = function(event) {
   if (!event.target.matches('.dropbtn')) {
       let dropdowns = document.getElementsByClassName("dropdown-content");
@@ -1191,7 +1189,7 @@ if (unbanButton != null) {
     sendAjaxRequest('POST', '/admin/' + username + '/unban', data, unbanUserHandler);
     }
   );
-}
+};
 
 function unbanUserHandler() {
   let response = JSON.parse(this.responseText);
@@ -1217,4 +1215,37 @@ function unbanUserHandler() {
   button.setAttribute('href', '/admin/' + response.username + '/ban');
   button.classList.remove('unban-user');
   button.classList.add('ban-user');
-}
+};
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var helpIcons = document.querySelectorAll('.help-icon');
+
+    helpIcons.forEach(function(icon) {
+        icon.addEventListener('mouseover', function() {
+            let tooltip = document.createElement('div');
+            tooltip.className = 'tooltip';
+
+            let helpText = icon.getAttribute('data-help');
+            tooltip.textContent = helpText;
+
+            document.body.appendChild(tooltip);
+
+            let rect = icon.getBoundingClientRect();
+            tooltip.style.left = rect.left + 'em';
+            tooltip.style.top = rect.bottom + 'em';
+
+     
+            tooltip.style.display = 'block';
+
+            console.log('Tooltip text:', helpText);
+        });
+
+        icon.addEventListener('mouseout', function() {
+            let tooltips = document.querySelectorAll('.tooltip');
+            tooltips.forEach(function(tooltip) {
+                tooltip.remove();
+            });
+        });
+    });
+});
