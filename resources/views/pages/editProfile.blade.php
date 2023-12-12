@@ -32,13 +32,14 @@
             <div id="form-group">
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}">
+                <span class="help-icon" data-help="Enter your full name.">?</span>
                 @if ($errors->has('name'))
                 <span class="error">
                     {{ $errors->first('name') }}
                 </span>
                 @endif
-                
             </div>
+            
 
             <!-- Email -->
             <div id="form-group">
