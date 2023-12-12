@@ -19,11 +19,14 @@
             
             <!-- Profile Picture -->
             <div id="form-group">
-                <span class="help-icon"></span>
-                <div class="help-tooltip">
-                    Upload your profile picture here. Formats accepted: jpg, png. Max size: 2MB.
+                <div class="field-title">
+                    <label for="profile_picture">Profile Picture</label>
+                    <span class="help-icon"></span>
+                    <div class="help-tooltip">
+                        Accepted formats: jpg, png. Max size: 2MB.
+                    </div>
                 </div>
-                <label for="profile_picture">Profile Picture</label>
+
                 <input type="file" name="profile_picture" id="profile_picture" class="form-control">
                 @if ($errors->has('profile_picture'))
                 <span class="error">
@@ -52,11 +55,13 @@
 
             <!-- Email -->
             <div id="form-group">
-                <span class="help-icon"></span>
-                <div class="help-tooltip">
-                    "Provide a valid email address. This will be used for account notifications and password recovery. It won't be publicly displayed."
+                <div class="field-title">
+                    <label for="email">Email</label>
+                    <span class="help-icon"></span>
+                    <div class="help-tooltip">
+                        Provide a valid email address.
+                    </div>
                 </div>
-                <label for="email">Email</label>
                 <input type="email" name="email" id="email" class="form-control" value="{{ $user->email }}">
                 @if ($errors->has('email'))
                 <span class="error">
@@ -67,11 +72,14 @@
 
             <!-- Username -->
             <div id="form-group">
-                <span class="help-icon"></span>
-                <div class="help-tooltip">
-                    "Choose a unique username for your profile. This will be your identity on the platform and can be used for logging in."
+                <div class="field-title">
+                    <label for="username">Username</label>
+                    <span class="help-icon"></span>
+                    <div class="help-tooltip">
+                        Choose a unique username for your profile.
+                    </div>
                 </div>
-                <label for="username">Username</label>
+                
                 <input type="text" name="username" id="username" class="form-control" value="{{ $user->username }}">
                 @if ($errors->has('username'))
                 <span class="error">
@@ -82,11 +90,14 @@
 
             <!-- Phone Number -->
             <div id="form-group">
-                <span class="help-icon"></span>
-                <div class="help-tooltip">
-                    "Add your phone number. It can be used for account recovery and important notifications. Format: +[Country Code][Number]."
+                <div class="field-title">
+                    <label for="phone_number">Phone Number</label>
+                    <span class="help-icon"></span>
+                    <div class="help-tooltip">
+                        Format: +[Country Code (optional)][Number (8-15 characters)].
+                    </div>
                 </div>
-                <label for="phone_number">Phone Number</label>
+                
                 <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ $user->phone_number }}">
                 @if ($errors->has('phone_number'))
                 <span class="error">
@@ -97,11 +108,14 @@
 
             <!-- Birthdate -->
             <div id="form-group">
-                <span class="help-icon"></span>
-                <div class="help-tooltip">
-                    "Enter your birthdate in the format YYYY-MM-DD. Your age may affect the accessibility of certain features or content."
+                <div class="field-title">
+                    <label for="birthdate">Birthdate</label>
+                    <span class="help-icon"></span>
+                    <div class="help-tooltip">
+                        "Enter your birthdate in the format YYYY-MM-DD.
+                    </div>
                 </div>
-                <label for="birthdate">Birthdate</label>
+
                 <input type="date" name="birth_date" id="birthdate" class="form-control" value="{{ $user->birth_date->format('Y-m-d') }}">
                 @if ($errors->has('birth_date'))
                 <span class="error">
@@ -112,11 +126,14 @@
 
             <!-- Description -->
             <div id="form-group">
-                <span class="help-icon"></span>
-                <div class="help-tooltip">
-                    "Write a brief description about yourself. This could include your interests, what you do, or what you're looking for on this platform."
+                <div class="field-title">
+                    <label for="description">Description</label>
+                    <span class="help-icon"></span>
+                    <div class="help-tooltip">
+                        Write a brief description about yourself.
+                    </div>
                 </div>
-                <label for="description">Description</label>
+    
                 <textarea name="description" id="description" class="form-control">{{ $user->description }}</textarea>
                 @if ($errors->has('description'))
                 <span class="error">
@@ -127,11 +144,13 @@
 
             <!-- Public Profile -->
             <div id="form-group">
-                <span class="help-icon"></span>
-                <div class="help-tooltip">
-                    "Choose 'Public' to allow everyone to see your profile details. Select 'Private' if you want only approved users to view your profile details."
+                <div class="field-title">
+                    <label for="visibility">Visibility</label>
+                    <span class="help-icon"></span>
+                    <div class="help-tooltip">
+                        Select 'Public' for everyone to view your details, or 'Private' for limited access.
+                    </div>
                 </div>
-                <label for="visibility">Visibility</label>
                 <select name="visibility" id="visibility" class="form-control">
                     <option value="1" {{ $user->public_profile ? 'selected' : '' }}>Public</option>
                     <option value="0" {{ $user->public_profile ? '' : 'selected' }}>Private</option>
