@@ -1293,25 +1293,27 @@ main > aside#right-bar .notifications-bar {
 .help-icon {
   cursor: pointer;
   display: inline-block;
-  margin-left: 5px;
-  color: #007bff;
-  position: relative;
+  position: relative; /* Necessary for absolute positioning of child elements */
 }
 
-.help-icon:hover .tooltip-content {
-  display: block;
+.help-icon::after {
+  content: '?'; /* This will be your 'icon' */
+  display: inline-block;
+  margin-left: 0.5em;
+  color: #007bff; /* Or any color of your choice */
+  font-size: 0.8em; /* Adjust the size of your icon */
 }
 
-.tooltip-content {
-  display: none;
-  position: absolute;
-  border: 1px solid #ddd;
-  background-color: white;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-  left: 20px; /* Adjust as needed */
-  bottom: 100%; /* Adjust as needed */
-  white-space: nowrap; /* Keeps the tooltip text on a single line */
+.help-tooltip {
+  display: none; /* Initially hidden */
+  margin-top: 0.3em; /* Space between icon and tooltip */
+  background-color: #f9f9f9;
+  border: 1px solid #d3d3d3;
+  padding: 0.3em 0.6em;
+  color: black;
+  white-space: nowrap;
   z-index: 1000;
+  font-size: 0.9em; /* Adjust font size as needed */
 }
+
+

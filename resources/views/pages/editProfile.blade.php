@@ -19,6 +19,10 @@
             
             <!-- Profile Picture -->
             <div id="form-group">
+                <span class="help-icon"></span>
+                <div class="help-tooltip">
+                    Upload your profile picture here. Formats accepted: jpg, png. Max size: 2MB.
+                </div>
                 <label for="profile_picture">Profile Picture</label>
                 <input type="file" name="profile_picture" id="profile_picture" class="form-control">
                 @if ($errors->has('profile_picture'))
@@ -32,8 +36,6 @@
             <div id="form-group">
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}">
-                <span class="help-icon">?</span>
-                <div class="tooltip-content">Enter your full name.</div>
                 @if ($errors->has('name'))
                 <span class="error">
                     {{ $errors->first('name') }}

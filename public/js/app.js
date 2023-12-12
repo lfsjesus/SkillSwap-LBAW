@@ -1218,19 +1218,21 @@ function unbanUserHandler() {
 };
 
 
-document.addEventListener('DOMContentLoaded', function() {
-  var helpIcons = document.querySelectorAll('.help-icon');
-
-  helpIcons.forEach(function(icon) {
+  let helpIcons = document.querySelectorAll('.help-icon');
+  console.log(helpIcons)
+  if (helpIcons != null) {
+    helpIcons.forEach(function(icon) {
       icon.addEventListener('mouseover', function() {
-          let tooltip = document.createElement('div');
-          tooltip.className = 'tooltip';
-          tooltip.textContent = icon.getAttribute('data-help');
-          icon.appendChild(tooltip); 
+         let tooltip = icon.nextElementSibling;
+         console.log(tooltip)
+         tooltip.style.display = 'block';
       });
 
       icon.addEventListener('mouseout', function() {
-          icon.removeChild(icon.querySelector('.tooltip'));
-      });
-  });
-});
+        let tooltip = icon.nextElementSibling;
+        tooltip.style.display = 'none';
+        }
+      );
+    }
+    );
+}
