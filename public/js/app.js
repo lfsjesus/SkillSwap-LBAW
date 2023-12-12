@@ -1219,33 +1219,18 @@ function unbanUserHandler() {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    var helpIcons = document.querySelectorAll('.help-icon');
+  var helpIcons = document.querySelectorAll('.help-icon');
 
-    helpIcons.forEach(function(icon) {
-        icon.addEventListener('mouseover', function() {
-            let tooltip = document.createElement('div');
-            tooltip.className = 'tooltip';
+  helpIcons.forEach(function(icon) {
+      icon.addEventListener('mouseover', function() {
+          let tooltip = document.createElement('div');
+          tooltip.className = 'tooltip';
+          tooltip.textContent = icon.getAttribute('data-help');
+          icon.appendChild(tooltip); 
+      });
 
-            let helpText = icon.getAttribute('data-help');
-            tooltip.textContent = helpText;
-
-            document.body.appendChild(tooltip);
-
-            let rect = icon.getBoundingClientRect();
-            tooltip.style.left = rect.left + 'em';
-            tooltip.style.top = rect.bottom + 'em';
-
-     
-            tooltip.style.display = 'block';
-
-            console.log('Tooltip text:', helpText);
-        });
-
-        icon.addEventListener('mouseout', function() {
-            let tooltips = document.querySelectorAll('.tooltip');
-            tooltips.forEach(function(tooltip) {
-                tooltip.remove();
-            });
-        });
-    });
+      icon.addEventListener('mouseout', function() {
+          icon.removeChild(icon.querySelector('.tooltip'));
+      });
+  });
 });

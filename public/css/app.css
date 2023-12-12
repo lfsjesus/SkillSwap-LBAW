@@ -1267,7 +1267,7 @@ form #form-group textarea {
 }
 
 .see-more-button {
-  background-color: #663FA4;;
+  background-color: #663FA4;
   border: none;
   margin: 0;
   padding: 1em 1.5em; 
@@ -1289,20 +1289,29 @@ main > aside#right-bar .notifications-bar {
   font-weight: bold;
 }
 
+
 .help-icon {
   cursor: pointer;
   display: inline-block;
   margin-left: 5px;
   color: #007bff;
+  position: relative;
 }
 
-.tooltip {
+.help-icon:hover .tooltip-content {
+  display: block;
+}
+
+.tooltip-content {
+  display: none;
   position: absolute;
   border: 1px solid #ddd;
   background-color: white;
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-  display: none;
+  left: 20px; /* Adjust as needed */
+  bottom: 100%; /* Adjust as needed */
+  white-space: nowrap; /* Keeps the tooltip text on a single line */
   z-index: 1000;
 }

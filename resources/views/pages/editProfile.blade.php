@@ -32,7 +32,8 @@
             <div id="form-group">
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}">
-                <span class="help-icon" data-help="Enter your full name.">?</span>
+                <span class="help-icon">?</span>
+                <div class="tooltip-content">Enter your full name.</div>
                 @if ($errors->has('name'))
                 <span class="error">
                     {{ $errors->first('name') }}
