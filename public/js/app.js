@@ -1217,8 +1217,7 @@ function unbanUserHandler() {
   button.classList.add('ban-user');
 };
 
-
-  let helpIcons = document.querySelectorAll('.help-icon');
+let helpIcons = document.querySelectorAll('.help-icon');
   console.log(helpIcons)
   if (helpIcons != null) {
     helpIcons.forEach(function(icon) {
@@ -1234,5 +1233,5 @@ function unbanUserHandler() {
         }
       );
     }
-    );
+  );
 }

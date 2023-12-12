@@ -1315,4 +1315,17 @@ main > aside#right-bar .notifications-bar {
   font-size: 0.9em; /* Adjust font size as needed */
 }
 
+.field-title {
+  display: flex;
+  align-items: center; /* Aligns items vertically in the center */
+}
+
+.help-icon {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 0.5em;
+  color: #007bff; 
+
+}
+
 

@@ -34,11 +34,13 @@
 
             <!-- Name -->
             <div id="form-group">
-                <span class="help-icon"></span>
-                <div class="help-tooltip">
-                    "Enter your full name as you'd like it to appear on your profile. This is the name that will be visible to other users."
+                <div class="field-title">
+                    <label for="name">Name</label>
+                    <span class="help-icon"></span>
+                    <div class="help-tooltip">
+                        Upload your profile picture here. Formats accepted: jpg, png. Max size: 2MB.
+                    </div>
                 </div>
-                <label for="name">Name</label>
                 <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}">
                 @if ($errors->has('name'))
                 <span class="error">
@@ -46,7 +48,7 @@
                 </span>
                 @endif
             </div>
-            
+                        
 
             <!-- Email -->
             <div id="form-group">
