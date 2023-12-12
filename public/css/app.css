@@ -848,12 +848,25 @@ form #form-group textarea {
 }
 
 
-.username, .groupname{
+.username {
   font-size: 1.4rem;
   color: wheat;
   font-weight: bold;
   display: flex;
   align-items: center;
+}
+
+.groupname span {
+  color: #8d73eb;
+}
+
+.groupname {
+  font-size: 1.4rem;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
 }
 
 .card-info {
