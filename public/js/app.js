@@ -913,6 +913,62 @@ document.addEventListener('click', function(e) {
   }
 });
 
+
+let addFriend = document.querySelector('.add-friend');
+if (addFriend != null) {
+  addFriend.addEventListener('click', function(e) {
+    e.preventDefault();
+    handleAddFriendClick(e);
+  }
+  );
+}
+
+let cancelFriendRequest = document.querySelector('.cancel-friend-request');
+if (cancelFriendRequest != null) {
+  cancelFriendRequest.addEventListener('click', function(e) {
+    e.preventDefault();
+    handleCancelFriendRequestClick(e);
+  }
+  );
+}
+
+let acceptFriendRequest = document.querySelector('.accept-friend-request');
+if (acceptFriendRequest != null) {
+  acceptFriendRequest.addEventListener('click', function(e) {
+    e.preventDefault();
+    handleAcceptFriendRequestClick(e);
+  }
+  );
+}
+
+let removeFriend = document.querySelector('.remove-friend');
+if (removeFriend != null) {
+  removeFriend.addEventListener('click', function(e) {
+    e.preventDefault();
+    handleRemoveFriendClick(e);
+  }
+  );
+}
+
+let acceptFriendRequestNotification = document.querySelector('.accept-friend-request-notification');
+if (acceptFriendRequestNotification != null) {
+  acceptFriendRequestNotification.addEventListener('click', function(e) {
+    e.preventDefault();
+    handleAcceptFriendRequestNotificationClick(e);
+  }
+  );
+}
+
+let rejectFriendRequestNotification = document.querySelector('.reject-friend-request-notification');
+if (rejectFriendRequestNotification != null) {
+  rejectFriendRequestNotification.addEventListener('click', function(e) {
+    e.preventDefault();
+    handleRejectFriendRequestNotificationClick(e);
+  }
+  );
+}
+
+
 function handleAddFriendClick(e) {
   let friend_id = e.target.closest('.add-friend').querySelector('input[name="friend_id"]').value;
   let data = { friend_id: friend_id };
