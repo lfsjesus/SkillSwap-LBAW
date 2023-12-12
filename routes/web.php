@@ -89,11 +89,14 @@ Route::controller(UserController::class)->group(function () {
 Route::controller(AdminController::class)->group(function () {
     Route::get('/admin/users/search', 'search')->name('admin-search');
     Route::get('/admin/{username}', 'showUser')->name('view-user-admin');  
+    Route::post('/admin/{username}/ban', 'banUser')->name('ban-user-admin');
+    Route::post('/admin/{username}/unban', 'unbanUser')->name('unban-user-admin');
     Route::get('/admin/{username}/edit', 'showEditUserForm')->name('edit-user-form-admin');
     Route::get('/admin/user/create', 'showCreateUserForm')->name('create-user-form-admin');
     Route::post('/admin/create', 'createUser')->name('create_user_admin');
     Route::put('/admin/edit', 'editUser')->name('edit_profile_admin');
     Route::delete('/admin/delete', 'deleteUser')->name('delete_user_admin');
+    Route::get('/admin/groups/list', 'listGroups')->name('admin-groups');
 });
 
 Route::controller(GroupController::class)->group(function () {

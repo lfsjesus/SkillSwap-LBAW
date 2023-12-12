@@ -22,10 +22,17 @@ function sendAjaxRequest(method, url, data, handler) {
 }
 
 function postDeletedHandler() {
-  if (this.status != 200) window.location = window.location.href;
-  let item = JSON.parse(this.responseText);
-  let element = document.querySelector('.post[data-id="' + item.id + '"]');
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let element = document.querySelector('.post[data-id="' + response.id + '"]');
   element.remove();
+
+  let content = document.querySelector('#content');
+
+  if (content.children.length == 1) {
+    window.location = '/';
+  }
 }
 
 
@@ -56,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   if (postDeleteButtons != null) {
     postDeleteButtons.forEach(function(button) {
+      event.preventDefault();
       button.addEventListener('click', function(e) {
         let id = e.target.parentNode.parentNode.parentNode.getAttribute('data-id');
         let data = {post_id: id};
@@ -1130,8 +1138,6 @@ window.onclick = function(event) {
 };
 
 
-// TO FIX
-
 if (window.location.hash) {
   let hash = window.location.hash.substring(1).split('-')[1];
   let scrollContainer = document.querySelector('#content');
@@ -1139,11 +1145,84 @@ if (window.location.hash) {
 
   if (comment) {
     scrollContainer.scrollTop = comment.offsetTop;
-    // Temporary highlight
     comment.classList.add('highlight');
     setTimeout(function() {
       comment.classList.remove('highlight');
     }, 1000);
 
   }
+}
+
+
+let banButton = document.querySelector('.ban-user'); 
+if (banButton != null) {
+  banButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    let username = document.querySelector('.username').innerHTML.split('@')[1];
+    let data = {username: username};
+    sendAjaxRequest('POST', '/admin/' + username + '/ban', data, banUserHandler);
+    }
+  );
+}
+
+function banUserHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response.success == false) return;
+
+  let span = document.createElement('span');
+  span.className = 'material-symbols-outlined';
+  span.innerHTML = 'person_add_disabled';
+
+  let button = document.querySelector('.ban-user');
+  button.addEventListener('click', function(e) {
+    e.preventDefault();
+    let username = document.querySelector('.username').innerHTML.split('@')[1];
+    let data = {username: username};
+    sendAjaxRequest('POST', '/admin/' + username + '/unban', data, unbanUserHandler);
+    }
+  );
+  button.innerHTML = '';
+  button.appendChild(span);
+  button.innerHTML += 'Unban';
+  button.setAttribute('href', '/admin/' + response.username + '/unban');
+  button.classList.remove('ban-user');
+  button.classList.add('unban-user');
+}
+
+
+let unbanButton = document.querySelector('.unban-user');
+if (unbanButton != null) {
+  unbanButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    let username = document.querySelector('.username').innerHTML.split('@')[1];
+    let data = {username: username};
+    sendAjaxRequest('POST', '/admin/' + username + '/unban', data, unbanUserHandler);
+    }
+  );
+}
+
+function unbanUserHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response.success == false) return;
+
+  let span = document.createElement('span');
+  span.className = 'material-symbols-outlined';
+  span.innerHTML = 'block';
+
+  let button = document.querySelector('.unban-user');
+
+  button.addEventListener('click', function(e) {
+    e.preventDefault();
+    let username = document.querySelector('.username').innerHTML.split('@')[1];
+    let data = {username: username};
+    sendAjaxRequest('POST', '/admin/' + username + '/ban', data, banUserHandler);
+    }
+  );
+
+  button.innerHTML = '';
+  button.appendChild(span);
+  button.innerHTML += 'Ban';
+  button.setAttribute('href', '/admin/' + response.username + '/ban');
+  button.classList.remove('unban-user');
+  button.classList.add('ban-user');
 }
