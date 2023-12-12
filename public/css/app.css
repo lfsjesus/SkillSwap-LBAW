@@ -1294,11 +1294,10 @@ main > aside#right-bar .notifications-bar {
   cursor: pointer;
   display: inline-block;
   position: relative; 
-  padding-bottom: 0.5em;
+  padding-bottom: 0.2em;
 }
 
 .help-icon::after {
-  content: '?'; 
   display: inline-block;
   margin-left: 0.5em;
   color: #663FA4; 
@@ -1331,4 +1330,7 @@ main > aside#right-bar .notifications-bar {
 
 }
 
-
+.field-title span {
+  font-variation-settings: 'FILL' 1;
+  color: wheat;
+}

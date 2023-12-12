@@ -21,7 +21,7 @@
             <div id="form-group">
                 <div class="field-title">
                     <label for="profile_picture">Profile Picture</label>
-                    <span class="help-icon"></span>
+                    <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Accepted formats: jpg, png. Max size: 2MB.
                     </div>
@@ -39,7 +39,7 @@
             <div id="form-group">
                 <div class="field-title">
                     <label for="name">Name</label>
-                    <span class="help-icon"></span>
+                    <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Upload your profile picture here. Formats accepted: jpg, png. Max size: 2MB.
                     </div>
@@ -57,7 +57,7 @@
             <div id="form-group">
                 <div class="field-title">
                     <label for="email">Email</label>
-                    <span class="help-icon"></span>
+                    <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Provide a valid email address.
                     </div>
@@ -74,7 +74,7 @@
             <div id="form-group">
                 <div class="field-title">
                     <label for="username">Username</label>
-                    <span class="help-icon"></span>
+                    <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Choose a unique username for your profile.
                     </div>
@@ -92,7 +92,7 @@
             <div id="form-group">
                 <div class="field-title">
                     <label for="phone_number">Phone Number</label>
-                    <span class="help-icon"></span>
+                    <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Format: +[Country Code (optional)][Number (8-15 characters)].
                     </div>
@@ -110,9 +110,9 @@
             <div id="form-group">
                 <div class="field-title">
                     <label for="birthdate">Birthdate</label>
-                    <span class="help-icon"></span>
+                    <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
-                        "Enter your birthdate in the format YYYY-MM-DD.
+                        "Enter your birthdate in the format DD-MM-YYYY.
                     </div>
                 </div>
 
@@ -128,7 +128,7 @@
             <div id="form-group">
                 <div class="field-title">
                     <label for="description">Description</label>
-                    <span class="help-icon"></span>
+                    <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Write a brief description about yourself.
                     </div>
@@ -146,7 +146,7 @@
             <div id="form-group">
                 <div class="field-title">
                     <label for="visibility">Visibility</label>
-                    <span class="help-icon"></span>
+                    <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Select 'Public' for everyone to view your details, or 'Private' for limited access.
                     </div>
