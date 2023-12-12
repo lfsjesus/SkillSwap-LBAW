@@ -1,5 +1,5 @@
 <div class="group-card">
-    <a href="{{ route('group', ['id' => $group->id]) }}">
+    <a href="{{ Auth::guard('webadmin')->check() ? route('view-group-admin', ['id' => $group->id]) : route('group', ['id' => $group->id]) }}">
          @if($group->banner)
         <img src="{{stream_get_contents($group->banner)}}"/>
         @else

@@ -93,10 +93,14 @@ Route::controller(AdminController::class)->group(function () {
     Route::post('/admin/{username}/unban', 'unbanUser')->name('unban-user-admin');
     Route::get('/admin/{username}/edit', 'showEditUserForm')->name('edit-user-form-admin');
     Route::get('/admin/user/create', 'showCreateUserForm')->name('create-user-form-admin');
+    Route::get('/admin/groups/{id}/edit', 'showEditGroupForm')->name('edit-group-form-admin');
     Route::post('/admin/create', 'createUser')->name('create_user_admin');
-    Route::put('/admin/edit', 'editUser')->name('edit_user_admin');
+    Route::put('/admin/user/edit', 'editUser')->name('edit_user_admin');
+    Route::put('/admin/group/edit', 'editGroup')->name('edit_group_admin');
     Route::delete('/admin/delete', 'deleteUser')->name('delete_user_admin');
+    Route::delete('/admin/group/delete', 'deleteGroup')->name('delete_group_admin');
     Route::get('/admin/groups/list', 'listGroups')->name('admin-groups');
+    Route::get('/admin/groups/{id}', 'showGroup')->where('id', '[0-9]+')->name('view-group-admin');
 });
 
 Route::controller(GroupController::class)->group(function () {
