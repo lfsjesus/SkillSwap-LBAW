@@ -1,25 +1,61 @@
-<div class="notification">
-    <input type="checkbox" id="notification-{{ $notification->id }}" />
-    
-    <!-- Sender Profile Picture -->
-    @php
-        $sender = $notification->sender;
-    @endphp
+@php
+$sender = $notification->sender;
+$subNotification = $notification->subNotification();
+$notificationType = $subNotification->notification_type;
 
-    @if($sender->profile_picture) 
-        <img src="{{stream_get_contents($sender->profile_picture)}}"/>
-    @else
-        <img src="{{ url('assets/profile-picture.png') }}"/>
-    @endif
+$href = '';
 
-    <div class="notification-inner">
-        <p>{{ $sender->name }} ({{ $sender->username }}) wants to be your friend</p>
-        <div class="notification-answer">
-            <button class="button">Accept</button>
-            <button class="button">Decline</button>
+if($subNotification instanceof App\Models\PostNotification) {
+    $href = route('post', ['id' => $subNotification->post_id]);
+}
+
+if($subNotification instanceof App\Models\CommentNotification) {
+    $href = route('post', ['id' => $subNotification->comment->post_id]) . '#comment-' . $subNotification->comment->id;
+}
+
+@endphp
+<a class="notification-href" href="{{ $href }}">
+    <div class="notification @if(!$notification->viewed) active @endif" data-id="{{ $notification->id }}" data-type="{{ $notificationType }}" 
+        data-sender-id="{{ $notification->sender->id }}" data-receiver-id="{{ $notification->receiver->id }}">
+        <input type="checkbox"/>
+
+        @if($sender->profile_picture) 
+            <img src="{{stream_get_contents($sender->profile_picture)}}"/>
+        @else
+            <img src="{{ url('assets/profile-picture.png') }}"/>
+        @endif
+
+        <div class="notification-inner">
+            <div class="card-info">
+                <span class="name"> {{ $sender->name }} </span>
+                <span class="username">&#64;{{ $sender->username }}</span>
+            </div>
+
+            @if($notificationType == 'friend_request')
+                <p class="notification-text">  Sent you a friend request </p>
+            @elseif($notificationType == 'like_post')
+                <p class="notification-text">  Liked your post </p>
+            @elseif($notificationType == 'like_comment')
+                <p class="notification-text">  Liked your comment </p>
+            @elseif($notificationType == 'new_comment')
+                <p class="notification-text">  Commented on your post </p>
+            @endif
+
+            <p class="notification-date"> {{Carbon\Carbon::parse($notification->date)->diffForHumans()}} </p>
+
+            @if($subNotification->notification_type == 'friend_request')
+                <div class="notification-answer">
+                    <button class="button accept-friend-request-notification">
+                        <input type="hidden" name="sender_id" value="{{ $sender->id }}">
+                        Accept
+                    </button>
+                    <button class="button btn-danger reject-friend-request-notification">
+                        <input type="hidden" name="sender_id" value="{{ $sender->id }}">
+                        Decline
+                    </button>
+                </div>
+            @endif
+
         </div>
     </div>
-
-    <!-- Notification Date -->
-    <p class="notification-date"> {{Carbon\Carbon::parse($notification->date)->diffForHumans()}} </p>
-</div>
+</a>

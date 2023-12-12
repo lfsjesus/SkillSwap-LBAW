@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Group;
 use App\Models\Member;
 use App\Models\GroupOwner;
+use App\Models\Notification;
+use App\Models\GroupNotification;
 
 
 class GroupController extends Model 
@@ -152,5 +154,52 @@ class GroupController extends Model
         $owners = $group->owners()->get(); 
 
         return view('pages.group_owners', ['group' => $group, 'owners' => $owners]);
+    }
+
+    public function sendJoinGroupRequest(Request $request)
+    {   
+        if(!Auth::check()) {
+            return redirect()->back()->with('error', 'You must be logged in to join a group');
+        }
+
+        $group = Group::find($request->input('group_id'));
+
+        if ($group->is_member(Auth::user())) {
+            return redirect()->back()->with('error', 'You are already a member of this group');
+        }
+
+        try {
+            DB::beginTransaction();
+            //save each new notification_id in an array
+
+            $notifications_ids = [];
+
+            foreach ($group->owners()->get() as $owner) {
+
+                $notification = new Notification();
+                $notification->sender_id = Auth::user()->id;
+                $notification->receiver_id = $owner->id;
+                $notification->date = date('Y-m-d H:i:s');
+                $notification->save();
+
+                array_push($notifications_ids, $notification->id);           
+
+                $groupNotification = new GroupNotification();
+                $groupNotification->notification_id = $notification->id;
+                $groupNotification->group_id = $group->id;
+                $groupNotification->notification_type = 'join_request';
+                $groupNotification->save();
+            }
+
+            DB::commit();
+            //return json_encode sucess with the array of notifications
+
+            return json_encode(['success' => true, 'notifications_ids' => $notifications_ids]);
+
+            
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error while sending join group request. Try again!');
+        }
     }
 }

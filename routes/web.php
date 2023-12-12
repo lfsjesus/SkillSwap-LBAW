@@ -47,7 +47,7 @@ Route::controller(PostController::class)->group(function () {
     Route::put('/posts/edit', 'edit')->name('edit_post');
     Route::delete('/posts/delete', 'delete')->name('delete_post');
     Route::get('/posts', 'list')->name('posts');
-    Route::get('/posts/{id}', 'show');
+    Route::get('/posts/{id}', 'show')->name('post');
 });
 
 // Authentication
@@ -80,17 +80,23 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{username}/groups', 'showGroups')->name('user_groups');
     Route::post('/friend/request', 'sendFriendRequest')->name('send_friend_request');
     Route::delete('/friend/cancel_request', 'cancelFriendRequest')->name('cancel_friend_request');
+    Route::post('/friend/accept_request', 'acceptFriendRequest')->name('accept_friend_request');
+    Route::delete('/friend/remove', 'removeFriend')->name('remove_friend');
+    Route::delete('/friend/reject_request', 'rejectFriendRequest')->name('reject_friend_request');
 
 });
 
 Route::controller(AdminController::class)->group(function () {
     Route::get('/admin/users/search', 'search')->name('admin-search');
     Route::get('/admin/{username}', 'showUser')->name('view-user-admin');  
+    Route::post('/admin/{username}/ban', 'banUser')->name('ban-user-admin');
+    Route::post('/admin/{username}/unban', 'unbanUser')->name('unban-user-admin');
     Route::get('/admin/{username}/edit', 'showEditUserForm')->name('edit-user-form-admin');
     Route::get('/admin/user/create', 'showCreateUserForm')->name('create-user-form-admin');
     Route::post('/admin/create', 'createUser')->name('create_user_admin');
     Route::put('/admin/edit', 'editUser')->name('edit_profile_admin');
     Route::delete('/admin/delete', 'deleteUser')->name('delete_user_admin');
+    Route::get('/admin/groups/list', 'listGroups')->name('admin-groups');
 });
 
 Route::controller(GroupController::class)->group(function () {
@@ -103,6 +109,7 @@ Route::controller(GroupController::class)->group(function () {
     Route::delete('/group/delete', 'deleteGroup')->name('delete_group');
     Route::get('/group/{groupId}/members', 'showMembers')->name('group_members');
     Route::get('/group/{groupId}/owners', 'showOwners')->name('group_owners');
+    Route::post('/group/join-request', 'sendJoinGroupRequest')->name('join_group_request');
 
     /*
     Route::get('/groups/{id}', 'show')->name('group');

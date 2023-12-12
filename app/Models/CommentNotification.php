@@ -17,4 +17,14 @@ class CommentNotification extends Model
     ];
 
     public $incrementing = false;
+
+    public function notification()
+    {
+        return $this->belongsTo(Notification::class, 'notification_id');
+    }
+
+    public function comment()
+    {
+        return $this->belongsTo(Comment::class, 'comment_id');
+    }
 }

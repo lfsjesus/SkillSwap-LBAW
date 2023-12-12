@@ -77,7 +77,7 @@ CREATE TABLE posts (
 
 CREATE TABLE comments (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id)  ON DELETE SET NULL, 
+    user_id INTEGER REFERENCES users(id)  ON DELETE SET NULL, 
     post_id INTEGER NOT NULL REFERENCES posts(id)  ON DELETE CASCADE,
     comment_id INTEGER REFERENCES comments(id)  ON DELETE CASCADE,
     content TEXT,
@@ -161,10 +161,8 @@ CREATE TABLE administrators (
 
 CREATE TABLE user_ban (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     administrator_id INTEGER NOT NULL REFERENCES administrators(id),
-    days INTEGER NOT NULL,
-    CHECK (days > 0),
     date TIMESTAMP NOT NULL,
     CHECK (date <= CURRENT_TIMESTAMP)
 );
@@ -353,6 +351,25 @@ CREATE TRIGGER add_friend
 
 
 
+CREATE OR REPLACE FUNCTION delete_friend() RETURNS TRIGGER AS $$
+BEGIN
+    -- Check if the trigger was called by the DELETE operation
+    IF (TG_OP = 'DELETE' AND OLD.user_id <> OLD.friend_id) THEN
+        -- Perform the DELETE only if it's not a recursive call
+        DELETE FROM is_friend
+        WHERE user_id = OLD.friend_id AND friend_id = OLD.user_id;
+    END IF;
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER delete_friend
+    AFTER DELETE ON is_friend
+    FOR EACH ROW
+    WHEN (OLD.user_id <> OLD.friend_id)
+    EXECUTE FUNCTION delete_friend();
+
 
 CREATE OR REPLACE FUNCTION check_file_format()
 RETURNS TRIGGER AS $$
@@ -481,15 +498,25 @@ EXECUTE FUNCTION prevent_duplicate_friend_requests();
 
 CREATE OR REPLACE FUNCTION prevent_duplicate_join_requests()
 RETURNS TRIGGER AS $$
+DECLARE 
+    sender_id_val INT;
+    receiver_id_val INT;
 BEGIN
+
+    SELECT sender_id, receiver_id
+    INTO sender_id_val, receiver_id_val
+    FROM notifications
+    WHERE id = NEW.notification_id;
+
     IF EXISTS (
             SELECT 1
-            FROM is_member
-            WHERE user_id = NEW.user_id
-            AND group_id = NEW.group_id)
-
-            THEN
-            RAISE EXCEPTION 'User is already a member of the group!';
+            FROM group_notifications
+            JOIN notifications ON group_notifications.notification_id = notifications.id
+            WHERE notification_type = 'join_request'
+            AND sender_id = sender_id_val AND receiver_id = receiver_id_val AND group_id = NEW.group_id
+            
+        ) THEN
+        RAISE EXCEPTION 'A join group request from this user already exists';
     END IF;
            
     IF EXISTS(
@@ -498,10 +525,10 @@ BEGIN
             JOIN notifications ON group_notifications.notification_id = notifications.id
             WHERE notification_type = 'ban'
             AND group_id = NEW.group_id
-            AND receiver_id = NEW.user_id)
+            AND sender_id = sender_id_val AND receiver_id = receiver_id_val AND group_id = NEW.group_id
 
-            THEN
-            RAISE EXCEPTION 'User is already a member of the group!';
+            ) THEN
+            RAISE EXCEPTION 'User can not send a request to this group since he was banned!';
 
     END IF;
 
@@ -511,10 +538,42 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_prevent_duplicate_join_requests
-BEFORE INSERT ON is_member
+BEFORE INSERT ON group_notifications
 FOR EACH ROW
 EXECUTE FUNCTION prevent_duplicate_join_requests();
 
+
+
+CREATE OR REPLACE FUNCTION delete_parent_notification()
+RETURNS TRIGGER AS $$
+BEGIN
+    DELETE FROM notifications
+    WHERE notifications.id = OLD.notification_id;
+    
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER delete_parent_notification_after_user
+AFTER DELETE ON user_notifications
+FOR EACH ROW
+EXECUTE FUNCTION delete_parent_notification();
+
+CREATE TRIGGER delete_parent_notification_after_group
+AFTER DELETE ON group_notifications
+FOR EACH ROW
+EXECUTE FUNCTION delete_parent_notification();
+
+CREATE TRIGGER delete_parent_notification_after_comment
+AFTER DELETE ON comment_notifications
+FOR EACH ROW
+EXECUTE FUNCTION delete_parent_notification();
+
+CREATE TRIGGER delete_parent_notification_after_post
+AFTER DELETE ON post_notifications
+FOR EACH ROW
+EXECUTE FUNCTION delete_parent_notification();
 
 
 

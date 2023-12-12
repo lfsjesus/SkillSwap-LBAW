@@ -22,10 +22,17 @@ function sendAjaxRequest(method, url, data, handler) {
 }
 
 function postDeletedHandler() {
-  if (this.status != 200) window.location = window.location.href;
-  let item = JSON.parse(this.responseText);
-  let element = document.querySelector('.post[data-id="' + item.id + '"]');
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let element = document.querySelector('.post[data-id="' + response.id + '"]');
   element.remove();
+
+  let content = document.querySelector('#content');
+
+  if (content.children.length == 1) {
+    window.location = '/';
+  }
 }
 
 
@@ -56,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   if (postDeleteButtons != null) {
     postDeleteButtons.forEach(function(button) {
+      event.preventDefault();
       button.addEventListener('click', function(e) {
         let id = e.target.parentNode.parentNode.parentNode.getAttribute('data-id');
         let data = {post_id: id};
@@ -93,7 +101,7 @@ async function editPost(id) {
   let post = document.querySelector('.post[data-id="' + id + '"]');
   let profile_picture = post.querySelector('.post-header-left img');
   let files = post.querySelectorAll('.post-body a img'); // TO CHANGE AFTER MODIFYING IMAGES VIEW
-  
+  let public_post = post.getAttribute('data-public');
   let content = post.querySelector('.post-body p');
   /* Elements to create */
   let create_post = document.createElement('div');
@@ -149,14 +157,39 @@ async function editPost(id) {
   textarea.setAttribute('name', 'description');
 
   textarea.value = (content == null) ? '' : filterContent(content.innerHTML);
+  
+  let createPostFooter = document.createElement('div');
+  createPostFooter.className = 'create-post-footer';
+
+  let inputCheckBox = document.createElement('input');
+  inputCheckBox.setAttribute('type', 'checkbox');
+  inputCheckBox.setAttribute('name', 'visibility');
+  inputCheckBox.setAttribute('value', '1');
+
+  if (public_post == 1) {
+    inputCheckBox.setAttribute('checked', 'checked');
+  }
+
+  let checkboxLabel = document.createElement('label');
+  checkboxLabel.setAttribute('for', 'visibility');
+  checkboxLabel.innerHTML = 'Public';
+
+  let checkboxDiv = document.createElement('div');
+
+  checkboxDiv.appendChild(inputCheckBox);
+  checkboxDiv.appendChild(checkboxLabel);
 
   let button = document.createElement('button');
   button.className = 'edit-button';
-  button.innerHTML = 'Edit';
+  button.innerHTML = 'Save';
   button.setAttribute('type', 'submit');
   form.innerHTML += '<input type="hidden" name="_token" value="' + document.querySelector('meta[name="csrf-token"]').content + '">';
+  
+  createPostFooter.appendChild(button);
+  createPostFooter.appendChild(checkboxDiv);
+
   form.appendChild(textarea);
-  form.appendChild(button);
+  form.appendChild(createPostFooter);
   
   // add hidden input with method PUT
   let method = document.createElement('input');
@@ -183,13 +216,10 @@ async function editPost(id) {
   // replace article with create_post div
   post.replaceWith(create_post);
 
-
-
-
-   let realInput = create_post.querySelector('input[type="file"]');
-   console.log(realInput);
-   
-   await fetchFiles(realInput, files);
+  let realInput = create_post.querySelector('input[type="file"]');
+  console.log(realInput);
+  
+  await fetchFiles(realInput, files);
 
    //console.log(realInput.files);
 
@@ -757,7 +787,11 @@ function createComment(id, post_id, author_name, content, replyTo_id) {
     commentBody.appendChild(commentBox);
   }
 
-  comment.appendChild(img);
+  let imgHref = document.createElement('a');
+  imgHref.setAttribute('href', author_url);
+  imgHref.appendChild(img);
+
+  comment.appendChild(imgHref);
   comment.appendChild(commentBody);
 
   return comment;
@@ -865,6 +899,14 @@ document.addEventListener('click', function(e) {
       handleAddFriendClick(e);
   } else if (e.target.closest('.cancel-friend-request')) {
       handleCancelFriendRequestClick(e);
+  } else if (e.target.closest('.accept-friend-request')) {
+      handleAcceptFriendRequestClick(e);
+  } else if (e.target.closest('.remove-friend')) {
+      handleRemoveFriendClick(e);
+  } else if (e.target.closest('.accept-friend-request-notification')){
+      handleAcceptFriendRequestNotificationClick(e);
+  } else if (e.target.closest('.reject-friend-request-notification')){
+      handleRejectFriendRequestNotificationClick(e);
   }
 });
 
@@ -879,6 +921,31 @@ function handleCancelFriendRequestClick(e) {
   let data = { friend_id: friend_id };
   sendAjaxRequest('DELETE', '/friend/cancel_request', data, cancelFriendRequestHandler);
 }
+
+function handleAcceptFriendRequestClick(e) {
+  let sender_id = e.target.closest('.accept-friend-request').querySelector('input[name="sender_id"]').value;
+  let data = { sender_id: sender_id };
+  sendAjaxRequest('POST', '/friend/accept_request', data, acceptFriendRequestHandler);
+}
+
+function handleRemoveFriendClick(e) {
+  let friend_id = e.target.closest('.remove-friend').querySelector('input[name="friend_id"]').value;
+  let data = { friend_id: friend_id };
+  sendAjaxRequest('DELETE', '/friend/remove', data, removeFriendHandler);
+}
+
+function handleAcceptFriendRequestNotificationClick(e) {
+  let sender_id = e.target.closest('.accept-friend-request-notification').querySelector('input[name="sender_id"]').value;
+  let data = { sender_id: sender_id };
+  sendAjaxRequest('POST', '/friend/accept_request', data, acceptFriendRequestNotificationHandler);
+}
+
+function handleRejectFriendRequestNotificationClick(e) {
+  let sender_id = e.target.closest('.reject-friend-request-notification').querySelector('input[name="sender_id"]').value;
+  let data = { sender_id: sender_id };
+  sendAjaxRequest('DELETE', '/friend/reject_request', data, rejectFriendRequestNotificationHandler);
+}
+
 
 function addFriendHandler() {
   let response = JSON.parse(this.responseText);
@@ -912,6 +979,133 @@ function cancelFriendRequestHandler() {
   button.innerHTML += 'Add friend';
 }
 
+function acceptFriendRequestHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let button = document.querySelector('.accept-friend-request');
+  button.classList.remove('accept-friend-request');
+  button.classList.add('remove-friend');
+  let iconSpan = button.querySelector('span');
+  iconSpan.innerHTML = 'person_remove';
+  let input2 = button.querySelector('input[name="sender_id"]');
+  if (input2) {
+    input2.setAttribute('name', 'friend_id');
+  }
+  button.innerHTML = '';
+  button.appendChild(input2);
+  button.appendChild(iconSpan);
+  button.innerHTML += 'Remove Friend';
+
+  // If there is a visible notification, remove it.
+  acceptFriendRequestNotificationHandler.call(this);
+}
+
+function removeFriendHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let button = document.querySelector('.remove-friend');
+  button.classList.remove('remove-friend');
+  button.classList.add('add-friend');
+  let iconSpan = button.querySelector('span');
+  iconSpan.innerHTML = 'person_add';
+  let input2 = button.querySelector('input[name="friend_id"]');
+  button.innerHTML = '';
+  button.appendChild(input2);
+  button.appendChild(iconSpan);
+  button.innerHTML += 'Add friend';
+}
+
+function acceptFriendRequestNotificationHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let notification_id = response.notification_id;
+  let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
+  if (notification) {
+    notification.remove();
+  }
+
+  // Get the friend button on profile page
+  let button = document.querySelector(' .accept-friend-request');
+  if (button) {
+    let check_notification = button.querySelector('input[name="sender_id"]');
+    if (check_notification.value == response.sender_id) {
+      acceptFriendRequestHandler.call(this);
+    }
+  }
+
+}
+
+function rejectFriendRequestNotificationHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let notification_id = response.notification_id;
+  let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
+  if (notification) {
+    notification.remove();
+  }
+
+  // Maybe it's better to create handler for this
+  let button = document.querySelector('.accept-friend-request');
+  if (button) {
+    let check_notification = button.querySelector('input[name="sender_id"]');
+    if (check_notification.value == response.sender_id) {
+      button.classList.remove('accept-friend-request');
+      button.classList.add('add-friend');
+
+      let iconSpan = button.querySelector('span');
+      iconSpan.innerHTML = 'person_add';
+
+      let input2 = button.querySelector('input[name="sender_id"]');
+      input2.setAttribute('name', 'friend_id');
+
+      button.innerHTML = '';
+
+      button.appendChild(input2);
+      button.appendChild(iconSpan);
+
+      button.innerHTML += 'Add friend';
+    }
+  }
+}
+
+
+//Hande group requests with event delegation
+
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.join-group')) {
+      handleJoinGroupRequestClick(e);
+  } 
+}
+);
+
+function handleJoinGroupRequestClick(e) {
+  let group_id = e.target.closest('.join-group').querySelector('input[name="group_id"]').value;
+  let data = { group_id: group_id };
+  sendAjaxRequest('POST', '/group/join-request', data, joinGroupRequestHandler);
+}
+
+
+function joinGroupRequestHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let button = document.querySelector('.join-group');
+  button.classList.remove('join-group');
+  button.classList.add('cancel-join-request');
+  let iconSpan = button.querySelector('span');
+  iconSpan.innerHTML = 'done';
+  let input2 = button.querySelector('input[name="group_id"]');
+  button.innerHTML = '';
+  button.appendChild(input2);
+  button.appendChild(iconSpan);
+  button.innerHTML += 'Request sent';
+}
+
+
 // Get all elements with class="dropbtn" and attach a click event listener
 document.querySelectorAll('.dropbtn').forEach(dropbtn => {
   dropbtn.onclick = function() {
@@ -931,3 +1125,93 @@ window.onclick = function(event) {
       }
   }
 };
+
+
+if (window.location.hash) {
+  let hash = window.location.hash.substring(1).split('-')[1];
+  let scrollContainer = document.querySelector('#content');
+  let comment = document.querySelector('.comment[data-id="' + hash + '"]');
+
+  if (comment) {
+    scrollContainer.scrollTop = comment.offsetTop;
+    comment.classList.add('highlight');
+    setTimeout(function() {
+      comment.classList.remove('highlight');
+    }, 1000);
+
+  }
+}
+
+
+let banButton = document.querySelector('.ban-user'); 
+if (banButton != null) {
+  banButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    let username = document.querySelector('.username').innerHTML.split('@')[1];
+    let data = {username: username};
+    sendAjaxRequest('POST', '/admin/' + username + '/ban', data, banUserHandler);
+    }
+  );
+}
+
+function banUserHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response.success == false) return;
+
+  let span = document.createElement('span');
+  span.className = 'material-symbols-outlined';
+  span.innerHTML = 'person_add_disabled';
+
+  let button = document.querySelector('.ban-user');
+  button.addEventListener('click', function(e) {
+    e.preventDefault();
+    let username = document.querySelector('.username').innerHTML.split('@')[1];
+    let data = {username: username};
+    sendAjaxRequest('POST', '/admin/' + username + '/unban', data, unbanUserHandler);
+    }
+  );
+  button.innerHTML = '';
+  button.appendChild(span);
+  button.innerHTML += 'Unban';
+  button.setAttribute('href', '/admin/' + response.username + '/unban');
+  button.classList.remove('ban-user');
+  button.classList.add('unban-user');
+}
+
+
+let unbanButton = document.querySelector('.unban-user');
+if (unbanButton != null) {
+  unbanButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    let username = document.querySelector('.username').innerHTML.split('@')[1];
+    let data = {username: username};
+    sendAjaxRequest('POST', '/admin/' + username + '/unban', data, unbanUserHandler);
+    }
+  );
+}
+
+function unbanUserHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response.success == false) return;
+
+  let span = document.createElement('span');
+  span.className = 'material-symbols-outlined';
+  span.innerHTML = 'block';
+
+  let button = document.querySelector('.unban-user');
+
+  button.addEventListener('click', function(e) {
+    e.preventDefault();
+    let username = document.querySelector('.username').innerHTML.split('@')[1];
+    let data = {username: username};
+    sendAjaxRequest('POST', '/admin/' + username + '/ban', data, banUserHandler);
+    }
+  );
+
+  button.innerHTML = '';
+  button.appendChild(span);
+  button.innerHTML += 'Ban';
+  button.setAttribute('href', '/admin/' + response.username + '/ban');
+  button.classList.remove('unban-user');
+  button.classList.add('ban-user');
+}

@@ -41,6 +41,13 @@ class LoginController extends Controller
  
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
+
+            if (Auth::user()->isBanned()) {
+                Auth::logout();
+                return back()->withErrors(
+                    ['banned' => 'You have been banned from SkillSwap.']
+                );
+            }
  
             return redirect()->intended('/home');
         }

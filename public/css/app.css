@@ -163,12 +163,18 @@ main > aside#left-bar {
 }
 
 main > aside#right-bar {
-  padding: 1.5em 0.5em;
+  padding: 1.5em 0.5em 1.5em 0.5em;
   overflow-y: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
   grid-column: 3;
   /*
   background: linear-gradient(to bottom left, #000000,#050505, #0e030e, rgba(22,6,26, 0.1));
   */
+}
+
+main > aside#right-bar::-webkit-scrollbar {
+  display: none;
 }
 
 main > #content {
@@ -320,6 +326,13 @@ aside .logo img {
   color: #d1d1e1;
 }
 
+.post .post-header .author-date-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+}
+
 .post-header img {
   width: 3em;
   height: 3em;
@@ -464,6 +477,31 @@ aside .logo img {
   image-rendering: optimizeSpeed;
 }
 
+#content .create-post-footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+#content .create-post-footer div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5em;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+
+#content .create-post-footer label {
+  font-size: 1em;
+  margin: 0;
+}
+
+#content .create-post-footer input[type="checkbox"] {
+  margin: 0;
+}
 
 #content .create-post form {
   margin: 0;
@@ -484,11 +522,11 @@ aside .logo img {
 
 
 
-#content .create-post textarea:focus {
+#content textarea:focus {
   border: 1px solid pink;
 }
 
-#content .create-post textarea::placeholder {
+#content textarea::placeholder {
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -555,6 +593,12 @@ aside .logo img {
   align-items: left;
   gap: 0.1em;
   color: white;
+}
+
+.profile-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
 }
 
 .profile-content {
@@ -804,10 +848,12 @@ form #form-group textarea {
 }
 
 
-.username{
+.username, .groupname{
   font-size: 1.4rem;
   color: wheat;
   font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
 .card-info {
@@ -959,6 +1005,11 @@ form #form-group textarea {
   gap: 1em;
 }
 
+.comment.highlight > .comment-body > .comment-main > .inner-comment {
+  background-color: #663FA4;
+  transition: 0.2s ease;
+}
+
 .comment p {
   margin: 0;
 }
@@ -979,6 +1030,7 @@ form #form-group textarea {
   align-items: center;
   gap: 1em;
   padding: 1em;
+  transition: 0.2s ease;
 }
 
 .comment-body {
@@ -1079,11 +1131,19 @@ form #form-group textarea {
   gap: 1em;
 }
 
+.notification-href {
+  text-decoration: none;
+  color: white;
+}
+
+.notification-href:hover {
+  color: white;
+}
+
 .notifications {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
-  width: 100%;
 }
 
 .notification {
@@ -1094,7 +1154,7 @@ form #form-group textarea {
   padding: 1em;
   flex-direction: row;
   align-items: center;
-  font-size: 0.8em;
+  font-size: 0.9em;
   gap: 1em;
 }
 
@@ -1131,6 +1191,17 @@ form #form-group textarea {
   margin: 0;
 }
 
+.notification .notification-date {
+  font-size: 0.8em;
+  color: #d1d1e1;
+}
+
+.notification .card-info {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+}
+
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
   position: relative;
@@ -1145,6 +1216,7 @@ form #form-group textarea {
   min-width: 13.75em;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   border-radius: 10px;
+  transition: all 0.2s ease;
 }
 
 /* Links inside the dropdown */
@@ -1190,4 +1262,16 @@ form #form-group textarea {
   color: white;
   cursor: pointer;
   border-radius: 10px;
+}
+
+
+main > aside#right-bar .notifications-bar {
+  width: 100%;
+  align-self: center;
+}
+
+.name{
+  font-size: 1.5rem;
+  color: pink;
+  font-weight: bold;
 }

@@ -26,9 +26,17 @@
                 @if(isset($group))
                 <input type="hidden" name="group_id" value="{{$group->id}}">
                 @endif
-                <button type="submit">
-                    Post
-                </button>
+
+                <!-- Visibility  checkbox -->
+                <div class="create-post-footer">
+                    <button type="submit">
+                        Post
+                    </button>
+                    <div>
+                        <input type="checkbox" name="visibility" id="visibility" value="1" checked>
+                        <label for="visibility">Public</label>
+                    </div>
+                </div>
             </form>
         </div>
         <div class="post-files" id="attach-button">
