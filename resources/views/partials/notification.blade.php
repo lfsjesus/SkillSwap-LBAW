@@ -3,7 +3,7 @@ $sender = $notification->sender;
 $subNotification = $notification->subNotification();
 $notificationType = $subNotification->notification_type;
 
-$href = '';
+$href = 'javascript:void(0)';
 
 if($subNotification instanceof App\Models\PostNotification) {
     $href = route('post', ['id' => $subNotification->post_id]);
@@ -11,6 +11,10 @@ if($subNotification instanceof App\Models\PostNotification) {
 
 if($subNotification instanceof App\Models\CommentNotification) {
     $href = route('post', ['id' => $subNotification->comment->post_id]) . '#comment-' . $subNotification->comment->id;
+}
+
+if($subNotification instanceof App\Models\UserNotification) {
+    $href = route('user', ['username' => $sender->username]);
 }
 
 @endphp
