@@ -1243,14 +1243,14 @@ form #form-group textarea {
   background-color: transparent;
   position: absolute;
   padding-top: 10px;
-  bottom: 10px; /* Adjust this value to match the desired distance from the bottom */
-  width: 100%; /* This makes the div span the entire width of the box */
+  bottom: 10px; 
+  width: 100%; 
   display: flex;
-  justify-content: center; /* This will center the button in the container */
+  justify-content: center; 
 }
 
 .spacer {
-  height: 20px; /* Adjust this value as needed to create more space */
+  height: 20px; 
 }
 
 .see-more-button {

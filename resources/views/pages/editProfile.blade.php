@@ -37,6 +37,7 @@
                     {{ $errors->first('name') }}
                 </span>
                 @endif
+                
             </div>
 
             <!-- Email -->
