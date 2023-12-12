@@ -54,7 +54,7 @@ class AdminController extends Controller
         }
         
         $user = User::where('username', $username)->firstOrFail();
-        return view('pages.edit-user-admin', ['user' => $user]);
+        return view('pages.editProfile', ['user' => $user]);
     }
 
     public function showCreateUserForm() {
