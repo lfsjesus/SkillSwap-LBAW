@@ -140,4 +140,5 @@ Route::controller(CommentController::class)->group(function () {
 
 Route::controller(NotificationController::class)->group(function () {
     Route::put('/notifications/markAsRead', 'markAsRead')->name('mark_as_read');
+    Route::put('/notifications/markAllAsRead', 'markAllAsRead')->name('mark_all_as_read');
 });

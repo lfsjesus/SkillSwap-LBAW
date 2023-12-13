@@ -897,23 +897,6 @@ if (menuItems != null) {
 }
 
 // Handle Friend Requests using Event Delegation
-document.addEventListener('click', function(e) {
-  if (e.target.closest('.add-friend')) {
-      handleAddFriendClick(e);
-  } else if (e.target.closest('.cancel-friend-request')) {
-      handleCancelFriendRequestClick(e);
-  } else if (e.target.closest('.accept-friend-request')) {
-      handleAcceptFriendRequestClick(e);
-  } else if (e.target.closest('.remove-friend')) {
-      handleRemoveFriendClick(e);
-  } else if (e.target.closest('.accept-friend-request-notification')){
-      handleAcceptFriendRequestNotificationClick(e);
-  } else if (e.target.closest('.reject-friend-request-notification')){
-      handleRejectFriendRequestNotificationClick(e);
-  }
-});
-
-
 let addFriend = document.querySelector('.add-friend');
 if (addFriend != null) {
   addFriend.addEventListener('click', function(e) {
@@ -1276,19 +1259,16 @@ function unbanUserHandler() {
 }
 
 
-let markAsRead = document.querySelectorAll('.mark-as-read');
 
-if (markAsRead != null) {
-  markAsRead.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      e.preventDefault();
-      let notificationCheckboxes = document.querySelectorAll('.notification-checkbox:checked');
-      notificationCheckboxes.forEach(function(checkbox) {
-        let id = checkbox.value;
-        let data = {notification_id: id};
-        sendAjaxRequest('PUT', '/notifications/markAsRead', data, markAsReadHandler);
-      }
-      );
+// click on notification marks it as viewed
+let notifications = document.querySelectorAll('.notification.active');
+
+if (notifications != null) {
+  notifications.forEach(function(notification) {
+    notification.addEventListener('click', function(e) {
+      let id = notification.getAttribute('data-id');
+      let data = {notification_id: id};
+      sendAjaxRequest('PUT', '/notifications/markAsRead', data, markAsReadHandler);
       }
     );
   }
@@ -1305,6 +1285,58 @@ function markAsReadHandler() {
     notification.classList.remove('active');
     notification.querySelector('.notification-checkbox').checked = false;
   }
-
-
 }
+
+
+let markAllAsRead = document.querySelector('.mark-as-read');
+
+if (markAllAsRead != null) {
+  markAllAsRead.addEventListener('click', function(e) {
+    e.preventDefault();
+    sendAjaxRequest('PUT', '/notifications/markAllAsRead', {}, markAllAsReadHandler);
+    }
+  );
+}
+
+
+function markAllAsReadHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response.success == false) return;
+
+  let notifications = document.querySelectorAll('.notification.active');
+  notifications.forEach(function(notification) {
+    notification.classList.remove('active');
+  }
+  );
+
+  let markAllAsRead = document.querySelector('.mark-as-read');
+  markAllAsRead.blur();
+
+  let newNotifications = document.querySelector('.new-notification');
+  if (newNotifications != null) newNotifications.remove();
+}
+
+
+let hideNotifications = document.querySelector('#notifications');
+
+if (hideNotifications != null) {
+  hideNotifications.addEventListener('click', function(e) {
+    e.preventDefault();
+    let notifications = document.querySelector('.notifications');
+    let icon = hideNotifications.querySelector('span');
+    if (notifications != null) {
+      if (notifications.style.display == 'none') {
+        notifications.style.display = 'flex';
+        icon.innerHTML = 'arrow_drop_down';
+      }
+      else {
+        notifications.style.display = 'none';
+        icon.innerHTML = 'arrow_right';
+      }
+    }
+    hideNotifications.blur();
+    }
+  );
+}
+    
+

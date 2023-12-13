@@ -1154,6 +1154,15 @@ form #form-group textarea {
   scrollbar-width: none;  /* Firefox */
 }
 
+.notifications::-webkit-scrollbar { /* Chrome */
+  display: none;
+}
+
+.new-notification {
+  font-variation-settings: 'FILL' 1;
+  color: #8d73eb;
+}
+
 .notification.active {
   border: 2px solid #8d73eb;
 }

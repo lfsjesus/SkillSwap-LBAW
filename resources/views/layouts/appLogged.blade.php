@@ -111,23 +111,33 @@
                         <li>
                             <a id="notifications" href="javascript:void(0)">
                                 <span class="material-symbols-outlined">
-                                    expand_more
+                                    arrow_drop_down
                                 </span>
                                 Notifications
+                                @if(Auth::user()->hasUnreadNotifications())
+                                    <!-- dot -->
+                                    <span class="material-symbols-outlined new-notification">
+                                        fiber_manual_record
+                                    </span>
+                                @endif
                             </a>
                         </li>
                     </ul>
 
                     <div class="notifications">
                         @if (Auth::check())
-                            @each('partials.notification', Auth::user()->notifications->sortByDesc('date'), 'notification')
+                            @if(Auth::user()->notifications->isEmpty())
+                                <p>You have no notifications</p>
+                            @else
+                                @each('partials.notification', Auth::user()->notifications->sortByDesc('date'), 'notification')
+                            @endif
                         @else
                             <p>Login to check your notifications</p>
                         @endif
                     </div>
                 </div>
                 
-                <button class="button mark-as-read">Mark As Read</button>
+                <a class="button mark-as-read" href="javascript:void(0)"> Mark all as read </a>
             </aside>
         </main>
     </body>
