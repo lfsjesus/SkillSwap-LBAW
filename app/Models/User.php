@@ -148,4 +148,8 @@ class User extends Authenticatable
     public function isBanned() {
         return UserBan::where('user_id', $this->id)->exists();
     }
+
+    public function hasUnreadNotifications() {
+        return $this->notifications()->where('viewed', false)->exists();
+    }
 }
