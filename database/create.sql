@@ -620,11 +620,10 @@ CREATE TRIGGER user_search_update BEFORE INSERT OR UPDATE ON users
 FOR EACH ROW EXECUTE PROCEDURE user_search_update();
 
 
-
-
-
 -- Creating a GIN index to optimize text search on the tsvectors column
 CREATE INDEX search_user ON users USING GIN (tsvectors);
+
+
 
 ALTER TABLE groups ADD COLUMN tsvectors TSVECTOR;
 
@@ -662,6 +661,65 @@ EXECUTE FUNCTION g_search_update();
 
 CREATE INDEX search_g ON groups USING GIN (tsvectors);
 
+
+
+
+ALTER TABLE posts ADD COLUMN tsvectors TSVECTOR;
+-- Create a function to automatically update ts_vectors
+
+CREATE OR REPLACE FUNCTION posts_search_update() RETURNS TRIGGER AS $$
+
+BEGIN
+
+IF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND (NEW.description <> OLD.description)) THEN
+
+NEW.tsvectors = to_tsvector('english', NEW.description) ;
+                
+END IF;
+
+RETURN NEW;
+
+END $$ LANGUAGE plpgsql;
+
+-- Create a trigger before insert or update on posts
+
+CREATE TRIGGER posts_search_update
+BEFORE INSERT OR UPDATE ON posts
+FOR EACH ROW
+EXECUTE FUNCTION posts_search_update();
+
+-- Create a GIN index for ts_vectors
+CREATE INDEX search_posts ON posts USING GIN (tsvectors);
+
+
+
+
+ALTER TABLE comments ADD COLUMN tsvectors TSVECTOR;
+-- Create a function to automatically update ts_vectors
+
+CREATE OR REPLACE FUNCTION comments_search_update() RETURNS TRIGGER AS $$
+
+BEGIN
+
+IF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND (NEW.content <> OLD.content)) THEN
+
+NEW.tsvectors =  to_tsvector('english', NEW.content);
+                
+END IF;
+
+RETURN NEW;
+
+END $$ LANGUAGE plpgsql;
+
+-- Create a trigger before insert or update on posts
+
+CREATE TRIGGER comments_search_update
+BEFORE INSERT OR UPDATE ON comments
+FOR EACH ROW
+EXECUTE FUNCTION comments_search_update();
+
+-- Create a GIN index for ts_vectors
+CREATE INDEX search_comments ON comments USING GIN (tsvectors);
 
 /*Administrators */
 insert into administrators (name, username, email, password) values ('Roderic Gullam', 'admin0848605704823569', 'rgullam0@topsy.com', 'iS7\_uj>');
