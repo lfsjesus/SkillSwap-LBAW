@@ -899,38 +899,23 @@ if (menuItems != null) {
 // Handle Friend Requests using Event Delegation
 let addFriend = document.querySelector('.add-friend');
 if (addFriend != null) {
-  addFriend.addEventListener('click', function(e) {
-    e.preventDefault();
-    handleAddFriendClick(e);
-  }
-  );
+  addFriend.addEventListener('click', handleAddFriendClick);
+
 }
 
 let cancelFriendRequest = document.querySelector('.cancel-friend-request');
 if (cancelFriendRequest != null) {
-  cancelFriendRequest.addEventListener('click', function(e) {
-    e.preventDefault();
-    handleCancelFriendRequestClick(e);
-  }
-  );
+  cancelFriendRequest.addEventListener('click', handleCancelFriendRequestClick);
 }
 
 let acceptFriendRequest = document.querySelector('.accept-friend-request');
 if (acceptFriendRequest != null) {
-  acceptFriendRequest.addEventListener('click', function(e) {
-    e.preventDefault();
-    handleAcceptFriendRequestClick(e);
-  }
-  );
+  acceptFriendRequest.addEventListener('click', handleAcceptFriendRequestClick);
 }
 
 let removeFriend = document.querySelector('.remove-friend');
 if (removeFriend != null) {
-  removeFriend.addEventListener('click', function(e) {
-    e.preventDefault();
-    handleRemoveFriendClick(e);
-  }
-  );
+  removeFriend.addEventListener('click', handleRemoveFriendClick);
 }
 
 let acceptFriendRequestNotification = document.querySelector('.accept-friend-request-notification');
@@ -1003,6 +988,9 @@ function addFriendHandler() {
   button.appendChild(input2);
   button.appendChild(iconSpan);
   button.innerHTML += 'Request sent';
+
+  button.removeEventListener('click', handleAddFriendClick);
+  button.addEventListener('click', handleCancelFriendRequestClick);
 }
 
 function cancelFriendRequestHandler() {
@@ -1019,7 +1007,11 @@ function cancelFriendRequestHandler() {
   button.appendChild(input2);
   button.appendChild(iconSpan);
   button.innerHTML += 'Add friend';
+
+  button.removeEventListener('click', handleCancelFriendRequestClick);
+  button.addEventListener('click', handleAddFriendClick);
 }
+
 
 function acceptFriendRequestHandler() {
   let response = JSON.parse(this.responseText);
@@ -1041,6 +1033,9 @@ function acceptFriendRequestHandler() {
 
   // If there is a visible notification, remove it.
   acceptFriendRequestNotificationHandler.call(this);
+
+  button.removeEventListener('click', handleAcceptFriendRequestClick);
+  button.addEventListener('click', handleRemoveFriendClick);
 }
 
 function removeFriendHandler() {
@@ -1057,6 +1052,10 @@ function removeFriendHandler() {
   button.appendChild(input2);
   button.appendChild(iconSpan);
   button.innerHTML += 'Add friend';
+
+  button.removeEventListener('click', handleRemoveFriendClick);
+  button.addEventListener('click', handleAddFriendClick);
+  
 }
 
 function acceptFriendRequestNotificationHandler() {
