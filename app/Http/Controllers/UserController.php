@@ -365,60 +365,23 @@ class UserController extends Model
     }
 
 
-    //Uses full text search for name and username and exact match search for email
+    //Uses full text search for name and username and exact match search for email, 
     public function search(Request $request)
     {
-        if (!Auth::check()) {
-            $query = trim($request->input('q'));
+        $query = $request->input('q');
 
-            if (str_contains($query, '@')) {
-                // Use the local scope for public profiles
-                $users = User::publicProfile()
-                            ->orWhere('email', 'like', '%' . $request->input('q') . '%')
-                            ->get();
-                $viewName = 'pages.search';
-            } else {
-                // Use the local scope for public profiles in full-text search
-                $users = User::publicProfile()
-                            ->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$query])
-                            ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$query])
-                            ->get();
-                $viewName = 'pages.search';
-            }
+        $users = User::activeUsers()
+                    ->where(function($query) use ($request) {
+                        $query->Where('username', '=', $request->input('q'))
+                                ->orWhere('email', '=', $request->input('q'))
+                                ->orWhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                                ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')]);
 
-            return view($viewName, ['users' => $users, 'query' => $query]);
-        } else {
-            $query = trim($request->input('q'));
-            $currentUser = Auth::user();
-
-            // Fetch public users
-            $publicUsers = User::where('public_profile', true)
-                            ->where(function ($query) use ($request) {
-                                $query->where('name', 'ILIKE', $request->input('q') . '%')
-                                        ->orWhere('username', 'ILIKE', $request->input('q') . '%')
-                                        ->orWhere('email', 'ILIKE', $request->input('q') . '%')
-                                        ->orWhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                                        ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')]);
-
-                            })
-                            ->get();
-
-            // Fetch friends of the current user
-            $friends = $currentUser->get_friends_helper()->where(function ($query) use ($request) {
-                                                            $query->where('name', 'ILIKE', $request->input('q') . '%')
-                                                                    ->orWhere('username', 'ILIKE', '%' . $request->input('q') . '%')
-                                                                    ->orWhere('email', 'ILIKE', '%' . $request->input('q') . '%')
-                                                                    ->orWhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                                                                    ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')]);
-                                                                })
-                                                                ->get();
-            // Combine and remove duplicates
-            $users = $publicUsers->merge($friends)->unique('id');
-
-            return view('pages.search', ['users' => $users, 'query' => $query]);
-        }
+                    })
+                    ->get();
 
         
+        return view('pages.search', ['users' => $users, 'query' => $query]);        
     }
 
     public function showFriends($username)

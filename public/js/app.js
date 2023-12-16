@@ -1074,6 +1074,9 @@ function removeFriendHandler() {
   button.appendChild(input2);
   button.appendChild(iconSpan);
   button.innerHTML += 'Add friend';
+
+  button.removeEventListener('click', handleRemoveFriendClick);
+  button.addEventListener('click', handleAddFriendClick);
 }
 
 function acceptFriendRequestNotificationHandler() {
@@ -1289,5 +1292,80 @@ let helpIcons = document.querySelectorAll('.help-icon');
         }
       );
     }
+  );
+}
+
+
+function markAllAsReadHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response.success == false) return;
+
+  let notifications = document.querySelectorAll('.notification.active');
+  notifications.forEach(function(notification) {
+    notification.classList.remove('active');
+  }
+  );
+
+  let markAllAsRead = document.querySelector('.mark-as-read');
+  markAllAsRead.blur();
+
+  let newNotifications = document.querySelector('.new-notification');
+  if (newNotifications != null) newNotifications.remove();
+}
+
+
+let hideNotifications = document.querySelector('#notifications');
+
+if (hideNotifications != null) {
+  hideNotifications.addEventListener('click', function(e) {
+    e.preventDefault();
+    let notifications = document.querySelector('.notifications');
+    let icon = hideNotifications.querySelector('span');
+    if (notifications != null) {
+      if (notifications.style.display == 'none') {
+        notifications.style.display = 'flex';
+        icon.innerHTML = 'arrow_drop_down';
+      }
+      else {
+        notifications.style.display = 'none';
+        icon.innerHTML = 'arrow_right';
+      }
+    }
+    hideNotifications.blur();
+    }
+  );
+}
+    
+
+let searchTabs = document.querySelectorAll('.search-tabs a');
+
+if (searchTabs != null) {
+  searchTabs.forEach(function(tab) {
+    if (tab.href == window.location.href) {
+      tab.classList.add('active');
+    }
+  }
+  );
+}
+
+
+
+let searchDateFilter = document.querySelector('.search-sort select[name="date"]');
+if (searchDateFilter != null) {
+  searchDateFilter.addEventListener('change', function() {
+    let url = window.location.href;
+    
+    // check if url already has date filter
+    let index = url.indexOf('&date=');
+    if (index != -1) {
+      url = url.substring(0, index);
+    }
+
+    // add date filter to url
+    url += '&date=' + this.value;
+
+    window.location = url;
+
+  }
   );
 }
