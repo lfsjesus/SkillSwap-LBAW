@@ -41,7 +41,7 @@
                     <label for="name">Name</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
-                        Write your full name here.
+                        Upload your profile picture here. Formats accepted: jpg, png. Max size: 2MB.
                     </div>
                 </div>
                 <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}">

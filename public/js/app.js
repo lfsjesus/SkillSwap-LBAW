@@ -897,57 +897,25 @@ if (menuItems != null) {
 }
 
 // Handle Friend Requests using Event Delegation
-document.addEventListener('click', function(e) {
-  if (e.target.closest('.add-friend')) {
-      handleAddFriendClick(e);
-  } else if (e.target.closest('.cancel-friend-request')) {
-      handleCancelFriendRequestClick(e);
-  } else if (e.target.closest('.accept-friend-request')) {
-      handleAcceptFriendRequestClick(e);
-  } else if (e.target.closest('.remove-friend')) {
-      handleRemoveFriendClick(e);
-  } else if (e.target.closest('.accept-friend-request-notification')){
-      handleAcceptFriendRequestNotificationClick(e);
-  } else if (e.target.closest('.reject-friend-request-notification')){
-      handleRejectFriendRequestNotificationClick(e);
-  }
-});
-
-
 let addFriend = document.querySelector('.add-friend');
 if (addFriend != null) {
-  addFriend.addEventListener('click', function(e) {
-    e.preventDefault();
-    handleAddFriendClick(e);
-  }
-  );
+  addFriend.addEventListener('click', handleAddFriendClick);
+
 }
 
 let cancelFriendRequest = document.querySelector('.cancel-friend-request');
 if (cancelFriendRequest != null) {
-  cancelFriendRequest.addEventListener('click', function(e) {
-    e.preventDefault();
-    handleCancelFriendRequestClick(e);
-  }
-  );
+  cancelFriendRequest.addEventListener('click', handleCancelFriendRequestClick);
 }
 
 let acceptFriendRequest = document.querySelector('.accept-friend-request');
 if (acceptFriendRequest != null) {
-  acceptFriendRequest.addEventListener('click', function(e) {
-    e.preventDefault();
-    handleAcceptFriendRequestClick(e);
-  }
-  );
+  acceptFriendRequest.addEventListener('click', handleAcceptFriendRequestClick);
 }
 
 let removeFriend = document.querySelector('.remove-friend');
 if (removeFriend != null) {
-  removeFriend.addEventListener('click', function(e) {
-    e.preventDefault();
-    handleRemoveFriendClick(e);
-  }
-  );
+  removeFriend.addEventListener('click', handleRemoveFriendClick);
 }
 
 let acceptFriendRequestNotification = document.querySelector('.accept-friend-request-notification');
@@ -1020,6 +988,9 @@ function addFriendHandler() {
   button.appendChild(input2);
   button.appendChild(iconSpan);
   button.innerHTML += 'Request sent';
+
+  button.removeEventListener('click', handleAddFriendClick);
+  button.addEventListener('click', handleCancelFriendRequestClick);
 }
 
 function cancelFriendRequestHandler() {
@@ -1036,7 +1007,11 @@ function cancelFriendRequestHandler() {
   button.appendChild(input2);
   button.appendChild(iconSpan);
   button.innerHTML += 'Add friend';
+
+  button.removeEventListener('click', handleCancelFriendRequestClick);
+  button.addEventListener('click', handleAddFriendClick);
 }
+
 
 function acceptFriendRequestHandler() {
   let response = JSON.parse(this.responseText);
@@ -1058,6 +1033,9 @@ function acceptFriendRequestHandler() {
 
   // If there is a visible notification, remove it.
   acceptFriendRequestNotificationHandler.call(this);
+
+  button.removeEventListener('click', handleAcceptFriendRequestClick);
+  button.addEventListener('click', handleRemoveFriendClick);
 }
 
 function removeFriendHandler() {
@@ -1274,23 +1252,44 @@ function unbanUserHandler() {
   button.setAttribute('href', '/admin/' + response.username + '/ban');
   button.classList.remove('unban-user');
   button.classList.add('ban-user');
-};
+}
 
-let helpIcons = document.querySelectorAll('.help-icon');
-  console.log(helpIcons)
-  if (helpIcons != null) {
-    helpIcons.forEach(function(icon) {
-      icon.addEventListener('mouseover', function() {
-         let tooltip = icon.nextElementSibling;
-         console.log(tooltip)
-         tooltip.style.display = 'block';
-      });
 
-      icon.addEventListener('mouseout', function() {
-        let tooltip = icon.nextElementSibling;
-        tooltip.style.display = 'none';
-        }
-      );
+
+// click on notification marks it as viewed
+let notifications = document.querySelectorAll('.notification.active');
+
+if (notifications != null) {
+  notifications.forEach(function(notification) {
+    notification.addEventListener('click', function(e) {
+      let id = notification.getAttribute('data-id');
+      let data = {notification_id: id};
+      sendAjaxRequest('PUT', '/notifications/markAsRead', data, markAsReadHandler);
+      }
+    );
+  }
+  );
+}
+
+function markAsReadHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response.success == false) return;
+
+  let notification = document.querySelector('.notification[data-id="' + response.id + '"]');
+  
+  if (notification) {
+    notification.classList.remove('active');
+    notification.querySelector('.notification-checkbox').checked = false;
+  }
+}
+
+
+let markAllAsRead = document.querySelector('.mark-as-read');
+
+if (markAllAsRead != null) {
+  markAllAsRead.addEventListener('click', function(e) {
+    e.preventDefault();
+    sendAjaxRequest('PUT', '/notifications/markAllAsRead', {}, markAllAsReadHandler);
     }
   );
 }
