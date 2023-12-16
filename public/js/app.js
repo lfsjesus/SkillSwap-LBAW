@@ -1357,7 +1357,7 @@ if (searchDateFilter != null) {
     let url = window.location.href;
     
     // check if url already has date filter
-    let index = url.indexOf('date=');
+    let index = url.indexOf('&date=');
     if (index != -1) {
       url = url.substring(0, index);
     }
