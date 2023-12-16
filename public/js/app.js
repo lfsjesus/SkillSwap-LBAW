@@ -1253,28 +1253,6 @@ function unbanUserHandler() {
   button.setAttribute('href', '/admin/' + response.username + '/ban');
   button.classList.remove('unban-user');
   button.classList.add('ban-user');
-<<<<<<< HEAD
-};
-
-let helpIcons = document.querySelectorAll('.help-icon');
-  console.log(helpIcons)
-  if (helpIcons != null) {
-    helpIcons.forEach(function(icon) {
-      icon.addEventListener('mouseover', function() {
-         let tooltip = icon.nextElementSibling;
-         console.log(tooltip)
-         tooltip.style.display = 'block';
-      });
-
-      icon.addEventListener('mouseout', function() {
-        let tooltip = icon.nextElementSibling;
-        tooltip.style.display = 'none';
-        }
-      );
-    }
-  );
-}
-=======
 }
 
 
@@ -1359,4 +1337,3 @@ if (hideNotifications != null) {
 }
     
 
->>>>>>> a0a60de97a67f77443122e6d0377de0a3d79d4ff
