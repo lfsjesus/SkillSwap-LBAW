@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Models\Notification;
 use App\Models\UserNotification;
 use App\Models\Friend;
+use App\Models\Member;
+
 
 class UserController extends Model 
 {
@@ -61,15 +63,23 @@ class UserController extends Model
                         }
                     }
                 },
-            ],
-            
+            ],            
             'description' => 'nullable|string|max:500',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
-            'username' => 'required|string|max:50|unique:users,username,' . Auth::user()->id,
+            'username' => [
+                'required',
+                'string',
+                'max:50',
+                'unique:users,username,' . Auth::user()->id,
+                'not_regex:/^deleted/'
+            ],
             'birth_date' => 'required|date|before:18 years ago',
             'visibility' => 'required|boolean'
+        ],
+        $customMessages = [
+            'username.not_regex' => 'Username can\'t start with \'deleted\''
         ]);
-        
+
 
         $user->name = $request->input('name');
         $user->username = $request->input('username');
@@ -96,8 +106,40 @@ class UserController extends Model
             return redirect()->back()->with('error', 'You cannot delete this user');
         }
 
-        $user->delete();
+        try {
+            DB::beginTransaction();
 
+            $user->name = 'deleted';
+            $user->username = 'deleted' . $user->id;
+            $user->email = 'deleted' . $user->id;
+            $user->phone_number = null;
+            $user->birth_date = date('Y-m-d H:i:s', 1);
+            $user->profile_picture = null;
+            $user->description = null;
+            $user->public_profile = false;
+            $user->password = 'deleted';
+            $user->deleted = true;
+
+            $user->save();
+
+            // Delete all notifications
+            Notification::where('sender_id', $user->id)
+                            ->orWhere('receiver_id', $user->id)
+                            ->delete();
+
+            // Delete all friendships
+            Friend::where('user_id', $user->id)
+                            ->delete();
+
+            // Delete all group memberships
+            Member::where('user_id', $user->id)
+                            ->delete();
+            
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error while deleting user. Try again!');
+        }
         Auth::logout();
         
         return redirect()->route('home')->with('success', 'User deleted successfully!');

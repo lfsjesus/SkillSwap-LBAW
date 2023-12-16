@@ -44,7 +44,8 @@ class User extends Authenticatable
         'description',
         'birth_date',
         'remember_token',
-        'public_profile'
+        'public_profile',
+        'deleted'
     ];
 
     /**
