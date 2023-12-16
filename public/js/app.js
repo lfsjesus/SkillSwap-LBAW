@@ -1147,14 +1147,12 @@ function joinGroupRequestHandler() {
 }
 
 
-// Get all elements with class="dropbtn" and attach a click event listener
 document.querySelectorAll('.dropbtn').forEach(dropbtn => {
   dropbtn.onclick = function() {
       this.nextElementSibling.classList.toggle("show");
   }
 });
 
-// Close the dropdown if the user clicks outside of it
 window.onclick = function(event) {
   if (!event.target.matches('.dropbtn')) {
       let dropdowns = document.getElementsByClassName("dropdown-content");
@@ -1229,7 +1227,7 @@ if (unbanButton != null) {
     sendAjaxRequest('POST', '/admin/' + username + '/unban', data, unbanUserHandler);
     }
   );
-}
+};
 
 function unbanUserHandler() {
   let response = JSON.parse(this.responseText);

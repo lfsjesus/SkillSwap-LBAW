@@ -1264,18 +1264,18 @@ form #form-group textarea {
   background-color: transparent;
   position: absolute;
   padding-top: 10px;
-  bottom: 10px; /* Adjust this value to match the desired distance from the bottom */
-  width: 100%; /* This makes the div span the entire width of the box */
+  bottom: 10px; 
+  width: 100%; 
   display: flex;
-  justify-content: center; /* This will center the button in the container */
+  justify-content: center; 
 }
 
 .spacer {
-  height: 20px; /* Adjust this value as needed to create more space */
+  height: 20px; 
 }
 
 .see-more-button {
-  background-color: #663FA4;;
+  background-color: #663FA4;
   border: none;
   margin: 0;
   padding: 1em 1.5em; 
@@ -1295,4 +1295,50 @@ main > aside#right-bar .notifications-bar {
   font-size: 1.5rem;
   color: pink;
   font-weight: bold;
+}
+
+
+.help-icon {
+  cursor: pointer;
+  display: inline-block;
+  position: relative; 
+  padding-bottom: 0.2em;
+}
+
+.help-icon::after {
+  display: inline-block;
+  margin-left: 0.5em;
+  color: #663FA4; 
+  font-size: 0.8em; 
+}
+
+.help-tooltip {
+  border-radius: 10px;
+  display: none; 
+  margin-top: 0.3em; 
+  background-color: #663FA4;
+  padding: 0.2em 0.4em;
+  margin-bottom: 0.5em;
+  color: white;
+  white-space: nowrap;
+  font-size: 0.9em; 
+}
+
+.field-title {
+  display: flex;
+  align-items: center; 
+  margin-bottom: 0.7em;
+}
+
+.help-icon {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 0.5em;
+  color: #663FA4; 
+
+}
+
+.field-title span {
+  font-variation-settings: 'FILL' 1;
+  color: wheat;
 }
