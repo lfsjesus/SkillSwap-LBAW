@@ -46,7 +46,7 @@
             @endif
             </div>
             @if($comment->isParent())
-            @include('partials.comment-box') 
+            @include('partials.comment-box', ['post' => $comment->post])
             @endif
         </div>   
 </div>

@@ -99,7 +99,10 @@
                         <span class="material-symbols-outlined">
                             search
                         </span>
-                        <input type="text" name="q" placeholder="Search" autofocus>
+                        <input type="text" name="q" placeholder="Search" value="{{ $query ?? '' }}" autofocus>
+                        <input type="hidden" name="type" value="{{ $type ?? 'user' }}">
+                        <input type="hidden" name="date" value="{{ $date ?? 'asc' }}">
+                        <input type="submit" value="Search" style="display: none;">
                     </form>
                 </div>
                 @yield('content')
