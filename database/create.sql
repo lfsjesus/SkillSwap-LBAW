@@ -52,7 +52,8 @@ CREATE TABLE users (
     birth_date DATE NOT NULL,
     CONSTRAINT check_age CHECK (birth_date <= CURRENT_DATE - INTERVAL '18' YEAR),
     remember_token VARCHAR(256) DEFAULT NULL,
-    public_profile BOOLEAN DEFAULT true
+    public_profile BOOLEAN DEFAULT true,
+    deleted BOOLEAN DEFAULT false
 );
 
 CREATE TABLE groups (

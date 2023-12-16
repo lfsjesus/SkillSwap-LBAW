@@ -14,6 +14,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,4 +135,10 @@ Route::controller(CommentController::class)->group(function () {
     Route::post('/posts/comment', 'createComment')->name('create_comment');
     Route::delete('/posts/comment/delete', 'deleteComment')->name('delete_comment');
     Route::put('/posts/comment/edit', 'editComment')->name('edit_comment');
+});
+
+
+Route::controller(NotificationController::class)->group(function () {
+    Route::put('/notifications/markAsRead', 'markAsRead')->name('mark_as_read');
+    Route::put('/notifications/markAllAsRead', 'markAllAsRead')->name('mark_all_as_read');
 });
