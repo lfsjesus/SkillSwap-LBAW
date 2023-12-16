@@ -32,10 +32,8 @@ class PostController extends Controller
         }
 
         /*Else if user is logged in, show public posts + friends posts + own user posts */
-        $posts = Post::publicPosts()->get()
-            ->merge(Auth::user()->posts()->get())
-            ->merge(Auth::user()->friendsPosts()->get())->unique('id')
-            ->sortByDesc('date');
+        $posts = Auth::user()->visiblePosts();
+
         return view('pages.home', ['posts' => $posts]);
 
     }
@@ -167,4 +165,33 @@ class PostController extends Controller
         }
     }
 
+    public function search(Request $request) {
+        $query = $request->input('q');
+
+        if (!(Auth::guard('webadmin')->check() && Auth::check())) {
+            $posts = Post::publicPosts()
+                    ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                    ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')])
+                    ->get();
+
+            return view('pages.searchPosts', ['posts' => $posts, 'query' => $query]);
+        }
+
+        else if (Auth::guard('webadmin')->check()) {
+            $posts = Post::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                    ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')])
+                    ->get();
+
+            return view('pages.searchPosts', ['posts' => $posts, 'query' => $query]);
+        }
+
+        else {
+            $posts = Auth::user()->visiblePosts()
+                    ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                    ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')])
+                    ->get();
+
+            return view('pages.searchPosts', ['posts' => $posts, 'query' => $query]);
+        }
+    }
 }

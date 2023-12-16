@@ -75,6 +75,24 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function visiblePosts() {
+        $myPosts = $this->posts()->get();
+
+        $friendsPosts = $this->friendsPosts()->get();
+
+        // posts from groups I am member of
+        $groupsIamMember = $this->groups()->with('posts')->get()->pluck('posts')->flatten();
+
+        $publicPosts = Post::publicPosts()->get();
+
+        return $myPosts
+                ->union($friendsPosts)
+                ->union($groupsIamMember)
+                ->union($publicPosts)
+                ->unique('id')
+                ->sortByDesc('date');
+    }
+
     public function friendsPosts()
     {
         return $this->hasManyThrough(Post::class, Friend::class, 'user_id', 'user_id', 'id', 'friend_id');
@@ -107,9 +125,9 @@ class User extends Authenticatable
     }
 
 
-    public function scopePublicProfile($query)
+    public function scopeActiveUsers($query)
     {
-        return $query->where('public_profile', true);
+        return $query->where('deleted', false);
     }
 
     /**

@@ -1055,7 +1055,6 @@ function removeFriendHandler() {
 
   button.removeEventListener('click', handleRemoveFriendClick);
   button.addEventListener('click', handleAddFriendClick);
-  
 }
 
 function acceptFriendRequestNotificationHandler() {
@@ -1337,3 +1336,35 @@ if (hideNotifications != null) {
 }
     
 
+let searchTabs = document.querySelectorAll('.search-tabs a');
+
+if (searchTabs != null) {
+  searchTabs.forEach(function(tab) {
+    if (tab.href == window.location.href) {
+      tab.classList.add('active');
+    }
+  }
+  );
+}
+
+
+
+let searchDateFilter = document.querySelector('.search-sort select[name="date"]');
+if (searchDateFilter != null) {
+  searchDateFilter.addEventListener('change', function() {
+    let url = window.location.href;
+    
+    // check if url already has date filter
+    let index = url.indexOf('&date=');
+    if (index != -1) {
+      url = url.substring(0, index);
+    }
+
+    // add date filter to url
+    url += '&date=' + this.value;
+
+    window.location = url;
+
+  }
+  );
+}

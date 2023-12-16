@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,7 +77,6 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{username}/edit', 'showEditForm')->name('edit_profile');
     Route::put('/user/edit', 'edit')->name('edit_user');
     Route::delete('/user/delete', 'userDelete')->name('delete_user');
-    Route::get('/search', 'search')->name('search');
     Route::get('/user/{username}/friends', 'showFriends')->name('user_friends');
     Route::get('/user/{username}/groups', 'showGroups')->name('user_groups');
     Route::post('/friend/request', 'sendFriendRequest')->name('send_friend_request');
@@ -141,4 +141,9 @@ Route::controller(CommentController::class)->group(function () {
 Route::controller(NotificationController::class)->group(function () {
     Route::put('/notifications/markAsRead', 'markAsRead')->name('mark_as_read');
     Route::put('/notifications/markAllAsRead', 'markAllAsRead')->name('mark_all_as_read');
+});
+
+
+Route::controller(SearchController::class)->group(function () {
+    Route::get('/search', 'search')->name('search');
 });
