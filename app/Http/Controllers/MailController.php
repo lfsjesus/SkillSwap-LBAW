@@ -16,4 +16,10 @@ class MailController extends Controller
         Mail::to($request->email)->send(new MailModel($mailData));
         return redirect()->route('home');
     }
+
+    public function showContactForm()
+    {
+        return view('emails.resetForm'); // Assuming this is the correct view for your form
+    }
+
 }
