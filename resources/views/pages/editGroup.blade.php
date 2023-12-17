@@ -14,7 +14,13 @@
             <input type="hidden" name="id" value="{{ $group->id }}">
             <!-- Banner -->
             <div id="form-group">
-                <label for="banner">Banner</label>
+                <div class="field-title">
+                    <label for="banner">Banner</label>
+                    <span class="help-icon material-symbols-outlined"> info </span>
+                    <div class="help-tooltip">
+                        Accepted formats: jpg, png. Max size: 2MB.
+                    </div>
+                </div>
                 <input type="file" name="banner" id="banner" class="form-control">
                 @if ($errors->has('banner'))
                 <span class="error">
@@ -25,7 +31,13 @@
 
             <!-- Name -->
             <div id="form-group">
-                <label for="name">Name</label>
+                <div class="field-title">
+                    <label for="name">Name</label>
+                    <span class="help-icon material-symbols-outlined"> info </span>
+                    <div class="help-tooltip">
+                        Write the group's name here.
+                    </div>
+                </div>
                 <input type="text" name="name" id="name" class="form-control" value="{{ $group->name }}" required>
                 @if ($errors->has('name'))
                 <span class="error">
@@ -36,7 +48,13 @@
 
             <!-- Description -->
             <div id="form-group">
-                <label for="description">Description</label>
+                <div class="field-title">
+                    <label for="name">Description</label>
+                    <span class="help-icon material-symbols-outlined"> info </span>
+                    <div class="help-tooltip">
+                        Write a brief description about the group.
+                    </div>
+                </div>
                 <textarea name="description" id="description" class="form-control">{{ $group->description }}</textarea>
                 @if ($errors->has('description'))
                 <span class="error">
@@ -47,7 +65,13 @@
 
             <!-- Visibility -->
             <div id="form-group">
-                <label for="visibility">Visibility</label>
+                <div class="field-title">
+                    <label for="visibility">Visibility</label>
+                    <span class="help-icon material-symbols-outlined"> info </span>
+                    <div class="help-tooltip">
+                        Select 'Public' for everyone to view your details, or 'Private' for limited access.
+                    </div>
+                </div>
                 <select name="visibility" id="visibility" class="form-control">
                     <option value="1" {{ $group->public_group ? 'selected' : '' }}>Public</option>
                     <option value="0" {{ $group->public_group ? '' : 'selected' }}>Private</option>
