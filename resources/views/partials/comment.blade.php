@@ -32,9 +32,11 @@
                 @if(Auth::user())
                 <p class="reply-comment"> Reply </p>
                 @endif
-                @if (Auth::guard('webadmin')->check() || $comment->author->id == Auth::user()->id)
-                <p class="edit-comment"> Edit </p>
-                <p class="delete-comment"> Delete </p>
+                @if (Auth::guard('webadmin')->check() || Auth::check())
+                    @if (Auth::guard('webadmin')->check() || $comment->author->id == Auth::user()->id)
+                    <p class="edit-comment"> Edit </p>
+                    <p class="delete-comment"> Delete </p>
+                    @endif
                 @endif
             </div>
             </div>
