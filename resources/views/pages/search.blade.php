@@ -15,7 +15,7 @@ else if ($type == 'group') {
     $partial = 'partials.group';
 }
 else if ($type == 'comment') {
-    $partial = 'partials.comment';
+    $partial = 'partials.comment-search-card';
 }
 
 @endphp
@@ -42,10 +42,11 @@ else if ($type == 'comment') {
         </div>  
         </div>
         <div class="search-results">
-            @if (count($results) > 0)
-                @each($partial, $results, $type)
+            @if ($results->isEmpty())
+                <span>No results found for "{{ $query }}"</span>  
             @else
-                <p>No results found for "{{ $query }}"</p>
+                <span>Found {{ $results->count() }} results for "{{ $query }}" :</span>
+                @each($partial, $results, $type)
             @endif
         </div>
     </div>

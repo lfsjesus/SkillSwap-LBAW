@@ -30,7 +30,7 @@ class CommentController extends Controller
             $comment->comment_id = $replyTo_id;
             $comment->content = nl2br($content);
             $comment->date = date('Y-m-d H:i:s');
-            $comment->save();
+            $comment->save();            
 
             $notification = new Notification();
             $notification->sender_id = Auth::user()->id;

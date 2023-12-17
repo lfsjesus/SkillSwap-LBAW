@@ -311,8 +311,10 @@ BEGIN
     ELSE
         IF (NEW.post_id NOT IN (SELECT id FROM posts WHERE public_post = true) 
                                 AND NEW.user_id NOT IN 
-                                (SELECT friend_id FROM is_friend WHERE user_id = (SELECT user_id FROM posts WHERE id = NEW.post_id))) THEN
-            RAISE EXCEPTION 'User can only comment on public posts or posts of friends';
+                                (SELECT friend_id FROM is_friend WHERE user_id = (SELECT user_id FROM posts WHERE id = NEW.post_id)) 
+                                AND NEW.user_id <> (SELECT user_id FROM posts WHERE id = NEW.post_id))
+                                THEN
+            RAISE EXCEPTION 'User can only comment on public posts, own posts or posts of friends';
         END IF;
     END IF;
     RETURN NEW;

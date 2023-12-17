@@ -77,20 +77,23 @@ class User extends Authenticatable
 
     public function visiblePosts() {
         $myPosts = $this->posts()->get();
-
+    
         $friendsPosts = $this->friendsPosts()->get();
-
-        // posts from groups I am member of
-        $groupsIamMember = $this->groups()->with('posts')->get()->pluck('posts')->flatten();
-
+    
+        $groupsIamMember = $this->groups()->with('posts')->get();
+    
         $publicPosts = Post::publicPosts()->get();
 
-        return $myPosts
-                ->union($friendsPosts)
-                ->union($groupsIamMember)
-                ->union($publicPosts)
-                ->unique('id')
-                ->sortByDesc('date');
+        $posts = $myPosts->merge($friendsPosts)->merge($groupsIamMember)->merge($publicPosts)->sortByDesc('date');
+
+        return $posts;
+    }
+    
+
+    public function visibleComments() { // Can see comments on posts that are visible to me
+        $visiblePosts = $this->visiblePosts()->pluck('id');
+
+        return Comment::whereIn('post_id', $visiblePosts)->get();
     }
 
     public function friendsPosts()

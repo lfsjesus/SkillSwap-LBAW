@@ -57,21 +57,26 @@ class SearchController extends Controller {
     protected function posts(Request $request) {
         $query = $request->input('q');
 
-        if (!(Auth::guard('webadmin')->check() && Auth::check())) {
-            $posts = Post::publicPosts()
-                    ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                    ->get();
-        }
-
-        else if (Auth::guard('webadmin')->check()) {
+        if (Auth::guard('webadmin')->check()) {
             $posts = Post::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
                     ->get();
         }
 
-        else {
-            $posts = Auth::user()->visiblePosts()
-                    ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+        else if (Auth::user()) {
+            $fstPosts = Post::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
                     ->get();
+
+            $visiblePosts = Auth::user()->visiblePosts();
+
+            $posts = $visiblePosts->intersect($fstPosts);          
+                                
+        }
+        else {
+            $posts = Post::publicPosts()
+                            ->where (function($query) use ($request) {
+                                    $query->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')]);
+                            })
+                            ->get(); 
         }
 
         return $posts;
@@ -104,11 +109,26 @@ class SearchController extends Controller {
 
 
     protected function comments(Request $request) {
-        // Will be changed to only return comments that are visible to the user
         $query = $request->input('q');
 
-        $comments = Comment::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+        if (Auth::guard('webadmin')->check()) {
+            $comments = Comment::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
                     ->get();
+        }
+
+        else if (Auth::user()) {
+            $fstComments = Comment::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                    ->get();
+            
+            $visibleComments = Auth::user()->visibleComments();
+
+            $comments = $visibleComments->intersect($fstComments);
+        }
+        else {
+            $comments = Comment::publicComments()
+                    ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                    ->get();
+        }
                     
         return $comments;
     }

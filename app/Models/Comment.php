@@ -50,6 +50,14 @@ class Comment extends Model
         return $this->replies()->count();
     }
 
+    public static function publicComments() { 
+        $publicComments = Comment::whereHas('post', function($query) {
+            $query->where('public_post', true);
+        });
+
+        return $publicComments;
+    }
+
     public function isParent() {
         return $this->comment_id == null;
     }
@@ -66,6 +74,7 @@ class Comment extends Model
     
         return $descendants;
     }
+    
     
     
     

@@ -117,7 +117,7 @@
                                     arrow_drop_down
                                 </span>
                                 Notifications
-                                @if(Auth::user()->hasUnreadNotifications())
+                                @if(Auth::user() && Auth::user()->hasUnreadNotifications())
                                     <!-- dot -->
                                     <span class="material-symbols-outlined new-notification">
                                         fiber_manual_record

@@ -884,6 +884,9 @@ form #form-group textarea {
   overflow-y: scroll;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }
 
 .search-results::-webkit-scrollbar {
@@ -955,7 +958,24 @@ form #form-group textarea {
 }
 
 
+.comment .go-to-comment {
+  background-color: #8d73eb;
+  border-radius: 50%;
+  color: white;
+}
 
+.comment .go-to-comment:hover {
+  background-color: #663FA4;
+}
+
+
+.comment-search {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5em;
+  justify-content: space-between;
+}
 
 .flex{
   display: flex;
