@@ -1368,3 +1368,22 @@ if (searchDateFilter != null) {
   }
   );
 }
+
+let helpIcons = document.querySelectorAll('.help-icon');
+  console.log(helpIcons)
+  if (helpIcons != null) {
+    helpIcons.forEach(function(icon) {
+      icon.addEventListener('mouseover', function() {
+         let tooltip = icon.nextElementSibling;
+         console.log(tooltip)
+         tooltip.style.display = 'block';
+      });
+
+      icon.addEventListener('mouseout', function() {
+        let tooltip = icon.nextElementSibling;
+        tooltip.style.display = 'none';
+        }
+      );
+    }
+  );
+}
