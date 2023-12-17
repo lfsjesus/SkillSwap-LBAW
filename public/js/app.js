@@ -655,7 +655,7 @@ if (editCommentButtons != null) {
 function editComment(id) {
   let comment = document.querySelector('.comment[data-id="' + id + '"]');
   let post_id = comment.closest('.post').getAttribute('data-id');
-  let profile_picture = comment.querySelector('.comment-body img').src;
+  let profile_picture = comment.querySelector('a img').src;
   let author_url = comment.querySelector('.comment-header a').getAttribute('href');
   let content = comment.querySelector('.comment-content p').innerHTML;
 

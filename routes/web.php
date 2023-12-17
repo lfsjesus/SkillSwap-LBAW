@@ -88,7 +88,6 @@ Route::controller(UserController::class)->group(function () {
 });
 
 Route::controller(AdminController::class)->group(function () {
-    Route::get('/admin/users/search', 'search')->name('admin-search');
     Route::get('/admin/{username}', 'showUser')->name('view-user-admin');  
     Route::post('/admin/{username}/ban', 'banUser')->name('ban-user-admin');
     Route::post('/admin/{username}/unban', 'unbanUser')->name('unban-user-admin');
