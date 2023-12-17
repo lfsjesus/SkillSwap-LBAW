@@ -147,3 +147,8 @@ Route::controller(NotificationController::class)->group(function () {
 Route::controller(SearchController::class)->group(function () {
     Route::get('/search', 'search')->name('search');
 });
+
+
+Route::controller(MailController::class)->group(function () {
+    Route::post('/send', 'send')->name('send');
+});
