@@ -174,4 +174,12 @@ class User extends Authenticatable
     public function hasUnreadNotifications() {
         return $this->notifications()->where('viewed', false)->exists();
     }
+
+    public function calculatePopularity() {
+        $popularity = $this->get_friends()->count();
+
+        return $popularity;
+    }
+
 }
+

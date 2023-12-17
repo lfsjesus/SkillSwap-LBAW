@@ -82,6 +82,7 @@
                         <input type="text" name="q" placeholder="Search" value="{{ $query ?? '' }}" autofocus>
                         <input type="hidden" name="type" value="{{ $type ?? 'user' }}">
                         <input type="hidden" name="date" value="{{ $date ?? 'asc' }}">
+                        <input type="hidden" name="popularity" value="{{ $popularity ?? 'asc' }}">
                         <input type="submit" value="Search" style="display: none;">
                     </form>
                 </div>

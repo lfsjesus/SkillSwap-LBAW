@@ -1369,6 +1369,26 @@ if (searchDateFilter != null) {
   );
 }
 
+let searchPostTypeFilter = document.querySelector('.search-sort select[name="popularity"]');
+if (searchPostTypeFilter != null) {
+  searchPostTypeFilter.addEventListener('change', function() {
+    let url = window.location.href;
+    
+    // check if url already has date filter
+    let index = url.indexOf('&popularity=');
+    if (index != -1) {
+      url = url.substring(0, index);
+    }
+
+    // add date filter to url
+    url += '&popularity=' + this.value;
+
+    window.location = url;
+
+  }
+  );
+}
+
 let helpIcons = document.querySelectorAll('.help-icon');
   console.log(helpIcons)
   if (helpIcons != null) {

@@ -28,7 +28,9 @@ class PostController extends Controller
             return view('pages.post', ['post' => $post]);
         }
 
-        else if ($post->user_id != Auth::user()->id && !$post->public_post && !Auth::user()->isFriend($post->user_id)) {
+        else if ($post->user_id != Auth::user()->id && 
+                !$post->public_post && 
+                !Auth::user()->isFriendWith($post->user_id)) {
             return redirect()->back()->with('error', 'You are not authorized to view this post');
         }
 

@@ -71,4 +71,12 @@ class Group extends Model
                     
     }
 
+    public function calculatePopularity() {
+        $members = $this->get_members()->count();
+        $posts = $this->posts()->count();
+        $popularity = $members + $posts;
+
+        return $popularity;
+    }
+
 }

@@ -66,6 +66,10 @@ class Post extends Model
         return $this->hasMany(File::class)->get();
     }
 
-
-
+    public function calculatePopularity() {
+        $likes = $this->getLikesCount();
+        $comments = $this->getCommentsCount();
+        $popularity = $likes + $comments;
+        return $popularity;
+    }
 }

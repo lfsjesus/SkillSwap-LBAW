@@ -75,7 +75,12 @@ class Comment extends Model
         return $descendants;
     }
     
-    
-    
-    
+    public function calculatePopularity() {
+        $likes = $this->getLikesCount();
+        $replies = $this->getRepliesCount();
+
+        $popularity = $likes + $replies;
+
+        return $popularity;
+    }   
 }
