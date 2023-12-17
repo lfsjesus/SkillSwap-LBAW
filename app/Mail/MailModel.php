@@ -36,7 +36,7 @@ class MailModel extends Mailable
      */
     public function content() {
         return new Content(
-            view: 'emails.example',
+            view: 'emails.email',
         );
     }
 }
