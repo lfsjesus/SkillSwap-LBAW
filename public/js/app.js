@@ -1134,6 +1134,11 @@ if (acceptJoinGroupRequestNotification != null) {
   );
 }
 
+let leaveGroup = document.querySelector('.leave-group');
+if (leaveGroup != null) {
+  leaveGroup.addEventListener('click', handleLeaveGroupClick);
+}
+
 function handleJoinGroupRequestClick(e) {
   let group_id = e.target.closest('.join-group').querySelector('input[name="group_id"]').value;
   let data = { group_id: group_id };
@@ -1153,6 +1158,11 @@ function handleAcceptJoinGroupRequestNotificationClick(e) {
   sendAjaxRequest('POST', '/group/accept-join-request', data, acceptJoinGroupRequestNotificationHandler);
 }
 
+function handleLeaveGroupClick(e) {
+  let group_id = e.target.closest('.leave-group').querySelector('input[name="group_id"]').value;
+  let data = { group_id: group_id };
+  sendAjaxRequest('DELETE', '/group/leave', data, leaveGroupHandler);
+}
 
 function joinGroupRequestHandler() {
   let response = JSON.parse(this.responseText);
@@ -1201,6 +1211,25 @@ function acceptJoinGroupRequestNotificationHandler() {
   if (notification) {
     notification.remove();
   }
+}
+
+function leaveGroupHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let button = document.querySelector('.leave-group');
+  button.classList.remove('leave-group');
+  button.classList.add('join-group');
+  let iconSpan = button.querySelector('span');
+  iconSpan.innerHTML = 'person_add';
+  let input2 = button.querySelector('input[name="group_id"]');
+  button.innerHTML = '';
+  button.appendChild(input2);
+  button.appendChild(iconSpan);
+  button.innerHTML += 'Join Group';
+
+  button.removeEventListener('click', handleLeaveGroupClick);
+  button.addEventListener('click', handleJoinGroupRequestClick);
 }
 
 // drop down menu
