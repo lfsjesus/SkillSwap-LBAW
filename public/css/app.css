@@ -680,6 +680,11 @@ aside .logo img {
   margin-bottom: 1.25em;
 }
 
+.password-change {
+  border-top: 1px solid #2e3541;
+  padding-top: 1.25em;
+}
+
 #form-group {
   margin-bottom: 0.938em;
 }

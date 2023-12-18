@@ -160,8 +160,60 @@
                         {{ $errors->first('visibility') }}
                     </span>
                 @endif
-            </div>          
+            </div>   
 
+            
+            <!-- Password -->
+            <div id="form-group" class="password-change">
+                <p>Leave the following fields blank if you don't want to change the password.</p>
+                <div class="field-title">
+                    <label for="password">Old Password</label>
+                    <span class="help-icon material-symbols-outlined"> info </span>
+                    <div class="help-tooltip">
+                        Enter your old password to confirm changes.
+                    </div>
+                </div>
+                <input type="password" name="old_password" id="old_password" class="form-control" placeholder="Old Password">
+                @if ($errors->has('old_password'))
+                    <span class="error">
+                        {{ $errors->first('old_password') }}
+                    </span>
+                @endif
+            </div>
+
+            <!-- New Password -->
+            <div id="form-group">
+                <div class="field-title">
+                    <label for="new_password">New Password</label>
+                    <span class="help-icon material-symbols-outlined"> info </span>
+                    <div class="help-tooltip">
+                        Enter a new password to change your current one.
+                    </div>
+                </div>
+                <input type="password" name="password" id="new_password" class="form-control" placeholder="New Password">
+                @if ($errors->has('password'))
+                    <span class="error">
+                        {{ $errors->first('password') }}
+                    </span>
+                @endif
+            </div>
+
+            <!-- Confirm New Password -->
+            <div id="form-group">
+                <div class="field-title">
+                    <label for="new_password_confirmation">Confirm New Password</label>
+                    <span class="help-icon material-symbols-outlined"> info </span>
+                    <div class="help-tooltip">
+                        Confirm your new password.
+                    </div>
+                </div>
+                <input type="password" name="password_confirmation" id="new_password_confirmation" class="form-control" placeholder="Confirm New Password">
+                @if ($errors->has('password-confirm'))
+                    <span class="error">
+                        {{ $errors->first('password-confirm') }}
+                    </span>
+                @endif
+            </div>
         </form>
         <form action="{{ Auth::guard('webadmin')->check() ? route('delete_user_admin') : route('delete_user') }}" method="POST" id="delete-profile-form">
             <input type="hidden" name="id" value="{{ $user->id }}">
