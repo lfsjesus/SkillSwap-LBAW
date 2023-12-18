@@ -1,4 +1,4 @@
-@extends('layouts.appLogged')
+@extends(Auth::guard('webadmin')->check() ? 'layouts.appLoggedAdmin' : 'layouts.appLogged')
 @section('title', 'Search Results')
 
 @section('content')
@@ -36,8 +36,8 @@ else if ($type == 'comment') {
                 <option value="desc" {{ $date == 'desc' ? 'selected' : '' }}>Date (desc)</option>
             </select>
             <select name="popularity">
-                <option value="asc">Popularity (asc)</option>
-                <option value="desc">Popularity (desc)</option>
+                <option value="asc" {{ $popularity == 'asc' ? 'selected' : '' }}>Popularity (asc)</option>
+                <option value="desc" {{ $popularity == 'desc' ? 'selected' : '' }}>Popularity (desc)</option>
             </select>
         </div>  
         </div>

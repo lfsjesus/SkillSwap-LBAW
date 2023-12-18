@@ -17,7 +17,7 @@ class SearchController extends Controller {
         $query = $request->input('q');
         $type = $request->input('type', 'user'); // Default to 'users
         $dateSort = $request->input('date', 'desc'); // Default to 'desc'
-
+        $popularitySort = $request->input('popularity', 'desc'); // Default to 'desc'
 
         $results = collect();
 
@@ -45,12 +45,28 @@ class SearchController extends Controller {
             $results = $results->sortByDesc('date');
         }
 
+        if ($popularitySort == 'asc') {
+            $results = $results->sortBy(function($item) {
+                return $item->calculatePopularity();
+            });
+        }
+            
+        else if ($popularitySort == 'desc') {
+            $results = $results->sortByDesc(function($item) {
+                return $item->calculatePopularity();
+            });
+        }
+
         if ($request->ajax()) {
             return response()->json($results);
         }
 
         else {
-            return view('pages.search', ['results' => $results, 'query' => $query, 'type' => $type, 'date' => $dateSort]);
+            return view('pages.search', ['results' => $results, 
+                                        'query' => $query, 
+                                        'type' => $type, 
+                                        'date' => $dateSort, 
+                                        'popularity' => $popularitySort]);
         }
     }
 

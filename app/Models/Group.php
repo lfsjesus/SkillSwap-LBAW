@@ -66,9 +66,19 @@ class Group extends Model
         $userId = $user->id;
         return Notification::join('group_notifications', 'notifications.id', '=', 'group_notifications.notification_id')
                        ->where('notifications.sender_id', $userId)
+                       ->where('group_notifications.group_id', $this->id)
                        ->where('group_notifications.notification_type', 'join_request')
                        ->exists();
+
                     
+    }
+
+    public function calculatePopularity() {
+        $members = $this->get_members()->count();
+        $posts = $this->posts()->count();
+        $popularity = $members + $posts;
+
+        return $popularity;
     }
 
 }

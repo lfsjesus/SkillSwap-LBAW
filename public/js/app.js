@@ -655,7 +655,7 @@ if (editCommentButtons != null) {
 function editComment(id) {
   let comment = document.querySelector('.comment[data-id="' + id + '"]');
   let post_id = comment.closest('.post').getAttribute('data-id');
-  let profile_picture = comment.querySelector('.comment-body img').src;
+  let profile_picture = comment.querySelector('a img').src;
   let author_url = comment.querySelector('.comment-header a').getAttribute('href');
   let content = comment.querySelector('.comment-content p').innerHTML;
 
@@ -1115,17 +1115,42 @@ function rejectFriendRequestNotificationHandler() {
 
 //Hande group requests with event delegation
 
-document.addEventListener('click', function(e) {
-  if (e.target.closest('.join-group')) {
-      handleJoinGroupRequestClick(e);
-  } 
+let joinGroup = document.querySelector('.join-group');
+if (joinGroup != null) {
+  joinGroup.addEventListener('click', handleJoinGroupRequestClick);
 }
-);
+
+let cancelJoinRequest = document.querySelector('.cancel-join-request');
+if (cancelJoinRequest != null) {
+  cancelJoinRequest.addEventListener('click', handleCancelJoinGroupRequestClick);
+}
+
+let acceptJoinGroupRequestNotification = document.querySelector('.accept-join-request-notification');
+if (acceptJoinGroupRequestNotification != null) {
+  acceptJoinGroupRequestNotification.addEventListener('click', function(e) {
+    e.preventDefault();
+    handleAcceptJoinGroupRequestNotificationClick(e);
+  }
+  );
+}
 
 function handleJoinGroupRequestClick(e) {
   let group_id = e.target.closest('.join-group').querySelector('input[name="group_id"]').value;
   let data = { group_id: group_id };
   sendAjaxRequest('POST', '/group/join-request', data, joinGroupRequestHandler);
+}
+
+function handleCancelJoinGroupRequestClick(e) {
+  let group_id = e.target.closest('.cancel-join-request').querySelector('input[name="group_id"]').value;
+  let data = { group_id: group_id };
+  sendAjaxRequest('DELETE', '/group/cancel-join-request', data, cancelJoinGroupRequestHandler);
+}
+
+function handleAcceptJoinGroupRequestNotificationClick(e) {
+  let sender_id = e.target.closest('.accept-join-request-notification').querySelector('input[name="sender_id"]').value;
+  let group_id = e.target.closest('.accept-join-request-notification').querySelector('input[name="group_id"]').value;
+  let data = { sender_id: sender_id , group_id: group_id};
+  sendAjaxRequest('POST', '/group/accept-join-request', data, acceptJoinGroupRequestNotificationHandler);
 }
 
 
@@ -1143,8 +1168,42 @@ function joinGroupRequestHandler() {
   button.appendChild(input2);
   button.appendChild(iconSpan);
   button.innerHTML += 'Request sent';
+
+  button.removeEventListener('click', handleJoinGroupRequestClick);
+  button.addEventListener('click', handleCancelJoinGroupRequestClick);
 }
 
+function cancelJoinGroupRequestHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let button = document.querySelector('.cancel-join-request');
+  button.classList.remove('cancel-join-request');
+  button.classList.add('join-group');
+  let iconSpan = button.querySelector('span');
+  iconSpan.innerHTML = 'person_add';
+  let input2 = button.querySelector('input[name="group_id"]');
+  button.innerHTML = '';
+  button.appendChild(input2);
+  button.appendChild(iconSpan);
+  button.innerHTML += 'Join Group';
+
+  button.removeEventListener('click', handleCancelJoinGroupRequestClick);
+  button.addEventListener('click', handleJoinGroupRequestClick);
+}
+
+function acceptJoinGroupRequestNotificationHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let notification_id = response.notification_id;
+  let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
+  if (notification) {
+    notification.remove();
+  }
+}
+
+// drop down menu
 
 document.querySelectorAll('.dropbtn').forEach(dropbtn => {
   dropbtn.onclick = function() {
@@ -1362,6 +1421,26 @@ if (searchDateFilter != null) {
 
     // add date filter to url
     url += '&date=' + this.value;
+
+    window.location = url;
+
+  }
+  );
+}
+
+let searchPostTypeFilter = document.querySelector('.search-sort select[name="popularity"]');
+if (searchPostTypeFilter != null) {
+  searchPostTypeFilter.addEventListener('change', function() {
+    let url = window.location.href;
+    
+    // check if url already has date filter
+    let index = url.indexOf('&popularity=');
+    if (index != -1) {
+      url = url.substring(0, index);
+    }
+
+    // add date filter to url
+    url += '&popularity=' + this.value;
 
     window.location = url;
 

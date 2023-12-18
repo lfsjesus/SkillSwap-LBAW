@@ -31,10 +31,12 @@
                 <p> {{Carbon\Carbon::parse($comment->date)->diffForHumans()}} </p>
                 @if(Auth::user())
                 <p class="reply-comment"> Reply </p>
-                @if ($comment->author->id == Auth::user()->id)
-                <p class="edit-comment"> Edit </p>
-                <p class="delete-comment"> Delete </p>
                 @endif
+                @if (Auth::guard('webadmin')->check() || Auth::check())
+                    @if (Auth::guard('webadmin')->check() || $comment->author->id == Auth::user()->id)
+                    <p class="edit-comment"> Edit </p>
+                    <p class="delete-comment"> Delete </p>
+                    @endif
                 @endif
             </div>
             </div>

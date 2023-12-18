@@ -28,7 +28,9 @@ class PostController extends Controller
             return view('pages.post', ['post' => $post]);
         }
 
-        else if ($post->user_id != Auth::user()->id && !$post->public_post && !Auth::user()->isFriend($post->user_id)) {
+        else if ($post->user_id != Auth::user()->id && 
+                !$post->public_post && 
+                !Auth::user()->isFriendWith($post->user_id)) {
             return redirect()->back()->with('error', 'You are not authorized to view this post');
         }
 
@@ -172,36 +174,6 @@ class PostController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Error in editing post');
-        }
-    }
-
-    public function search(Request $request) {
-        $query = $request->input('q');
-
-        if (!(Auth::guard('webadmin')->check() && Auth::check())) {
-            $posts = Post::publicPosts()
-                    ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                    ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')])
-                    ->get();
-
-            return view('pages.searchPosts', ['posts' => $posts, 'query' => $query]);
-        }
-
-        else if (Auth::guard('webadmin')->check()) {
-            $posts = Post::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                    ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')])
-                    ->get();
-
-            return view('pages.searchPosts', ['posts' => $posts, 'query' => $query]);
-        }
-
-        else {
-            $posts = Auth::user()->visiblePosts()
-                    ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                    ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')])
-                    ->get();
-
-            return view('pages.searchPosts', ['posts' => $posts, 'query' => $query]);
         }
     }
 }

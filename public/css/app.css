@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
 
 html {
   font-family: 'Montserrat', sans-serif;
@@ -10,14 +8,6 @@ body {
   background-attachment: fixed;
   margin: 0; 
   background-color: #151b26;
-}
-
-.material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24;
 }
 
 header {
@@ -680,6 +670,11 @@ aside .logo img {
   margin-bottom: 1.25em;
 }
 
+.password-change {
+  border-top: 1px solid #2e3541;
+  padding-top: 1.25em;
+}
+
 #form-group {
   margin-bottom: 0.938em;
 }
@@ -786,6 +781,15 @@ form #form-group textarea {
   scrollbar-width: none;  /* Firefox */
 }
 
+.users-out {
+  width: 100%;
+  padding: 0 6em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
 .users::-webkit-scrollbar , .groups::-webkit-scrollbar, .friends::-webkit-scrollbar{
   display: none;
 }
@@ -799,6 +803,49 @@ form #form-group textarea {
 
   border: 1px solid #2e3541;
   transition: 0.2s ease;
+}
+
+#content form.user-card {
+  margin: 0;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#content form.user-card p {
+  margin: 0;
+  font-weight: 500;
+}
+
+#content .user-add-input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#content .user-add-input input {
+  margin: 0;
+}
+
+#content .user-add-input input:nth-child(1) {
+  background-color: #232a37;
+  border: 1px solid #2e3541;
+  border-radius: 5px;
+  font-size: 1em;
+  color: white;
+}
+
+#content .user-add-input input:nth-child(2) {
+  background-color: #8d73eb;
+  border: 1px solid #2e3541;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+#content .user-add-input input:nth-child(2):hover {
+  background-color: #663FA4;
 }
 
 .user-card:hover , .group-card:hover{
@@ -1012,6 +1059,37 @@ form #form-group textarea {
   color: pink;
   font-weight: bold;
   margin-left: 1rem;
+}
+
+.private-profile{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color:white;
+  gap: 1em;
+  border-bottom: 1px solid #2e3541;
+  padding-bottom: 1em;
+}
+
+.private-profile p {
+  margin: 0;
+}
+
+.private-profile p:nth-child(3) {
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.private-profile .material-symbols-outlined{
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24;
+  color: #8d73eb;
+  font-size: 5em;
 }
 
 .user-name{

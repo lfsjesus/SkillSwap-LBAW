@@ -167,7 +167,8 @@ class AdminController extends Controller
                 'not_regex:/^deleted/'
             ],
             'birth_date' => 'required|date|before:18 years ago',
-            'visibility' => 'required|boolean'
+            'visibility' => 'required|boolean',
+            'password' => 'nullable|required_with:old_password|min:8|confirmed'
         ]
         , $customMessages = [
             'username.not_regex' => 'Username can\'t start with \'deleted\''
@@ -181,6 +182,13 @@ class AdminController extends Controller
         $user->profile_picture = ($request->file('profile_picture') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('profile_picture'))) : $user->profile_picture;
         $user->description = $request->input('description');
         $user->public_profile = $request->input('visibility');
+        if ($request->input('password') != null) {
+            if (Hash::check($request->input('old_password'), $user->password)) {
+                $user->password = bcrypt($request->input('password'));
+            } else {
+                return redirect()->back()->withErrors(['old_password' => 'Old password is incorrect']);
+            }
+        }
 
         $user->save();
 
@@ -317,29 +325,5 @@ class AdminController extends Controller
 
             return json_encode($response);
         }
-    }
-   
-    //Uses full text search for name and username and exact match search for email
-    public function search(Request $request)
-    {   
-
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
-        }
-
-        $query = trim($request->input('q'));
-
-        if (str_contains($query, '@')) {
-            // If the query contains '@', perform an exact match search (assuming it's an email)
-            $users = User::where('email', '=', $query)->get();
-        } else {
-            // Otherwise, perform a full-text search
-            $users = User::query()
-                        ->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$query])
-                        ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$query])
-                        ->get();
-        }
-
-        return view('pages.search-admin', ['users' => $users, 'query' => $query]);
     }
 }

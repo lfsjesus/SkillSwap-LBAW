@@ -28,15 +28,14 @@
                 <p> {{Carbon\Carbon::parse($post->date)->diffForHumans()}} </p>
             </div>
         </div>
-        @if(Auth::check() || Auth::guard('webadmin')->check())
+        @if(Auth::guard('webadmin')->check() || Auth::check())
             @if (Auth::guard('webadmin')->check() || $post->author->id == Auth::user()->id)
-            <div class="post-header-right">
-                <span class='material-symbols-outlined'>edit</span>
-                <span class='material-symbols-outlined'>delete</span>
-            </div>
+                <div class="post-header-right">
+                    <span class='material-symbols-outlined'>edit</span>
+                    <span class='material-symbols-outlined'>delete</span>
+                </div>
             @endif
         @endif
-
     </div>
     <div class="post-body">
         <p> {!! $post->description !!} </p>

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -16,20 +16,14 @@ use App\Models\Member;
 class UserController extends Model 
 {
     public function show(string $username) {
-        if(!Auth::check()) {
-            if(User::where('username', $username)->firstOrFail()->public_profile == false) {
-                return redirect()->route('home')->with('error', 'You cannot view this profile');
-            }
-            $user = User::where('username', $username)->firstOrFail();
-            $posts = $user->posts()->get();
-            $groups = $user->get_groups();
-            return view('pages.user', ['user' => $user, 'posts' => $posts, 'groups' => $groups]);
-        }
-        $user = User::where('username', $username)->firstOrFail();
-        $posts = $user->posts()->get();
-        $groups = $user->get_groups();
-        return view('pages.user', ['user' => $user, 'posts' => $posts, 'groups' => $groups]);
 
+        try {
+            $user = User::where('username', $username)->firstOrFail();
+        } catch (\Exception $e) {
+            return redirect()->route('home')->with('error', 'User not found'); // We need to change this to a 404 page
+        }
+
+        return view('pages.user', ['user' => $user]);
     }
 
 
@@ -74,7 +68,8 @@ class UserController extends Model
                 'not_regex:/^deleted/'
             ],
             'birth_date' => 'required|date|before:18 years ago',
-            'visibility' => 'required|boolean'
+            'visibility' => 'required|boolean',
+            'password' => 'nullable|required_with:old_password|min:8|confirmed'
         ],
         $customMessages = [
             'username.not_regex' => 'Username can\'t start with \'deleted\''
@@ -89,7 +84,13 @@ class UserController extends Model
         $user->profile_picture = ($request->file('profile_picture') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('profile_picture'))) : $user->profile_picture;
         $user->description = $request->input('description');
         $user->public_profile = $request->input('visibility');
-
+        if ($request->input('password') != null) {
+            if (Hash::check($request->input('old_password'), $user->password)) {
+                $user->password = bcrypt($request->input('password'));
+            } else {
+                return redirect()->back()->withErrors(['old_password' => 'Old password is incorrect']);
+            }
+        }
 
         $user->save();
         return redirect()->route('user', ['username' => $user->username])->withSuccess('Profile updated successfully!');
@@ -362,26 +363,6 @@ class UserController extends Model
             DB::rollback();
             return redirect()->back()->with('error', 'Unexpected error while removing friend. Try again!');
         }
-    }
-
-
-    //Uses full text search for name and username and exact match search for email, 
-    public function search(Request $request)
-    {
-        $query = $request->input('q');
-
-        $users = User::activeUsers()
-                    ->where(function($query) use ($request) {
-                        $query->Where('username', '=', $request->input('q'))
-                                ->orWhere('email', '=', $request->input('q'))
-                                ->orWhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                                ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')]);
-
-                    })
-                    ->get();
-
-        
-        return view('pages.search', ['users' => $users, 'query' => $query]);        
     }
 
     public function showFriends($username)

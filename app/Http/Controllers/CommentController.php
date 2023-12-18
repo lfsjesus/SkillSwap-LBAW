@@ -75,12 +75,12 @@ class CommentController extends Controller
         try {
             DB::beginTransaction();
 
-            if ($comment->user_id != Auth::user()->id) {
+            if (!(Auth::guard('webadmin')->check() || $comment->user_id == Auth::user()->id)) {
                 return redirect()->back()->withError('You are not authorized to delete this comment!');
             }
-
+            
             $comment->delete();
-
+            
             // There is a trigger that removes notification.
 
             DB::commit();
@@ -109,7 +109,7 @@ class CommentController extends Controller
             DB::beginTransaction();
             $comment = Comment::find($id);
 
-            if ($comment->user_id != Auth::user()->id) {
+            if (!(Auth::guard('webadmin')->check() || $comment->user_id == Auth::user()->id)) {
                 return redirect()->back()->withError('You are not authorized to edit this comment!');
             }
 

@@ -11,6 +11,7 @@ use App\Models\Member;
 use App\Models\GroupOwner;
 use App\Models\Notification;
 use App\Models\GroupNotification;
+use App\Models\User;
 
 
 class GroupController extends Model 
@@ -211,6 +212,126 @@ class GroupController extends Model
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Unexpected error while sending join group request. Try again!');
+        }
+    }
+
+<<<<<<< HEAD
+    public function cancelJoinGroupRequest(Request $request)
+    {
+        if(!Auth::check()) {
+            return redirect()->back()->with('error', 'You must be logged in to cancel a join group request');
+        }
+
+        $group = Group::find($request->input('group_id'));
+=======
+    public function addMember(Request $request) {
+        $request->validate([
+            'group_id' => 'required|integer',
+            'user' => 'required'
+        ]);
+
+        $group = Group::find($request->group_id);
+        
+        if (!$group->is_owner(Auth::user())) {
+            return redirect()->back()->withErrors(['add_member' => 'You are not authorized to add members to this group']);
+        }
+        
+        if (filter_var($request->user, FILTER_VALIDATE_EMAIL)) {
+            $user = User::where('email', $request->user)->first();
+        } else {
+            $user = User::where('username', $request->user)->first();
+        }
+
+        if ($user == null) {
+            return redirect()->back()->withErrors(['add_member' => 'User not found']);
+        }
+
+        if ($group->is_member($user)) {
+            return redirect()->back()->withErrors(['add_member' => 'User is already a member of this group']);
+        }
+>>>>>>> 1eda1a0157c4d157b7db5d5ad91df5ae69306008
+
+        try {
+            DB::beginTransaction();
+
+<<<<<<< HEAD
+            $notifications = Notification::join('group_notifications', 'notifications.id', '=', 'group_notifications.notification_id')
+                        ->where('notifications.sender_id', Auth::user()->id)
+                        ->where('group_notifications.group_id', $group->id)
+                        ->where('group_notifications.notification_type', 'join_request')
+                        ->get();
+
+            foreach ($notifications as $notification) {
+                
+                //find the notification in the notification table and delete it
+                $real_notification = Notification::find($notification->id);
+                $real_notification->delete();
+            }
+
+            DB::commit();
+            return json_encode(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error while canceling join group request. Try again!');
+        }
+    }
+
+    public function acceptJoinGroupRequest(Request $request)
+    {
+        if(!Auth::check()) {
+            return redirect()->back()->with('error', 'You must be logged in to accept a join group request');
+        }
+
+        $group = Group::find($request->input('group_id'));
+        $sender_id = $request->input('sender_id');
+        try {
+            DB::beginTransaction();
+            
+            //find every notification that has the sender_id and the group_id
+            
+            $notifications = Notification::join('group_notifications', 'notifications.id', '=', 'group_notifications.notification_id')
+                        ->where('notifications.sender_id', $sender_id)
+                        ->where('group_notifications.group_id', $group->id)
+                        ->where('group_notifications.notification_type', 'join_request')
+                        ->get();
+
+
+            foreach ($notifications as $notification) {
+
+                //find the notification in the notification table and delete it
+                $real_notification = Notification::find($notification->id);
+
+                //if the receiver is the auth()->user() then store the notification_id
+                if($real_notification->receiver_id == Auth::user()->id){
+                    $notification_id = $real_notification->id;
+                }
+
+                $real_notification->delete();
+            }
+            
+            $member = new Member();
+            $member->user_id = $sender_id;
+=======
+            $member = new Member();
+            $member->user_id = $user->id;
+>>>>>>> 1eda1a0157c4d157b7db5d5ad91df5ae69306008
+            $member->group_id = $group->id;
+            $member->date = date('Y-m-d H:i:s');
+            $member->save();
+
+            DB::commit();
+<<<<<<< HEAD
+            return json_encode(['success' => true, 'notification_id' => $notification_id]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error while accepting join group request. Try again!');
+=======
+
+            return redirect()->back()->withSuccess('Member added successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(['add_member' => 'Unexpected error while adding member to group. Try again!']);
+>>>>>>> 1eda1a0157c4d157b7db5d5ad91df5ae69306008
         }
     }
 }

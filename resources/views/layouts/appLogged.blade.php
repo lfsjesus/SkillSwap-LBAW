@@ -6,7 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Styles -->
@@ -102,6 +101,7 @@
                         <input type="text" name="q" placeholder="Search" value="{{ $query ?? '' }}" autofocus>
                         <input type="hidden" name="type" value="{{ $type ?? 'user' }}">
                         <input type="hidden" name="date" value="{{ $date ?? 'asc' }}">
+                        <input type="hidden" name="popularity" value="{{ $popularity ?? 'asc' }}">
                         <input type="submit" value="Search" style="display: none;">
                     </form>
                 </div>
