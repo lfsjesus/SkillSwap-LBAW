@@ -337,4 +337,25 @@ class GroupController extends Model
             return redirect()->back()->withErrors(['add_member' => 'Unexpected error while adding member to group. Try again!']);
         }
     }
+
+    public function leaveGroup(Request $request) {
+        $group = Group::find($request->group_id);
+
+        if (!$group->is_member(Auth::user())) {
+            return redirect()->back()->withErrors(['leave_group' => 'You are not a member of this group']);
+        }
+        try {
+            DB::beginTransaction();
+
+            $member = Member::where('user_id', Auth::user()->id)->where('group_id', $group->id)->first();
+            $member->delete();
+
+            DB::commit();
+
+            return json_encode(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(['leave_group' => 'Unexpected error while leaving group. Try again!']);
+        }
+    }
 }
