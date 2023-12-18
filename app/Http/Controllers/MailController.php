@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailModel;
+
 
 class MailController extends Controller
 {
@@ -19,7 +22,7 @@ class MailController extends Controller
 
     public function showContactForm()
     {
-        return view('emails.resetForm'); // Assuming this is the correct view for your form
+        return view('emails.resetForm'); 
     }
 
 }
