@@ -7,7 +7,7 @@
     </div>
 
     <div class="auth-form">
-        <h1>Reset Password</h1>
+        <h1>Choose Password</h1>
         <br>
         
         @if ($errors->any())
@@ -23,8 +23,13 @@
             @csrf
             
             <div class="form-group">
-                <label for="email">Email:</label>
-                <input id="email" type="email" name="email" value="{{ old('email') }}" required placeholder="E-mail" autofocus>
+                <label for="email">New Password:</label>
+                <input id="password" type="password" name="password" required placeholder="New Password" autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Confirm Password:</label>
+                <input id="password" type="password" name="password" required placeholder="Confirm Password" autofocus>
             </div>
             
             <button type="submit" class="btn btn-primary">Send</button>
