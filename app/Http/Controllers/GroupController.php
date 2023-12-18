@@ -339,6 +339,7 @@ class GroupController extends Model
     }
 
     public function leaveGroup(Request $request) {
+
         $group = Group::find($request->group_id);
 
         if (!$group->is_member(Auth::user())) {
@@ -347,8 +348,10 @@ class GroupController extends Model
         try {
             DB::beginTransaction();
 
-            $member = Member::where('user_id', Auth::user()->id)->where('group_id', $group->id)->first();
-            $member->delete();
+            DB::table('is_member')
+                ->where('user_id', Auth::user()->id)
+                ->where('group_id', $group->id)
+                ->delete();
 
             DB::commit();
 
