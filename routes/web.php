@@ -115,14 +115,8 @@ Route::controller(GroupController::class)->group(function () {
     Route::get('/group/{groupId}/owners', 'showOwners')->name('group_owners');
     Route::post('/group/join-request', 'sendJoinGroupRequest')->name('join_group_request');
     Route::post('/group/add', 'addMember')->name('add_member');
-
-    /*
-    Route::get('/groups/{id}', 'show')->name('group');
-    Route::get('/groups/{id}/edit', 'showEditForm')->name('edit_group');
-    Route::put('/groups/edit', 'edit')->name('edit_group');
-    Route::post('/groups/create', 'create')->name('create_group');
-    Route::delete('/groups/delete', 'delete')->name('delete_group');
-    */
+    Route::delete('/group/cancel-join-request', 'cancelJoinGroupRequest')->name('cancel_join_group_request');
+    Route::post('/group/accept-join-request', 'acceptJoinGroupRequest')->name('accept_join_group_request');
 });
 
 // Like

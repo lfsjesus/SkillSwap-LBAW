@@ -17,6 +17,10 @@ if($subNotification instanceof App\Models\UserNotification) {
     $href = route('user', ['username' => $sender->username]);
 }
 
+if($subNotification instanceof App\Models\GroupNotification) {
+    $href = route('user', ['username' => $sender->username]);
+}
+
 @endphp
 <a class="notification-href" href="{{ $href }}">
     <div class="notification @if(!$notification->viewed) active @endif" data-id="{{ $notification->id }}" data-type="{{ $notificationType }}" 
@@ -41,6 +45,14 @@ if($subNotification instanceof App\Models\UserNotification) {
                 <p class="notification-text">  Liked your comment </p>
             @elseif($notificationType == 'new_comment')
                 <p class="notification-text">  Commented on your post </p>
+            @elseif($notificationType == 'join_request')
+                <?php $group = App\Models\Group::find($subNotification->group_id); ?>
+                <p class="notification-text">  
+                    Wants to join
+                    <span class="name">  {{ $group->name }} </span>
+                </p>
+
+
             @endif
 
             <p class="notification-date"> {{Carbon\Carbon::parse($notification->date)->diffForHumans()}} </p>
@@ -52,6 +64,20 @@ if($subNotification instanceof App\Models\UserNotification) {
                         Accept
                     </button>
                     <button class="button btn-danger reject-friend-request-notification">
+                        <input type="hidden" name="sender_id" value="{{ $sender->id }}">
+                        Decline
+                    </button>
+                </div>
+            @endif
+
+            @if($subNotification->notification_type == 'join_request')
+                <div class="notification-answer">
+                    <button class="button accept-join-request-notification">
+                        <input type="hidden" name="sender_id" value="{{ $sender->id }}">
+                        <input type="hidden" name="group_id" value="{{ $subNotification->group_id }}">
+                        Accept
+                    </button>
+                    <button class="button btn-danger reject-join-request-notification">
                         <input type="hidden" name="sender_id" value="{{ $sender->id }}">
                         Decline
                     </button>
