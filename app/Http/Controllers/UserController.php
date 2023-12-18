@@ -365,26 +365,6 @@ class UserController extends Model
         }
     }
 
-
-    //Uses full text search for name and username and exact match search for email, 
-    public function search(Request $request)
-    {
-        $query = $request->input('q');
-
-        $users = User::activeUsers()
-                    ->where(function($query) use ($request) {
-                        $query->Where('username', '=', $request->input('q'))
-                                ->orWhere('email', '=', $request->input('q'))
-                                ->orWhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                                ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')]);
-
-                    })
-                    ->get();
-
-        
-        return view('pages.search', ['users' => $users, 'query' => $query]);        
-    }
-
     public function showFriends($username)
     {
         $user = User::where('username', $username)->firstOrFail();
