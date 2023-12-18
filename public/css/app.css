@@ -781,6 +781,15 @@ form #form-group textarea {
   scrollbar-width: none;  /* Firefox */
 }
 
+.users-out {
+  width: 100%;
+  padding: 0 6em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
 .users::-webkit-scrollbar , .groups::-webkit-scrollbar, .friends::-webkit-scrollbar{
   display: none;
 }
@@ -794,6 +803,49 @@ form #form-group textarea {
 
   border: 1px solid #2e3541;
   transition: 0.2s ease;
+}
+
+#content form.user-card {
+  margin: 0;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#content form.user-card p {
+  margin: 0;
+  font-weight: 500;
+}
+
+#content .user-add-input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#content .user-add-input input {
+  margin: 0;
+}
+
+#content .user-add-input input:nth-child(1) {
+  background-color: #232a37;
+  border: 1px solid #2e3541;
+  border-radius: 5px;
+  font-size: 1em;
+  color: white;
+}
+
+#content .user-add-input input:nth-child(2) {
+  background-color: #8d73eb;
+  border: 1px solid #2e3541;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+#content .user-add-input input:nth-child(2):hover {
+  background-color: #663FA4;
 }
 
 .user-card:hover , .group-card:hover{
