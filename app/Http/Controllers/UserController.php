@@ -16,20 +16,14 @@ use App\Models\Member;
 class UserController extends Model 
 {
     public function show(string $username) {
-        if(!Auth::check()) {
-            if(User::where('username', $username)->firstOrFail()->public_profile == false) {
-                return redirect()->route('home')->with('error', 'You cannot view this profile');
-            }
-            $user = User::where('username', $username)->firstOrFail();
-            $posts = $user->posts()->get();
-            $groups = $user->get_groups();
-            return view('pages.user', ['user' => $user, 'posts' => $posts, 'groups' => $groups]);
-        }
-        $user = User::where('username', $username)->firstOrFail();
-        $posts = $user->posts()->get();
-        $groups = $user->get_groups();
-        return view('pages.user', ['user' => $user, 'posts' => $posts, 'groups' => $groups]);
 
+        try {
+            $user = User::where('username', $username)->firstOrFail();
+        } catch (\Exception $e) {
+            return redirect()->route('home')->with('error', 'User not found'); // We need to change this to a 404 page
+        }
+
+        return view('pages.user', ['user' => $user]);
     }
 
 

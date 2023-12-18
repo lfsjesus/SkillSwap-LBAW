@@ -75,6 +75,11 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function publicPosts()
+    {
+        return $this->hasMany(Post::class)->where('public_post', true);
+    }
+
     public function visiblePosts() {
         $myPosts = $this->posts()->get();
     
@@ -179,6 +184,10 @@ class User extends Authenticatable
         $popularity = $this->get_friends()->count();
 
         return $popularity;
+    }
+
+    public function isPublic() {
+        return $this->public_profile;
     }
 
 }

@@ -34,14 +34,14 @@
                     <span class="username"> &#64{{$user->username}} </span>
                     
                 </div>
+                @if($user->isPublic() || (Auth::user() && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()->id))))
                 <p class="user-email">
                     <span class="material-symbols-outlined">
                     mail
                     </span>
                     {{ $user->email }}
                 </p>
-
-        
+                @endif        
             </div>
             
             @if(Auth::user())
@@ -105,8 +105,9 @@
         </p>
         
     </div>
-    <!-- Profile Content Grid -->
+
     <div class="profile-content">
+        @if($user->isPublic() || (Auth::user() && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()->id))))
         <!-- Friends and Groups Grid -->
         <div class="friends-groups-grid">
             <!-- Friends Box -->
@@ -136,17 +137,27 @@
                 @endif
             </div>
         </div>
-        
+        @else
+        <div class="private-profile">
+            <span class="material-symbols-outlined">lock</span> 
+            <p> This user's profile is private </p>
+            <p> You must be friend of this user to see all the information </p>
+        </div>
+        @endif
         <!-- Posts Section -->
         <section id="posts">
             <h2>Posts</h2>
-            @if (count($posts) == 0)
+            @if (count($user->posts) == 0)
             <p> This user does not have posts </p>
             @else
-            @each('partials.post', $posts, 'post')
+            @each('partials.post', (($user->isPublic() || 
+                                    (Auth::user() && (Auth::user()->id == $user->id || 
+                                    $user->isFriendWith(Auth::user()->id)))) ? $user->posts : $user->publicPosts), 'post')
             @endif
         </section>
+
     </div>
+
 </section>
 
 @endsection

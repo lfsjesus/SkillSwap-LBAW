@@ -1014,6 +1014,37 @@ form #form-group textarea {
   margin-left: 1rem;
 }
 
+.private-profile{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color:white;
+  gap: 1em;
+  border-bottom: 1px solid #2e3541;
+  padding-bottom: 1em;
+}
+
+.private-profile p {
+  margin: 0;
+}
+
+.private-profile p:nth-child(3) {
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.private-profile .material-symbols-outlined{
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24;
+  color: #8d73eb;
+  font-size: 5em;
+}
+
 .user-name{
   font-size: 3.1rem;
 }
