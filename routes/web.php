@@ -147,4 +147,6 @@ Route::controller(SearchController::class)->group(function () {
 Route::controller(MailController::class)->group(function () {
     Route::get('/contact', 'showContactForm')->name('contact.show');
     Route::post('/send', 'send')->name('send');
+    Route::get('/password/reset/{token}', 'showResetForm')->name('password.reset');
+    Route::post('/password/reset', 'reset')->name('password.update');
 });
