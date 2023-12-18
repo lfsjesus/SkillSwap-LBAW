@@ -44,7 +44,7 @@ class PostController extends Controller
         }
 
         /*Else if user is logged in, show public posts + friends posts + own user posts */
-        $posts = Auth::user()->visiblePosts();
+        $posts = Auth::user()->visiblePosts()->simplePaginate(10);
 
         return view('pages.home', ['posts' => $posts]);
 
