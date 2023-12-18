@@ -1228,6 +1228,12 @@ function leaveGroupHandler() {
   button.appendChild(iconSpan);
   button.innerHTML += 'Join Group';
 
+  //also find the edit-group button and remove it
+  let editGroupButton = document.querySelector('.edit-group');
+  if (editGroupButton) {
+    editGroupButton.remove();
+  }
+
   button.removeEventListener('click', handleLeaveGroupClick);
   button.addEventListener('click', handleJoinGroupRequestClick);
 }

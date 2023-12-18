@@ -353,6 +353,12 @@ class GroupController extends Model
                 ->where('group_id', $group->id)
                 ->delete();
 
+            //also, if the user is an owner, delete him from the owners table
+            DB::table('owns')
+                ->where('user_id', Auth::user()->id)
+                ->where('group_id', $group->id)
+                ->delete();
+
             DB::commit();
 
             return json_encode(['success' => true]);
