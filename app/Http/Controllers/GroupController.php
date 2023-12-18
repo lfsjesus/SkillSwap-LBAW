@@ -11,6 +11,7 @@ use App\Models\Member;
 use App\Models\GroupOwner;
 use App\Models\Notification;
 use App\Models\GroupNotification;
+use App\Models\User;
 
 
 class GroupController extends Model 
@@ -211,6 +212,50 @@ class GroupController extends Model
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', 'Unexpected error while sending join group request. Try again!');
+        }
+    }
+
+    public function addMember(Request $request) {
+        $request->validate([
+            'group_id' => 'required|integer',
+            'user' => 'required'
+        ]);
+
+        $group = Group::find($request->group_id);
+        
+        if (!$group->is_owner(Auth::user())) {
+            return redirect()->back()->withErrors(['add_member' => 'You are not authorized to add members to this group']);
+        }
+        
+        if (filter_var($request->user, FILTER_VALIDATE_EMAIL)) {
+            $user = User::where('email', $request->user)->first();
+        } else {
+            $user = User::where('username', $request->user)->first();
+        }
+
+        if ($user == null) {
+            return redirect()->back()->withErrors(['add_member' => 'User not found']);
+        }
+
+        if ($group->is_member($user)) {
+            return redirect()->back()->withErrors(['add_member' => 'User is already a member of this group']);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $member = new Member();
+            $member->user_id = $user->id;
+            $member->group_id = $group->id;
+            $member->date = date('Y-m-d H:i:s');
+            $member->save();
+
+            DB::commit();
+
+            return redirect()->back()->withSuccess('Member added successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(['add_member' => 'Unexpected error while adding member to group. Try again!']);
         }
     }
 }
