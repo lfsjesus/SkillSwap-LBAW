@@ -74,6 +74,7 @@ if($subNotification instanceof App\Models\GroupNotification) {
                 <div class="notification-answer">
                     <button class="button accept-join-request-notification">
                         <input type="hidden" name="sender_id" value="{{ $sender->id }}">
+                        <input type="hidden" name="group_id" value="{{ $subNotification->group_id }}">
                         Accept
                     </button>
                     <button class="button btn-danger reject-join-request-notification">

@@ -115,6 +115,7 @@ Route::controller(GroupController::class)->group(function () {
     Route::get('/group/{groupId}/owners', 'showOwners')->name('group_owners');
     Route::post('/group/join-request', 'sendJoinGroupRequest')->name('join_group_request');
     Route::delete('/group/cancel-join-request', 'cancelJoinGroupRequest')->name('cancel_join_group_request');
+    Route::post('/group/accept-join-request', 'acceptJoinGroupRequest')->name('accept_join_group_request');
 
     /*
     Route::get('/groups/{id}', 'show')->name('group');

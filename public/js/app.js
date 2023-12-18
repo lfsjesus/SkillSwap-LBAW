@@ -1125,6 +1125,15 @@ if (cancelJoinRequest != null) {
   cancelJoinRequest.addEventListener('click', handleCancelJoinGroupRequestClick);
 }
 
+let acceptJoinGroupRequestNotification = document.querySelector('.accept-join-request-notification');
+if (acceptJoinGroupRequestNotification != null) {
+  acceptJoinGroupRequestNotification.addEventListener('click', function(e) {
+    e.preventDefault();
+    handleAcceptJoinGroupRequestNotificationClick(e);
+  }
+  );
+}
+
 function handleJoinGroupRequestClick(e) {
   let group_id = e.target.closest('.join-group').querySelector('input[name="group_id"]').value;
   let data = { group_id: group_id };
@@ -1135,6 +1144,13 @@ function handleCancelJoinGroupRequestClick(e) {
   let group_id = e.target.closest('.cancel-join-request').querySelector('input[name="group_id"]').value;
   let data = { group_id: group_id };
   sendAjaxRequest('DELETE', '/group/cancel-join-request', data, cancelJoinGroupRequestHandler);
+}
+
+function handleAcceptJoinGroupRequestNotificationClick(e) {
+  let sender_id = e.target.closest('.accept-join-request-notification').querySelector('input[name="sender_id"]').value;
+  let group_id = e.target.closest('.accept-join-request-notification').querySelector('input[name="group_id"]').value;
+  let data = { sender_id: sender_id , group_id: group_id};
+  sendAjaxRequest('POST', '/group/accept-join-request', data, acceptJoinGroupRequestNotificationHandler);
 }
 
 
@@ -1176,7 +1192,16 @@ function cancelJoinGroupRequestHandler() {
   button.addEventListener('click', handleJoinGroupRequestClick);
 }
 
+function acceptJoinGroupRequestNotificationHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
 
+  let notification_id = response.notification_id;
+  let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
+  if (notification) {
+    notification.remove();
+  }
+}
 
 // drop down menu
 
