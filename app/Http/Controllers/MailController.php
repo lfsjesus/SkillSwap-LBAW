@@ -38,6 +38,36 @@ class MailController extends Controller
         return view('emails.resetForm'); 
     }
 
+    
+    // Show form to reset password (where token is the password reset token)
+    public function showResetForm($token)
+    {
+        return view('auth.passwords.reset')->with(['token' => $token]);
+    }
+
+    // Reset the password
+    public function reset(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
+        ]);
+
+        // Reset the password
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->password = bcrypt($password);
+                $user->save();
+                // Authenticate the user immediately if desired
+            }
+        );
+
+        return $status == Password::PASSWORD_RESET
+                    ? redirect()->route('login')->with('status', __($status))
+                    : back()->withErrors(['email' => [__($status)]]);
+    }
 
 
 }
