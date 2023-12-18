@@ -7,12 +7,6 @@
         @csrf
         
         <div class="form-group">
-            <label for="name">Name:</label>
-            <input id="name" type="text" name="name" required placeholder="Name" autofocus>
-            
-        </div>
-        
-        <div class="form-group">
             <label for="email">Email:</label>
             <input id="email" type="email" name="email" value="{{ old('email') }}" required placeholder="E-mail" autofocus>
         </div>
