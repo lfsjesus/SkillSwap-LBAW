@@ -85,7 +85,7 @@ class User extends Authenticatable
     
         $friendsPosts = $this->friendsPosts()->select('posts.*');
     
-        $groupsIamMember = $this->groups()->with('posts:id')->select('posts.*');
+        $groupsIamMember = $this->groups()->join('posts', 'posts.group_id', '=', 'groups.id')->select('posts.*');
     
         $publicPosts = Post::publicPosts()->select('posts.*');
     
@@ -98,7 +98,7 @@ class User extends Authenticatable
     public function visibleComments() { // Can see comments on posts that are visible to me
         $visiblePosts = $this->visiblePosts()->pluck('id');
 
-        return Comment::whereIn('post_id', $visiblePosts)->get();
+        return Comment::whereIn('post_id', $visiblePosts);
     }
 
     public function friendsPosts()
