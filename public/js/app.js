@@ -1115,17 +1115,26 @@ function rejectFriendRequestNotificationHandler() {
 
 //Hande group requests with event delegation
 
-document.addEventListener('click', function(e) {
-  if (e.target.closest('.join-group')) {
-      handleJoinGroupRequestClick(e);
-  } 
+let joinGroup = document.querySelector('.join-group');
+if (joinGroup != null) {
+  joinGroup.addEventListener('click', handleJoinGroupRequestClick);
 }
-);
+
+let cancelJoinRequest = document.querySelector('.cancel-join-request');
+if (cancelJoinRequest != null) {
+  cancelJoinRequest.addEventListener('click', handleCancelJoinGroupRequestClick);
+}
 
 function handleJoinGroupRequestClick(e) {
   let group_id = e.target.closest('.join-group').querySelector('input[name="group_id"]').value;
   let data = { group_id: group_id };
   sendAjaxRequest('POST', '/group/join-request', data, joinGroupRequestHandler);
+}
+
+function handleCancelJoinGroupRequestClick(e) {
+  let group_id = e.target.closest('.cancel-join-request').querySelector('input[name="group_id"]').value;
+  let data = { group_id: group_id };
+  sendAjaxRequest('DELETE', '/group/cancel-join-request', data, cancelJoinGroupRequestHandler);
 }
 
 
@@ -1143,8 +1152,33 @@ function joinGroupRequestHandler() {
   button.appendChild(input2);
   button.appendChild(iconSpan);
   button.innerHTML += 'Request sent';
+
+  button.removeEventListener('click', handleJoinGroupRequestClick);
+  button.addEventListener('click', handleCancelJoinGroupRequestClick);
 }
 
+function cancelJoinGroupRequestHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null) return;
+
+  let button = document.querySelector('.cancel-join-request');
+  button.classList.remove('cancel-join-request');
+  button.classList.add('join-group');
+  let iconSpan = button.querySelector('span');
+  iconSpan.innerHTML = 'person_add';
+  let input2 = button.querySelector('input[name="group_id"]');
+  button.innerHTML = '';
+  button.appendChild(input2);
+  button.appendChild(iconSpan);
+  button.innerHTML += 'Join Group';
+
+  button.removeEventListener('click', handleCancelJoinGroupRequestClick);
+  button.addEventListener('click', handleJoinGroupRequestClick);
+}
+
+
+
+// drop down menu
 
 document.querySelectorAll('.dropbtn').forEach(dropbtn => {
   dropbtn.onclick = function() {

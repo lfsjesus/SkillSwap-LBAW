@@ -213,4 +213,36 @@ class GroupController extends Model
             return redirect()->back()->with('error', 'Unexpected error while sending join group request. Try again!');
         }
     }
+
+    public function cancelJoinGroupRequest(Request $request)
+    {
+        if(!Auth::check()) {
+            return redirect()->back()->with('error', 'You must be logged in to cancel a join group request');
+        }
+
+        $group = Group::find($request->input('group_id'));
+
+        try {
+            DB::beginTransaction();
+
+            $notifications = Notification::join('group_notifications', 'notifications.id', '=', 'group_notifications.notification_id')
+                        ->where('notifications.sender_id', Auth::user()->id)
+                        ->where('group_notifications.group_id', $group->id)
+                        ->where('group_notifications.notification_type', 'join_request')
+                        ->get();
+
+            foreach ($notifications as $notification) {
+                
+                //find the notification in the notification table and delete it
+                $real_notification = Notification::find($notification->id);
+                $real_notification->delete();
+            }
+
+            DB::commit();
+            return json_encode(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error while canceling join group request. Try again!');
+        }
+    }
 }
