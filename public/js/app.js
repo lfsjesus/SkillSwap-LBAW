@@ -1138,9 +1138,12 @@ if (leaveGroup != null) {
   leaveGroup.addEventListener('click', handleLeaveGroupClick);
 }
 
-let removeMember = document.querySelector('.remove-member');
+let removeMember = document.querySelectorAll('.remove-member');
 if (removeMember != null) {
-  removeMember.addEventListener('click', handleRemoveMemberClick);
+  removeMember.forEach(function(button) {
+    button.addEventListener('click', handleRemoveMemberClick);
+  }
+  );
 }
 
 function handleJoinGroupRequestClick(e) {
