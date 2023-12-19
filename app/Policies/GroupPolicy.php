@@ -55,7 +55,7 @@ class GroupPolicy
     }
 
     public function showMembers(Authenticatable|null $user, Group $group) : bool {
-        if ($group->public_group) {
+        if ($group->isPublic()) {
             return true;
         }
 
@@ -74,7 +74,7 @@ class GroupPolicy
     }
 
     public function showOwners(Authenticatable|null $user, Group $group) : bool {
-        if ($user2->public_group) {
+        if ($user2->isPublic()) {
             return true;
         }
 

@@ -94,6 +94,7 @@
 
 <!-- Group Content Grid -->
 <div class="group-content">
+    @if($group->isPublic() || (Auth::user() && ($group->isMember(Auth::user()) || $group->isOwner(Auth::user()))))
     <!-- Members and Groups Grid -->
     <div class="members-owners-grid">
         <!-- Members Box -->
@@ -124,12 +125,23 @@
             @endif
         </div>
     </div>
+    @else
+    <div class="private-group">
+        <span class="material-symbols-outlined">lock</span> 
+        <p> This group is private </p>
+        <p> You must be member of this group to see all the information </p>
+    </div>
+    @endif
 
     <!-- Posts Section -->
     <section id="posts">
         <h2>Posts</h2>
         @if(Auth::user())
-        @include('partials.create-post', ['group' => $group])
+            @if($group->posts->isEmpty())
+                <p> There are no posts to show </p>
+            @else
+                @include('partials.create-post', ['group' => $group])
+            @endif
         @endif    
         @each('partials.post', $group->posts, 'post')
     </section>

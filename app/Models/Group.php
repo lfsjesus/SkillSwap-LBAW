@@ -81,4 +81,8 @@ class Group extends Model
         return $popularity;
     }
 
+    public function isPublic() {
+        return $this->public_group;
+    }
+
 }

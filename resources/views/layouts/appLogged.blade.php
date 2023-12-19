@@ -51,23 +51,13 @@
                             </li>
                         @endif    
                         <li>
-                            <a>
-                                <span class="material-symbols-outlined">
-                                settings
-                                </span>Settings
-                            </a>
-                        </li>
-                        @if (Auth::user())
-                            <li>
-                                <a href="{{ route ('groups') }}">
+                            <a href="{{ route ('groups') }}">
 
-                                    <span class="material-symbols-outlined">
-                                    groups
-                                    </span>Groups
-                                </a>
-                            </li>
-                        @endif    
-                        
+                                <span class="material-symbols-outlined">
+                                groups
+                                </span>Groups
+                            </a>
+                        </li>                        
                         <li class="dropdown">
                             <a href="javascript:void(0)" class="dropbtn">
                                 <span class="material-symbols-outlined">
