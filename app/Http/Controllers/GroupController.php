@@ -384,12 +384,23 @@ class GroupController extends Controller
     }
 
     public function removeMember(Request $request) {
+        $request->validate([
+            'group_id' => 'required|integer',
+            'user_id' => 'required|integer'
+        ]);
+
         $group = Group::find($request->group_id);
         $user = User::find($request->user_id);
         
-        if (!$group->is_owner(Auth::user())) {
-            return redirect()->back()->withErrors(['remove_member' => 'You are not authorized to remove members from this group']);
+        if ($group == null) {
+            return json_encode(['success' => false, 'error' => 'Group not found']);
         }
+
+        if ($user == null) {
+            return json_encode(['success' => false, 'error' => 'User not found']);
+        }
+
+        $this->authorize('removeMember', $group);
 
         try {
             DB::beginTransaction();
@@ -410,7 +421,7 @@ class GroupController extends Controller
             return json_encode(['success' => true, 'user_id' => $user->id]);
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(['remove_member' => 'Unexpected error while removing member from group. Try again!']);
+            return json_encode(['success' => false, 'error' => 'Unexpected error while removing member from group. Try again!']);
         }
     }
 }

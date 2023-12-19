@@ -135,6 +135,17 @@ class GroupPolicy
         }
         return false;
     }
+
+    public function removeMember(User $user, Group $group) {
+        if (Auth::check()) {
+            if ($group->isOwner($user)) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
 }
 
 
