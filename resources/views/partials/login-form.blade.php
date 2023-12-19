@@ -14,6 +14,7 @@
             {{ $errors->first('password') }}
         </span>
     @endif
+    <a href="{{ route('contact.show') }}">Reset Password</a> 
 
     <label>
         <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
@@ -23,7 +24,6 @@
         Login
     </button>
     <a class="button button-outline" href="{{ route('register') }}">Register</a>
-    <a class="button button-outline" href="{{ route('contact.show') }}">Reset Password</a> 
     @if (session('success'))
         <p class="success">
             {{ session('success') }}
