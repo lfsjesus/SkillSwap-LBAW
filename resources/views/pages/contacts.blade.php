@@ -45,7 +45,7 @@
     </section>
 
     <section class="call-to-action">
-        <p>If you have general inquiries or feedback, you can also reach us at <strong>info@skillswap.com</strong>.</p>
+        <p class= "general-email">If you have general inquiries or feedback, you can also reach us at <strong>info@skillswap.com</strong>.</p>
 
         <p>We appreciate your interest in SkillSwap and look forward to hearing from you!</p>
     </section>
