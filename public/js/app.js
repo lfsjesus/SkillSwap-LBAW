@@ -976,7 +976,7 @@ function handleRejectFriendRequestNotificationClick(e) {
 
 function addFriendHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let button = document.querySelector('.add-friend');
   button.classList.remove('add-friend');
@@ -995,7 +995,7 @@ function addFriendHandler() {
 
 function cancelFriendRequestHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let button = document.querySelector('.cancel-friend-request');
   button.classList.remove('cancel-friend-request');
@@ -1015,7 +1015,7 @@ function cancelFriendRequestHandler() {
 
 function acceptFriendRequestHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let button = document.querySelector('.accept-friend-request');
   button.classList.remove('accept-friend-request');
@@ -1040,7 +1040,7 @@ function acceptFriendRequestHandler() {
 
 function removeFriendHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let button = document.querySelector('.remove-friend');
   button.classList.remove('remove-friend');
@@ -1059,7 +1059,7 @@ function removeFriendHandler() {
 
 function acceptFriendRequestNotificationHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let notification_id = response.notification_id;
   let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
@@ -1080,7 +1080,7 @@ function acceptFriendRequestNotificationHandler() {
 
 function rejectFriendRequestNotificationHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let notification_id = response.notification_id;
   let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
@@ -1166,7 +1166,7 @@ function handleLeaveGroupClick(e) {
 
 function joinGroupRequestHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let button = document.querySelector('.join-group');
   button.classList.remove('join-group');
@@ -1185,7 +1185,7 @@ function joinGroupRequestHandler() {
 
 function cancelJoinGroupRequestHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let button = document.querySelector('.cancel-join-request');
   button.classList.remove('cancel-join-request');
@@ -1204,7 +1204,7 @@ function cancelJoinGroupRequestHandler() {
 
 function acceptJoinGroupRequestNotificationHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let notification_id = response.notification_id;
   let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
@@ -1215,7 +1215,7 @@ function acceptJoinGroupRequestNotificationHandler() {
 
 function leaveGroupHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let button = document.querySelector('.leave-group');
   button.classList.remove('leave-group');
