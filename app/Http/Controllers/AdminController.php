@@ -241,22 +241,6 @@ class AdminController extends Controller
         return redirect()->route('admin')->withSuccess('User deleted successfully!');
     }
 
-    public function editGroup(Request $request) {
-        if (GroupController::edit($request)) {
-            return redirect()->route('view-group-admin', ['id' => $request->input('id')])->withSuccess('Group updated successfully!');
-        } else {
-            return redirect()->route('view-group-admin', ['id' => $request->input('id')])->withError('Unexpected error occurred while updating group!');
-        }
-    }
-
-    public function deleteGroup(Request $request) {
-        if (GroupController::deleteGroup($request)) {
-            return redirect()->route('admin-groups')->withSuccess('Group deleted successfully!');
-        } else {
-            return redirect()->route('admin-groups')->withError('Unexpected error occurred while deleting group!');
-        }
-    }
-
     public function banUser(Request $request) {
         if (!(Auth::guard('webadmin')->check())) {
             return redirect('/admin/login');

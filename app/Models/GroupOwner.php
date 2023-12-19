@@ -26,7 +26,7 @@ class GroupOwner extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function is_owner($user, $group)
+    public function isOwner($user, $group)
     {
         return $this->group()->owners()->where('user_id', $user->id)->where('group_id', $group->id)->exists();
     }

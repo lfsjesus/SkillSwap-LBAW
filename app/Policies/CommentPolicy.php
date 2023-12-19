@@ -20,7 +20,7 @@ class CommentPolicy
         return Auth::check();
     }
 
-    public function deleteComment(User $user, Comment $comment) : bool {
+    public function deleteComment($user, Comment $comment) : bool {
         if (Auth::guard('webadmin')->check()) {
             return true;
         }
@@ -30,7 +30,7 @@ class CommentPolicy
         return false;
     }
 
-    public function editComment(User $user, Comment $comment) : bool {
+    public function editComment($user, Comment $comment) : bool {
         if (Auth::guard('webadmin')->check()) {
             return true;
         }

@@ -35,7 +35,7 @@
 
             <div class="group-buttons">
                 @if(Auth::user())
-                    @if($group->is_owner(Auth::user()))
+                    @if($group->isOwner(Auth::user()))
                         <!-- User is the owner of the group -->
                         <a href="{{ route('edit_group_form', ['id' => $group->id]) }}" class="button edit-group">
                             <span class='material-symbols-outlined'>
@@ -51,7 +51,7 @@
                             Leave Group
                         </a>
 
-                    @elseif($group->is_member(Auth::user()))
+                    @elseif($group->isMember(Auth::user()))
                         <!-- User is a member of the group, but not the owner -->
                         <a class="button leave-group">
                             <input type="hidden" name="group_id" value="{{ $group->id }}">

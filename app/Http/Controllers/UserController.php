@@ -16,12 +16,7 @@ use App\Models\Member;
 class UserController extends Controller 
 {
     public function show(string $username) {
-
-        try {
-            $user = User::where('username', $username)->firstOrFail();
-        } catch (\Exception $e) {
-            return redirect()->route('home')->with('error', 'User not found'); // We need to change this to a 404 page
-        }
+        $user = User::where('username', $username)->firstOrFail();
 
         $this->authorize('show', User::class);
 
@@ -31,10 +26,7 @@ class UserController extends Controller
 
     public function showEditForm($username) {
 
-        $user = User::where('username', $username)->first();
-        if ($user == null) {
-            return redirect()->route('home')->with('error', 'User not found');
-        }
+        $user = User::where('username', $username)->firstOrFail();
 
         $this->authorize('showEditForm', $user);
 

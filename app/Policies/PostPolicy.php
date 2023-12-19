@@ -11,7 +11,7 @@ class PostPolicy
 {
     use HandlesAuthorization;
 
-    public function show(User $user, Post $post): bool
+    public function show($user, Post $post): bool
     {
         if ($post->public_post) {
             return true;
@@ -37,7 +37,7 @@ class PostPolicy
         return Auth::check();
     }
 
-    public function delete(User $user, Post $post): bool
+    public function delete($user, Post $post): bool
     {
         if (Auth::guard('webadmin')->check()) {
             return true;
@@ -48,7 +48,7 @@ class PostPolicy
         return false;
     }
 
-    public function edit(User $user, Post $post): bool
+    public function edit($user, Post $post): bool
     {
         if (Auth::guard('webadmin')->check()) {
             return true;

@@ -15,7 +15,7 @@
     </div>
 @endif
 <div class="users">
-    @if(Auth::user() && $group->is_owner(Auth::user()))
+    @if(Auth::user() && $group->isOwner(Auth::user()))
         <form action="{{ route('add_member') }}" class="add-user-group user-card" method="POST">
             <p> Add user to group </p>
             {{ csrf_field() }}
