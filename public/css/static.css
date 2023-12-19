@@ -101,43 +101,41 @@ text-decoration: underline;
 }
     
 .breadcrumb {
-  display: flex; /* Aligns the breadcrumb items in a row */
-  align-items: center; /* Centers the items vertically */
-  list-style: none; /* Removes the default list styling */
-  padding: 0; /* Removes the default padding */
-  margin-left: 18em; /* Removes the default margin */
-  background: none; /* Optional: Removes any background styling if you have it */
-  color: #FFC0CB; /* Adjust the color to fit your design */
+  display: flex; 
+  align-items: center; 
+  list-style: none; 
+  padding: 0; 
+  margin-left: 18em; 
+  color: #FFC0CB; 
   font-size: 1em;
 }
 
 .breadcrumb li {
-  margin-right: 0.5rem; /* Adds some spacing to the right of each breadcrumb item */
+  margin-right: 0.5rem; 
 }
 
 .breadcrumb li::after {
-  content: '>'; /* The separator character */
-  margin-left: 0.5rem; /* Adds some spacing to the left of the separator */
-  color: #FFC0CB; /* Adjust the color to fit your design */
+  content: '>';
+  margin-left: 0.5rem; 
+  color: #FFC0CB;
 }
 
 .breadcrumb li:last-child::after {
-  content: none; /* Removes the separator after the last breadcrumb item */
+  content: none; 
 }
 
 .breadcrumb a {
-  color: #FFC0CB; /* Adjust the link color to fit your design */
-  text-decoration: none; /* Optional: Removes the underline from links */
+  color: #FFC0CB; 
+  text-decoration: none;
 }
 
 .breadcrumb a:hover {
-  text-decoration: underline; /* Optional: Adds an underline on hover for links */
+  text-decoration: underline; 
 }
 
-/* Adjust the styling for the current page, which is not a link */
 .breadcrumb .breadcrumb-item.active {
-  color: #CCCCCC; /* A lighter color to indicate the current page */
-  pointer-events: none; /* Disables the link so it's not clickable */
+  color: #CCCCCC;
+  pointer-events: none; 
   cursor: default;
 }
 

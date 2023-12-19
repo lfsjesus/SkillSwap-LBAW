@@ -39,7 +39,7 @@
     <p>Connect with other SkillSwap users in the Collaboration Feed. This central space allows you to discover potential collaborators and projects, interact with their posts, and engage in collaborative efforts that take your skills and projects to new heights.</p>
     </section>
 
-    <section class="feature">
+    <section class="call-to-action">
     <h2>Join the SkillSwap Odyssey</h2>
     <p>Ready to embark on a journey of collaborative discovery? Join SkillSwap today to experience these features and more. Connect with a vibrant community, share your knowledge, and collaborate on exciting projects. The world of skill exchange and collaboration awaits!</p>
     </section>
