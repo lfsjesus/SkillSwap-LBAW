@@ -114,9 +114,8 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, Friend::class, 'user_id', 'friend_id')->get();
     }
 
-    public function isFriendWith($userId): bool
-    {
-        return $this->friends()->where('friend_id', $userId)->exists();
+    public function isFriendWith(User $user): bool {
+        return $this->friends()->where('friend_id', $user->id)->exists();
     }
 
     /**
@@ -144,11 +143,6 @@ class User extends Authenticatable
     public function get_friends_helper()
     {
         return $this->belongsToMany(User::class, Friend::class, 'user_id', 'friend_id');
-    }
-
-    public function is_friend($user)
-    {
-        return $this->friends()->where('friend_id', $user->id)->exists();
     }
 
     public function friends()

@@ -30,7 +30,7 @@ class PostController extends Controller
 
         else if ($post->user_id != Auth::user()->id && 
                 !$post->public_post && 
-                !Auth::user()->isFriendWith($post->user_id)) {
+                !Auth::user()->isFriendWith($post->author)) {
             return redirect()->back()->with('error', 'You are not authorized to view this post');
         }
 
