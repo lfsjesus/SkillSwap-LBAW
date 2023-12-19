@@ -20,7 +20,7 @@ class MailController extends Controller
     
         $user = User::where('email', $request->email)->first();
 
-        $token = Str::random(60);
+        $token = Str::random(100);
         session(['password_reset_token' => $token, 'password_reset_email' => $request->email]);
 
         if (!$user) {
