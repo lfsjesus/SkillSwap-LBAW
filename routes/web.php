@@ -149,4 +149,5 @@ Route::controller(MailController::class)->group(function () {
     Route::post('/send', 'send')->name('send');
     Route::get('/password/reset/{token}', 'showResetForm')->name('password.reset');
     Route::post('/password/reset', 'reset')->name('password.update');
+
 });

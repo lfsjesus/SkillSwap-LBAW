@@ -6,16 +6,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailModel;
 use App\Models\User;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 
 class MailController extends Controller
 {
-    public function send(Request $request) {
+
+    public function send(Request $request) { 
         $request->validate([
             'email' => 'required|email',
         ]);
     
         $user = User::where('email', $request->email)->first();
+
+        $token = Str::random(60);
     
         if (!$user) {
             // If the user does not exist, redirect back with an error message.
@@ -23,12 +28,13 @@ class MailController extends Controller
         }
     
         $mailData = [
-            'name' => $user->name,  // Since we know the user exists, we can directly access the name
+            'name' => $user->name,
             'email' => $request->email,
+            'token' => $token,
         ];
-    
-        Mail::to($request->email)->send(new MailModel($mailData));
         
+        Mail::to($request->email)->send(new MailModel($mailData));
+       
         // Redirect to the 'home' route with a success message.
         return redirect()->route('home')->with('status', 'Password reset link has been sent to your email address.');
     }
@@ -42,32 +48,37 @@ class MailController extends Controller
     // Show form to reset password (where token is the password reset token)
     public function showResetForm($token)
     {
-        return view('auth.passwords.reset')->with(['token' => $token]);
+        return view('emails.choosePassword', compact('token'));
     }
 
     // Reset the password
-    public function reset(Request $request)
-    {
+    public function reset(Request $request) {
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
             'password' => 'required|confirmed|min:8',
         ]);
-
-        // Reset the password
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user, $password) {
-                $user->password = bcrypt($password);
-                $user->save();
-                // Authenticate the user immediately if desired
-            }
-        );
-
-        return $status == Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
-                    : back()->withErrors(['email' => [__($status)]]);
+    
+        // Retrieve the token and email from session
+        $sessionToken = $request->session()->get('password_reset_token');
+        $sessionEmail = $request->session()->get('password_reset_email');
+    
+        // Verify the token and email
+        if ($request->token === $sessionToken && $request->email === $sessionEmail) {
+            // Token and email are valid, so reset the password
+            $user = User::where('email', $request->email)->firstOrFail();
+            $user->password = bcrypt($request->password);
+            $user->save();
+    
+            // Clear the session variables
+            $request->session()->forget('password_reset_token');
+            $request->session()->forget('password_reset_email');
+    
+            return redirect()->route('login')->with('status', 'Your password has been reset.');
+        }
+    
+        // Token or email is invalid, so redirect back with an error
+        return back()->withErrors(['token' => 'This password reset token is invalid.']);
     }
-
 
 }

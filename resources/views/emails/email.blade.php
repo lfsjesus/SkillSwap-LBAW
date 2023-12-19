@@ -18,7 +18,8 @@
         </section>
 
         <section style="margin-bottom: 20px;">
-            <a href="{{ '/reset' }}" style="background-color: #8d73eb; color: white; padding: 10px 20px; text-align: center; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
+            <a href="{{ url('/password/reset/'.$data['token']) }}" style="background-color: #8d73eb; color: white; padding: 10px 20px; text-align: center; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
+
         </section>
 
 
