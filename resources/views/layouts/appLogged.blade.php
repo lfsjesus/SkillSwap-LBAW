@@ -67,7 +67,7 @@
                             <div class="dropdown-content">
                                 <a href="{{ route('mainFeatures') }}">Main Features</a>
                                 <a href="{{ route('about') }}">About Us</a>
-                                <a href="{{ route('about') }}">Contact Us</a>
+                                <a href="{{ route('contacts') }}">Contact Us</a>
                             </div>
                         </li>
                         
