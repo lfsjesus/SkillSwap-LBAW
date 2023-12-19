@@ -1133,6 +1133,15 @@ if (acceptJoinGroupRequestNotification != null) {
   );
 }
 
+let rejectJoinGroupRequestNotification = document.querySelector('.reject-join-request-notification');
+if (rejectJoinGroupRequestNotification != null) {
+  rejectJoinGroupRequestNotification.addEventListener('click', function(e) {
+    e.preventDefault();
+    handleRejectJoinGroupRequestNotificationClick(e);
+  }
+  );
+}
+
 let leaveGroup = document.querySelector('.leave-group');
 if (leaveGroup != null) {
   leaveGroup.addEventListener('click', handleLeaveGroupClick);
@@ -1163,6 +1172,13 @@ function handleAcceptJoinGroupRequestNotificationClick(e) {
   let group_id = e.target.closest('.accept-join-request-notification').querySelector('input[name="group_id"]').value;
   let data = { sender_id: sender_id , group_id: group_id};
   sendAjaxRequest('POST', '/group/accept-join-request', data, acceptJoinGroupRequestNotificationHandler);
+}
+
+function handleRejectJoinGroupRequestNotificationClick(e) {
+  let sender_id = e.target.closest('.reject-join-request-notification').querySelector('input[name="sender_id"]').value;
+  let group_id = e.target.closest('.reject-join-request-notification').querySelector('input[name="group_id"]').value;
+  let data = { sender_id: sender_id , group_id: group_id};
+  sendAjaxRequest('DELETE', '/group/reject-join-request', data, rejectJoinGroupRequestNotificationHandler);
 }
 
 function handleLeaveGroupClick(e) {
@@ -1217,6 +1233,17 @@ function cancelJoinGroupRequestHandler() {
 }
 
 function acceptJoinGroupRequestNotificationHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null || response.success == false) return;
+
+  let notification_id = response.notification_id;
+  let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
+  if (notification) {
+    notification.remove();
+  }
+}
+
+function rejectJoinGroupRequestNotificationHandler() {
   let response = JSON.parse(this.responseText);
   if (response == null || response.success == false) return;
 
