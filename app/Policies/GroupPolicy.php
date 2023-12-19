@@ -94,7 +94,7 @@ class GroupPolicy
 
     public function sendJoinGroupRequest(User $user, Group $group) : bool {
         if (Auth::check()) {
-            if (!$group->isMember($user)) {
+            if (!$group->isMember($user) && !$group->userHasSentJoinRequest($user)) {
                 return true;
             }
             return false;
@@ -104,7 +104,7 @@ class GroupPolicy
 
     public function cancelJoinGroupRequest(User $user, Group $group) : bool {
         if (Auth::check()) {
-            if (!$group->isMember($user)) {
+            if (!$group->isMember($user) && $group->userHasSentJoinRequest($user)) {
                 return true;
             }
             return false;
@@ -112,16 +112,31 @@ class GroupPolicy
         return false;
     }
 
-    public function acceptJoinGroupRequest(User $user, Group $group) : bool {
-        return Auth::check();
+    public function acceptJoinGroupRequest(User $user, User $user2, Group $group) : bool {
+        if (Auth::check()) {
+            if ($group->isOwner($user) && $group->userHasSentJoinRequest($user2)) {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
-    public function rejectJoinGroupRequest(User $user, Group $group) : bool {
-        return Auth::check();
+    public function rejectJoinGroupRequest(User $user, User $user2, Group $group) : bool {
+        if (Auth::check()) {
+            if ($group->isOwner($user) && $group->userHasSentJoinRequest($user2)) {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
     public function addMember(User $user, Group $group) : bool {
         if (Auth::check()) {
+            // Don't check membership
+            // since we want a error message
+            // and not a 403
             if ($group->isOwner($user)) {
                 return true;
             }

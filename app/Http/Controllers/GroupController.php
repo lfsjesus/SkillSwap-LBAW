@@ -255,12 +255,17 @@ class GroupController extends Controller
 
         $group = Group::find($request->input('group_id'));
         $sender_id = $request->input('sender_id');
+        $sender = User::find($sender_id);
 
         if ($group == null) {
             return json_encode(['success' => false, 'error' => 'Group not found']);
         }
 
-        $this->authorize('acceptJoinGroupRequest', $group);
+        if ($sender == null) {
+            return json_encode(['success' => false, 'error' => 'User not found']);
+        }
+
+        $this->authorize('acceptJoinGroupRequest', [Group::class,$sender, $group]);
 
         try {
             DB::beginTransaction();
@@ -305,12 +310,17 @@ class GroupController extends Controller
 
         $group = Group::find($request->input('group_id'));
         $sender_id = $request->input('sender_id');
+        $sender = User::find($sender_id);
 
         if ($group == null) {
             return json_encode(['success' => false, 'error' => 'Group not found']);
         }
 
-        $this->authorize('rejectJoinGroupRequest', $group);
+        if ($sender == null) {
+            return json_encode(['success' => false, 'error' => 'User not found']);
+        }
+
+        $this->authorize('rejectJoinGroupRequest', [Group::class, $sender, $group]);
 
         try {
             DB::beginTransaction();
