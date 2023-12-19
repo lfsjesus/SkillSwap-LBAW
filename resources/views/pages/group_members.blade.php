@@ -26,7 +26,12 @@
             </div>
         </form>
     @endif
-    @each('partials.user', $group->get_members(), 'user')
+    
+    @foreach ($group->get_members() as $user)
+        @include('partials.user', ['user' => $user, 'group' => $group])
+    @endforeach
+
+    
 </div>
 
 @endsection

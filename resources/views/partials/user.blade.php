@@ -1,4 +1,4 @@
-<div class="user-card">
+<div class="user-card" data-id="{{ $user->id }}">
     @if(Auth::guard('webadmin')->check())
     <a href="{{ route('view-user-admin', ['username' => $user->username]) }}">
     @else
@@ -15,5 +15,16 @@
             <span class="username">&#64;{{$user->username}}</span>
         </span>
     </a>
+
+
+    @if(isset($group) && $group->is_owner(Auth::user()))
+        <div class="remove-member">
+            <input type="hidden" name="group_id" value="{{ $group->id }}">
+            <input type="hidden" name="user_id" value="{{ $user->id }}">
+            <span class="material-symbols-outlined">
+                logout
+            </span>
+        </div>
+    @endif
 
 </div>

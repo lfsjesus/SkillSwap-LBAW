@@ -382,4 +382,35 @@ class GroupController extends Controller
             return json_encode(['success' => false, 'error' => 'Unexpected error while leaving group. Try again!']);
         }
     }
+
+    public function removeMember(Request $request) {
+        $group = Group::find($request->group_id);
+        $user = User::find($request->user_id);
+        
+        if (!$group->is_owner(Auth::user())) {
+            return redirect()->back()->withErrors(['remove_member' => 'You are not authorized to remove members from this group']);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('is_member')
+                ->where('user_id', $user->id)
+                ->where('group_id', $group->id)
+                ->delete();
+
+            //also, if the user is an owner, delete him from the owners table
+            DB::table('owns')
+                ->where('user_id', $user->id)
+                ->where('group_id', $group->id)
+                ->delete();
+
+            DB::commit();
+
+            return json_encode(['success' => true, 'user_id' => $user->id]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(['remove_member' => 'Unexpected error while removing member from group. Try again!']);
+        }
+    }
 }
