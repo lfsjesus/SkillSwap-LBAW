@@ -22,7 +22,7 @@
             <input type="hidden" name="group_id" value="{{ $group->id }}">
             <input type="hidden" name="user_id" value="{{ $user->id }}">
             <span class="material-symbols-outlined">
-                remove_circle
+                delete
             </span>
         </div>
     @endif
