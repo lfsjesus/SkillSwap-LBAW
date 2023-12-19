@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Post;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,7 +12,7 @@ class PostPolicy
 {
     use HandlesAuthorization;
 
-    public function show($user, Post $post): bool
+    public function show(Authenticatable $user, Post $post): bool
     {
         if ($post->public_post) {
             return true;
@@ -37,7 +38,7 @@ class PostPolicy
         return Auth::check();
     }
 
-    public function delete($user, Post $post): bool
+    public function delete(Authenticatable $user, Post $post): bool
     {
         if (Auth::guard('webadmin')->check()) {
             return true;
@@ -48,7 +49,7 @@ class PostPolicy
         return false;
     }
 
-    public function edit($user, Post $post): bool
+    public function edit(Authenticatable $user, Post $post): bool
     {
         if (Auth::guard('webadmin')->check()) {
             return true;

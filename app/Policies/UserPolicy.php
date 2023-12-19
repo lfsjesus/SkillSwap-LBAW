@@ -4,13 +4,14 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 
 class UserPolicy
 {
     use HandlesAuthorization;
 
-    public function show(): bool
+    public function show(Authenticatable|null $user): bool
     {
         return true;
     }
@@ -92,7 +93,7 @@ class UserPolicy
         return false;
     }
 
-    public function showFriends(User $user, User $user2): bool
+    public function showFriends(User|null $user, User $user2): bool
     {
         if ($user2->isPublic()) {
             return true;
@@ -109,7 +110,7 @@ class UserPolicy
         return false;
     }
 
-    public function showGroups(User $user, User $user2): bool
+    public function showGroups(User|null $user, User $user2): bool
     {
         if ($user2->isPublic()) {
             return true;

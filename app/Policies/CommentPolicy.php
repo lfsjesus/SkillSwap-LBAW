@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Comment;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,7 +21,7 @@ class CommentPolicy
         return Auth::check();
     }
 
-    public function deleteComment($user, Comment $comment) : bool {
+    public function deleteComment(Authenticatable $user, Comment $comment) : bool {
         if (Auth::guard('webadmin')->check()) {
             return true;
         }
@@ -30,7 +31,7 @@ class CommentPolicy
         return false;
     }
 
-    public function editComment($user, Comment $comment) : bool {
+    public function editComment(Authenticatable $user, Comment $comment) : bool {
         if (Auth::guard('webadmin')->check()) {
             return true;
         }

@@ -12,7 +12,7 @@ class GroupPolicy
 {
     use HandlesAuthorization;
 
-    public function show() : bool {
+    public function show(User|null $user) : bool {
         return true;
     }
 
@@ -34,7 +34,7 @@ class GroupPolicy
         return Auth::check();
     }
 
-    public function edit($user, Group $group) : bool {
+    public function edit(Authenticatable|null $user, Group $group) : bool {
         if (Auth::guard('webadmin')->check()) {
             return true;
         }      
@@ -44,7 +44,7 @@ class GroupPolicy
         return false;
     }    
 
-    public function delete($user, Group $group) : bool {
+    public function delete(Authenticatable|null $user, Group $group) : bool {
         if (Auth::guard('webadmin')->check()) {
             return true;
         }      
@@ -54,8 +54,8 @@ class GroupPolicy
         return false;
     }
 
-    public function showMembers($user, Group $group) : bool {
-        if ($user2->public_group) {
+    public function showMembers(Authenticatable|null $user, Group $group) : bool {
+        if ($group->public_group) {
             return true;
         }
 
@@ -73,7 +73,7 @@ class GroupPolicy
         return false;
     }
 
-    public function showOwners($user, Group $group) : bool {
+    public function showOwners(Authenticatable|null $user, Group $group) : bool {
         if ($user2->public_group) {
             return true;
         }
@@ -135,10 +135,6 @@ class GroupPolicy
         }
         return false;
     }
-
-
-
-
 }
 
 
