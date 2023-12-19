@@ -93,13 +93,16 @@ class UserPolicy
         return false;
     }
 
-    public function showFriends(User|null $user, User $user2): bool
+    public function showFriends(Authenticatable|null $user, User $user2): bool
     {
         if ($user2->isPublic()) {
             return true;
         }
 
-        if (Auth::check()) {
+        if (Auth::guard('webadmin')->check()) {
+            return true;
+        }
+        else if (Auth::check()) {
             if ($user->id === $user2->id) {
                 return true;
             }
@@ -110,13 +113,17 @@ class UserPolicy
         return false;
     }
 
-    public function showGroups(User|null $user, User $user2): bool
+    public function showGroups(Authenticatable|null $user, User $user2): bool
     {
         if ($user2->isPublic()) {
             return true;
         }
 
-        if (Auth::check()) {
+        if (Auth::guard('webadmin')->check()) {
+            return true;
+        }
+
+        else if (Auth::check()) {
             if ($user->id === $user2->id) {
                 return true;
             }
