@@ -112,12 +112,14 @@ Route::controller(GroupController::class)->group(function () {
     Route::get('/group/{groupId}/members', 'showMembers')->name('group_members');
     Route::get('/group/{groupId}/owners', 'showOwners')->name('group_owners');
     Route::post('/group/join-request', 'sendJoinGroupRequest')->name('join_group_request');
-    Route::post('/group/add', 'addMember')->name('add_member');
     Route::delete('/group/cancel-join-request', 'cancelJoinGroupRequest')->name('cancel_join_group_request');
     Route::post('/group/accept-join-request', 'acceptJoinGroupRequest')->name('accept_join_group_request');
     Route::delete('/group/reject-join-request', 'rejectJoinGroupRequest')->name('reject_join_group_request');
     Route::delete('/group/leave', 'leaveGroup')->name('leave_group');
-    Route::delete('/group/remove', 'removeMember')->name('remove_member');
+    Route::post('/group/addMember', 'addMember')->name('add_member');
+    Route::post('/group/addOwner', 'addOwner')->name('add_owner');
+    Route::delete('/group/removeMember', 'removeMember')->name('remove_member');
+    Route::delete('/group/removeOwner', 'removeOwner')->name('remove_owner');
 });
 
 // Like

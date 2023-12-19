@@ -349,6 +349,42 @@ class GroupController extends Controller
         }
     }
 
+    public function leaveGroup(Request $request) {
+        $request->validate([
+            'group_id' => 'required|integer'
+        ]);
+
+        $group = Group::find($request->group_id);
+
+        if ($group == null) {
+            return json_encode(['success' => false, 'error' => 'Group not found']);
+        }
+         
+        $this->authorize('leaveGroup', $group);
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('is_member')
+                ->where('user_id', Auth::user()->id)
+                ->where('group_id', $group->id)
+                ->delete();
+
+            //also, if the user is an owner, delete him from the owners table
+            DB::table('owns')
+                ->where('user_id', Auth::user()->id)
+                ->where('group_id', $group->id)
+                ->delete();
+
+            DB::commit();
+
+            return json_encode(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return json_encode(['success' => false, 'error' => 'Unexpected error while leaving group. Try again!']);
+        }
+    }
+
     public function addMember(Request $request) {
         $request->validate([
             'group_id' => 'required|integer',
@@ -395,42 +431,6 @@ class GroupController extends Controller
         }
     }
 
-    public function leaveGroup(Request $request) {
-        $request->validate([
-            'group_id' => 'required|integer'
-        ]);
-
-        $group = Group::find($request->group_id);
-
-        if ($group == null) {
-            return json_encode(['success' => false, 'error' => 'Group not found']);
-        }
-         
-        $this->authorize('leaveGroup', $group);
-
-        try {
-            DB::beginTransaction();
-
-            DB::table('is_member')
-                ->where('user_id', Auth::user()->id)
-                ->where('group_id', $group->id)
-                ->delete();
-
-            //also, if the user is an owner, delete him from the owners table
-            DB::table('owns')
-                ->where('user_id', Auth::user()->id)
-                ->where('group_id', $group->id)
-                ->delete();
-
-            DB::commit();
-
-            return json_encode(['success' => true]);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return json_encode(['success' => false, 'error' => 'Unexpected error while leaving group. Try again!']);
-        }
-    }
-
     public function removeMember(Request $request) {
         $request->validate([
             'group_id' => 'required|integer',
@@ -470,6 +470,96 @@ class GroupController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return json_encode(['success' => false, 'error' => 'Unexpected error while removing member from group. Try again!']);
+        }
+    }
+
+    public function addOwner(Request $request) {
+        $request->validate([
+            'group_id' => 'required|integer',
+            'user' => 'required'
+        ]);
+
+        $group = Group::find($request->group_id);
+        if ($group == null) {
+            return redirect()->back()->withErrors(['add_owner' => 'Group not found']);
+        }
+
+
+        $this->authorize('addOwner', $group);
+
+        if (filter_var($request->user, FILTER_VALIDATE_EMAIL)) {
+            $user = User::where('email', $request->user)->first();
+        } else {
+            $user = User::where('username', $request->user)->first();
+        }
+
+        if ($user == null) {
+            return redirect()->back()->withErrors(['add_owner' => 'User not found']);
+        }
+
+        if ($group->isOwner($user)) {
+            return redirect()->back()->withErrors(['add_owner' => 'User is already an owner of this group']);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $owner = new GroupOwner();
+            $owner->user_id = $user->id;
+            $owner->group_id = $group->id;
+            $owner->date = date('Y-m-d H:i:s');
+            $owner->save();
+    
+            if (!$group->isMember($user)) {
+                $member = new Member();
+                $member->user_id = $user->id;
+                $member->group_id = $group->id;
+                $member->date = date('Y-m-d H:i:s');
+                $member->save();
+            }
+
+            DB::commit();
+
+            return redirect()->back()->withSuccess('Owner added successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(['add_owner' => 'Unexpected error while adding owner to group. Try again!']);
+        }
+    }   
+
+    public function removeOwner(Request $request) {
+        $request->validate([
+            'group_id' => 'required|integer',
+            'user_id' => 'required|integer'
+        ]);
+
+        $group = Group::find($request->group_id);
+        $user = User::find($request->user_id);
+        
+        if ($group == null) {
+            return json_encode(['success' => false, 'error' => 'Group not found']);
+        }
+
+        if ($user == null) {
+            return json_encode(['success' => false, 'error' => 'User not found']);
+        }
+
+        $this->authorize('removeOwner', $group);
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('owns')
+                ->where('user_id', $user->id)
+                ->where('group_id', $group->id)
+                ->delete();
+
+            DB::commit();
+
+            return json_encode(['success' => true, 'user_id' => $user->id]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return json_encode(['success' => false, 'error' => 'Unexpected error while removing owner from group. Try again!']);
         }
     }
 }

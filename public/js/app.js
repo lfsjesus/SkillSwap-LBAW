@@ -1155,6 +1155,14 @@ if (removeMember != null) {
   );
 }
 
+let removeOwner = document.querySelectorAll('.remove-owner');
+if (removeOwner != null) {
+  removeOwner.forEach(function(button) {
+    button.addEventListener('click', handleRemoveOwnerClick);
+  }
+  );
+}
+
 function handleJoinGroupRequestClick(e) {
   let group_id = e.target.closest('.join-group').querySelector('input[name="group_id"]').value;
   let data = { group_id: group_id };
@@ -1191,7 +1199,14 @@ function handleRemoveMemberClick(e) {
   let user_id = e.target.closest('.remove-member').querySelector('input[name="user_id"]').value;
   let group_id = e.target.closest('.remove-member').querySelector('input[name="group_id"]').value;
   let data = { user_id: user_id, group_id: group_id };
-  sendAjaxRequest('DELETE', '/group/remove', data, removeMemberHandler);
+  sendAjaxRequest('DELETE', '/group/removeMember', data, removeMemberHandler);
+}
+
+function handleRemoveOwnerClick(e) {
+  let user_id = e.target.closest('.remove-owner').querySelector('input[name="user_id"]').value;
+  let group_id = e.target.closest('.remove-owner').querySelector('input[name="group_id"]').value;
+  let data = { user_id: user_id, group_id: group_id };
+  sendAjaxRequest('DELETE', '/group/removeOwner', data, removeOwnerHandler);
 }
 
 function joinGroupRequestHandler() {
@@ -1281,6 +1296,18 @@ function leaveGroupHandler() {
 
 
 function removeMemberHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null || response.success == false) return;
+
+  //remove the user-card
+  let user_id = response.user_id;
+  let userCard = document.querySelector('.user-card[data-id="' + user_id + '"]');
+  if (userCard) {
+    userCard.remove();
+  }
+}
+
+function removeOwnerHandler() {
   let response = JSON.parse(this.responseText);
   if (response == null || response.success == false) return;
 

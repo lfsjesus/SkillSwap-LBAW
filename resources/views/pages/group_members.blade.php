@@ -28,7 +28,7 @@
     @endif
     
     @foreach ($group->get_members() as $user)
-        @include('partials.user', ['user' => $user, 'group' => $group])
+        @include('partials.user', ['user' => $user, 'group' => $group, 'owners' => false])
     @endforeach
 
     

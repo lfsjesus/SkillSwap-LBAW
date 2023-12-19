@@ -16,9 +16,16 @@
         </span>
     </a>
 
-
-    @if(isset($group) && $group->isOwner(Auth::user()))
+    @if(isset($group) && !$owners && $group->isOwner(Auth::user()))
         <div class="remove-member">
+            <input type="hidden" name="group_id" value="{{ $group->id }}">
+            <input type="hidden" name="user_id" value="{{ $user->id }}">
+            <span class="material-symbols-outlined">
+                logout
+            </span>
+        </div>
+    @elseif (isset($group) && isset($owners) && $owners)
+        <div class="remove-owner">
             <input type="hidden" name="group_id" value="{{ $group->id }}">
             <input type="hidden" name="user_id" value="{{ $user->id }}">
             <span class="material-symbols-outlined">

@@ -165,6 +165,26 @@ class GroupPolicy
         return false;
     }
 
+    public function addOwner(User $user, Group $group) {
+        if (Auth::check()) {
+            if ($group->isOwner($user)) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public function removeOwner(User $user, Group $group) {
+        if (Auth::check()) {
+            if ($group->isOwner($user)) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
 }
 
 
