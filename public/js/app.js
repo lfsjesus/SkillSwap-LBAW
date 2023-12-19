@@ -1138,6 +1138,11 @@ if (leaveGroup != null) {
   leaveGroup.addEventListener('click', handleLeaveGroupClick);
 }
 
+let removeMember = document.querySelector('.remove-member');
+if (removeMember != null) {
+  removeMember.addEventListener('click', handleRemoveMemberClick);
+}
+
 function handleJoinGroupRequestClick(e) {
   let group_id = e.target.closest('.join-group').querySelector('input[name="group_id"]').value;
   let data = { group_id: group_id };
@@ -1161,6 +1166,13 @@ function handleLeaveGroupClick(e) {
   let group_id = e.target.closest('.leave-group').querySelector('input[name="group_id"]').value;
   let data = { group_id: group_id };
   sendAjaxRequest('DELETE', '/group/leave', data, leaveGroupHandler);
+}
+
+function handleRemoveMemberClick(e) {
+  let user_id = e.target.closest('.remove-member').querySelector('input[name="user_id"]').value;
+  let group_id = e.target.closest('.remove-member').querySelector('input[name="group_id"]').value;
+  let data = { user_id: user_id, group_id: group_id };
+  sendAjaxRequest('DELETE', '/group/remove', data, removeMemberHandler);
 }
 
 function joinGroupRequestHandler() {
@@ -1235,6 +1247,19 @@ function leaveGroupHandler() {
 
   button.removeEventListener('click', handleLeaveGroupClick);
   button.addEventListener('click', handleJoinGroupRequestClick);
+}
+
+
+function removeMemberHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null || response.success == false) return;
+
+  //remove the user-card
+  let user_id = response.user_id;
+  let userCard = document.querySelector('.user-card[data-id="' + user_id + '"]');
+  if (userCard) {
+    userCard.remove();
+  }
 }
 
 // drop down menu
