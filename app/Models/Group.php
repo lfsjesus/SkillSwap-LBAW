@@ -51,12 +51,12 @@ class Group extends Model
         return $this->owners()->get();
     }
 
-    public function is_owner($user)
+    public function isOwner($user)
     {
         return $this->owners()->where('user_id', $user->id)->exists();
     }
 
-    public function is_member($user)
+    public function isMember($user)
     {
         return $this->members()->where('user_id', $user->id)->exists();
     }
@@ -79,6 +79,10 @@ class Group extends Model
         $popularity = $members + $posts;
 
         return $popularity;
+    }
+
+    public function isPublic() {
+        return $this->public_group;
     }
 
 }

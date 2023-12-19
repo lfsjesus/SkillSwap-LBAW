@@ -20,32 +20,25 @@ use App\Models\Notification;
 class AdminController extends Controller
 {
     public function show() {
-
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
-        }
-
-        else{
+        if (Auth::guard('webadmin')->check()) {
             $username = Auth::guard('webadmin')->user()->username;
             $admin = Administrator::where('username', $username)->firstOrFail();
             $users = DB::table('users')->simplePaginate(20);
             return view('pages.admin', ['admin' => $admin, 'users' => $users]);
         }
+        return redirect('/admin/login');
     }
 
     public function listGroups() {
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
+        if (Auth::guard('webadmin')->check()) {
+            $groups = DB::table('groups')->simplePaginate(20);
+            return view('pages.groups', ['groups' => $groups]);  
         }
-
-        $groups = DB::table('groups')->simplePaginate(20);
-        return view('pages.groups', ['groups' => $groups]);        
+        return redirect('/admin/login');              
     }
 
     public function showUser($username) {
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
-        }
+        $this->authorize('showUser', Administrator::class);
 
         $user = User::where('username', $username)->firstOrFail();
         $posts = $user->posts()->get();
@@ -54,47 +47,35 @@ class AdminController extends Controller
 
 
     public function showEditUserForm($username) {
-
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
-        }
+        $this->authorize('showEditUserForm', Administrator::class);
         
         $user = User::where('username', $username)->firstOrFail();
         return view('pages.editProfile', ['user' => $user]);
     }
 
     public function showCreateUserForm() {
-
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
-        }
+        $this->authorize('showCreateUserForm', Administrator::class);
 
         return view('pages.create-user-admin');
     }
 
     public function showGroup($id) {
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
-        }
+        $this->authorize('showGroup', Administrator::class);
 
-        $group = Group::find($id);
+        $group = Group::where('id', $id)->firstOrFail();
         $posts = $group->posts()->get();
         return view('pages.view-group-admin', ['group' => $group, 'posts' => $posts]);
     }
 
     public function showEditGroupForm($id) {
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
-        }
+        $this->authorize('showEditGroupForm', Administrator::class);
 
-        $group = Group::find($id);
+        $group = Group::where('id', $id)->firstOrFail();
         return view('pages.editGroup', ['group' => $group]);
     }
 
     public function createUser(Request $request) {
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
-        }
+        $this->authorize('createUser', Administrator::class);
 
         $request->validate([
             'name' => 'required|string|max:50',
@@ -107,40 +88,44 @@ class AdminController extends Controller
             'description' => 'nullable|string|max:500',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'username' => 'required|string|max:50|unique:users,username',
-            'birth_date' => 'required|date|before:18 years ago'
+            'birth_date' => 'required|date|before:18 years ago',
+            'password' => 'required|min:8|confirmed'
         ]);
 
         try {
-        $user = new User();
+            DB::beginTransaction();
+            $user = new User();
 
-        $user->name = $request->input('name');
-        $user->username = $request->input('username');
-        $user->email = $request->input('email');
-        $user->phone_number = ($request->input('phone_number') != null) ? $request->input('phone_number') : null;
-        $user->birth_date = date('Y-m-d', strtotime($request->input('birth_date')));
-        $user->profile_picture = ($request->file('profile_picture') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('profile_picture'))) : null;
-        
-        $password = $request->input('password');
-        $user->password = bcrypt($password);
+            $user->name = $request->input('name');
+            $user->username = $request->input('username');
+            $user->email = $request->input('email');
+            $user->phone_number = ($request->input('phone_number') != null) ? $request->input('phone_number') : null;
+            $user->birth_date = date('Y-m-d', strtotime($request->input('birth_date')));
+            $user->profile_picture = ($request->file('profile_picture') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('profile_picture'))) : null;
+            $password = $request->input('password');
+            $user->password = bcrypt($password);
+            $user->description = $request->input('description');
 
-        $user->description = $request->input('description');
+            $user->save();
 
-        $user->save();
+            DB::commit();
         return redirect()->route('view-user-admin', ['username' => $user->username])->withSuccess('User created successfully!');
         } catch (\Exception $e) {
+            DB::rollback();
             return redirect()->route('create-user-form-admin')->withError('Unexpected error occurred while creating user!');
         }
     }
 
     public function editUser(Request $request) {
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
-        }
+        $this->authorize('editUser', Administrator::class);
 
         $id = $request->input('user_id');
 
         $user = User::find($id);
 
+        if ($user == null) {
+            return redirect()->back()->with('error', 'User not found!');
+        }
 
         // perform validation
         $request->validate([
@@ -173,35 +158,44 @@ class AdminController extends Controller
         , $customMessages = [
             'username.not_regex' => 'Username can\'t start with \'deleted\''
         ]);
-        
-        $user->name = $request->input('name');
-        $user->username = $request->input('username');
-        $user->email = $request->input('email');
-        $user->phone_number = ($request->input('phone_number') != null) ? $request->input('phone_number') : $user->phone_number;
-        $user->birth_date = date('Y-m-d', strtotime($request->input('birth_date')));
-        $user->profile_picture = ($request->file('profile_picture') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('profile_picture'))) : $user->profile_picture;
-        $user->description = $request->input('description');
-        $user->public_profile = $request->input('visibility');
-        if ($request->input('password') != null) {
-            if (Hash::check($request->input('old_password'), $user->password)) {
-                $user->password = bcrypt($request->input('password'));
-            } else {
-                return redirect()->back()->withErrors(['old_password' => 'Old password is incorrect']);
+
+        try {
+            DB::beginTransaction();
+            $user->name = $request->input('name');
+            $user->username = $request->input('username');
+            $user->email = $request->input('email');
+            $user->phone_number = ($request->input('phone_number') != null) ? $request->input('phone_number') : $user->phone_number;
+            $user->birth_date = date('Y-m-d', strtotime($request->input('birth_date')));
+            $user->profile_picture = ($request->file('profile_picture') != null) ? 'data:image/png;base64,' . base64_encode(file_get_contents($request->file('profile_picture'))) : $user->profile_picture;
+            $user->description = $request->input('description');
+            $user->public_profile = $request->input('visibility');
+            if ($request->input('password') != null) {
+                if (Hash::check($request->input('old_password'), $user->password)) {
+                    $user->password = bcrypt($request->input('password'));
+                } else {
+                    return redirect()->back()->withErrors(['old_password' => 'Old password is incorrect']);
+                }
             }
+
+            $user->save();
+            DB::commit();
+
+            return redirect()->route('view-user-admin', ['username' => $user->username])->withSuccess('Profile updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Unexpected error occurred while updating profile!');
         }
-
-        $user->save();
-
-        return redirect()->route('view-user-admin', ['username' => $user->username])->withSuccess('Profile updated successfully!');
     }
 
     public function deleteUser(Request $request) {
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
-        }
+        $this->authorize('deleteUser', Administrator::class);
 
         $id = $request->input('id');
         $user = User::find($id);
+
+        if ($user == null) {
+            return redirect()->back()->with('error', 'User not found!');
+        }
 
         try {
             DB::beginTransaction();
@@ -241,32 +235,18 @@ class AdminController extends Controller
         return redirect()->route('admin')->withSuccess('User deleted successfully!');
     }
 
-    public function editGroup(Request $request) {
-        if (GroupController::edit($request)) {
-            return redirect()->route('view-group-admin', ['id' => $request->input('id')])->withSuccess('Group updated successfully!');
-        } else {
-            return redirect()->route('view-group-admin', ['id' => $request->input('id')])->withError('Unexpected error occurred while updating group!');
-        }
-    }
-
-    public function deleteGroup(Request $request) {
-        if (GroupController::deleteGroup($request)) {
-            return redirect()->route('admin-groups')->withSuccess('Group deleted successfully!');
-        } else {
-            return redirect()->route('admin-groups')->withError('Unexpected error occurred while deleting group!');
-        }
-    }
-
     public function banUser(Request $request) {
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
+        $this->authorize('banUser', Administrator::class);
+        
+        $username = $request->input('username');
+        $user = User::where('username', $username)->first();
+
+        if ($user == null) {
+            return json_encode(['success' => false, 'error' => 'User not found!']);
         }
 
         try {
             DB::beginTransaction();
-
-            $id = $request->input('username');
-            $user = User::where('username', $id)->firstOrFail();
 
             $userBan = new UserBan();
             $userBan->user_id = $user->id;
@@ -286,7 +266,9 @@ class AdminController extends Controller
         catch (\Exception $e) {
             DB::rollBack();
             $response = [
-                'success' => false
+                'success' => false,
+                'error' => 'Unexpected error occurred while banning user!'
+
             ];
 
             return json_encode($response);
@@ -295,8 +277,13 @@ class AdminController extends Controller
 
 
     public function unbanUser(Request $request) {
-        if (!(Auth::guard('webadmin')->check())) {
-            return redirect('/admin/login');
+        $this->authorize('unbanUser', Administrator::class);
+
+        $username = $request->input('username');
+        $user = User::where('username', $username)->first();
+
+        if ($user == null) {
+            return json_encode(['success' => false, 'error' => 'User not found!']);
         }
 
         try {
@@ -320,7 +307,8 @@ class AdminController extends Controller
         catch (\Exception $e) {
             DB::rollBack();
             $response = [
-                'success' => false
+                'success' => false,
+                'error' => 'Unexpected error occurred while unbanning user!'
             ];
 
             return json_encode($response);

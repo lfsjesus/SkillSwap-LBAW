@@ -14,32 +14,26 @@ use App\Models\GroupNotification;
 use App\Models\User;
 
 
-class GroupController extends Model 
+class GroupController extends Controller 
 {
     public function show(int $id) {
-        $group = Group::find($id);
-        $posts = $group->posts()->get();
+        $group = Group::where('id', $id)->firstOrFail();
+        
+        $this->authorize('show', Group::class);
+
         return view('pages.group', ['group' => $group]);
     }
 
     public function showCreateForm() {
-        if (!Auth::check()) {
-            return redirect()->route('home')->with('error', 'You cannot create a group');
-        }
+        $this->authorize('showCreateForm', Group::class);
 
         return view('pages.createGroup');
     }
 
     public function showEditForm($id) {
-        if (!Auth::check()) {
-            return redirect()->route('home')->with('error', 'You cannot edit a group');
-        }
+        $group = Group::where('id', $id)->firstOrFail();
 
-        $group = Group::find($id);
-
-        if (!$group->is_owner(Auth::user())) {
-            return redirect()->route('home')->with('error', 'You cannot edit a group you do not own');
-        }
+        $this->authorize('showEditForm', $group);
 
         return view('pages.editGroup', ['group' => $group]);
     }
@@ -52,16 +46,14 @@ class GroupController extends Model
 
 
     public function create(Request $request) {
-        if (!Auth::check()) {
-            return redirect()->route('home')->with('error', 'You cannot create a group');
-        }
-
         $request->validate([
             'name' => 'required|string|max:50',
             'description' => 'required|string|max:255',
             'visibility' => 'required|boolean',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
+
+        $this->authorize('create', Group::class);
 
         try {
             DB::beginTransaction();
@@ -100,7 +92,7 @@ class GroupController extends Model
 
     }
 
-    static public function edit(Request $request) {
+    public function edit(Request $request) {
         $request->validate([
             'id' => 'required|integer',
             'name' => 'required|string|max:50',
@@ -108,13 +100,14 @@ class GroupController extends Model
             'visibility' => 'required|boolean',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
-
         
         $group = Group::find($request->id);
-
-        if (!(Auth::guard('webadmin')->check() || $group->is_owner(Auth::user()))) {
-            return redirect()->back()->with('error', 'You are not authorized to edit this post');
+        
+        if ($group == null) {
+            return redirect()->route('groups')->with('error', 'Group not found');
         }
+
+        $this->authorize('edit', $group);
 
         try {
             DB::beginTransaction();
@@ -129,6 +122,10 @@ class GroupController extends Model
 
             DB::commit();
 
+            if (Auth::check('webadmin')) {
+                return redirect()->route('view-group-admin', ['id' => $group->id])->with('success', 'Group edited successfully');
+            }
+
             return redirect()->route('group', ['id' => $group->id])->with('success', 'Group edited successfully');
         } catch (\Exception $e) {
             DB::rollback();
@@ -136,16 +133,18 @@ class GroupController extends Model
         }
     }
 
-    static public function deleteGroup(Request $request) {
+    public function deleteGroup(Request $request) {
         $request->validate([
             'id' => 'required|integer'
         ]);
 
         $group = Group::find($request->id);
 
-        if (!(Auth::guard('webadmin')->check() || $group->is_owner(Auth::user()))) {
-            return redirect()->route('home')->with('error', 'You do not have permission to delete this group');
+        if ($group == null) {
+            return redirect()->route('groups')->with('error', 'Group not found');
         }
+
+        $this->authorize('delete', $group);
 
         $group->delete();
 
@@ -154,31 +153,29 @@ class GroupController extends Model
 
     public function showMembers($groupId)
     {
-        $group = Group::findOrFail($groupId);
-        $members = Member::where('group_id', $groupId)->get(); 
+        $group = Group::where('id', $groupId)->firstOrFail();
+        
+        $this->authorize('showMembers', $group);
 
-        return view('pages.group_members', ['group' => $group, 'members' => $members]);
+        return view('pages.group_members', ['group' => $group]);
     }
 
     public function showOwners($groupId)
     {
         $group = Group::findOrFail($groupId);
-        $owners = $group->owners()->get(); 
 
-        return view('pages.group_owners', ['group' => $group, 'owners' => $owners]);
+        return view('pages.group_owners', ['group' => $group]);
     }
 
     public function sendJoinGroupRequest(Request $request)
     {   
-        if(!Auth::check()) {
-            return redirect()->back()->with('error', 'You must be logged in to join a group');
-        }
-
         $group = Group::find($request->input('group_id'));
 
-        if ($group->is_member(Auth::user())) {
-            return redirect()->back()->with('error', 'You are already a member of this group');
+        if ($group == null) {
+            return json_encode(['success' => false, 'error' => 'Group not found']);
         }
+
+        $this->authorize('sendJoinGroupRequest', $group);
 
         try {
             DB::beginTransaction();
@@ -211,17 +208,19 @@ class GroupController extends Model
             
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Unexpected error while sending join group request. Try again!');
+            return json_encode(['success' => false, 'error' => 'Unexpected error while sending join group request. Try again!']);
         }
     }
 
     public function cancelJoinGroupRequest(Request $request)
     {
-        if(!Auth::check()) {
-            return redirect()->back()->with('error', 'You must be logged in to cancel a join group request');
+        $group = Group::find($request->input('group_id'));
+
+        if ($group == null) {
+            return json_encode(['success' => false, 'error' => 'Group not found']);
         }
 
-        $group = Group::find($request->input('group_id'));
+        $this->authorize('cancelJoinGroupRequest', $group);
 
         try {
             DB::beginTransaction();
@@ -243,18 +242,31 @@ class GroupController extends Model
             return json_encode(['success' => true]);
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Unexpected error while canceling join group request. Try again!');
+            return json_encode(['success' => false, 'error' => 'Unexpected error while canceling join group request. Try again!']);
         }
     }
 
     public function acceptJoinGroupRequest(Request $request)
     {
-        if(!Auth::check()) {
-            return redirect()->back()->with('error', 'You must be logged in to accept a join group request');
-        }
+        $request->validate([
+            'group_id' => 'required|integer',
+            'sender_id' => 'required|integer'
+        ]);
 
         $group = Group::find($request->input('group_id'));
         $sender_id = $request->input('sender_id');
+        $sender = User::find($sender_id);
+
+        if ($group == null) {
+            return json_encode(['success' => false, 'error' => 'Group not found']);
+        }
+
+        if ($sender == null) {
+            return json_encode(['success' => false, 'error' => 'User not found']);
+        }
+
+        $this->authorize('acceptJoinGroupRequest', [Group::class,$sender, $group]);
+
         try {
             DB::beginTransaction();
             
@@ -271,12 +283,7 @@ class GroupController extends Model
 
                 //find the notification in the notification table and delete it
                 $real_notification = Notification::find($notification->id);
-
-                //if the receiver is the auth()->user() then store the notification_id
-                if($real_notification->receiver_id == Auth::user()->id){
-                    $notification_id = $real_notification->id;
-                }
-
+                $notification_id = $real_notification->id;
                 $real_notification->delete();
             }
             
@@ -290,7 +297,91 @@ class GroupController extends Model
             return json_encode(['success' => true, 'notification_id' => $notification_id]);
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Unexpected error while accepting join group request. Try again!');
+            return json_encode(['success' => false, 'error' => 'Unexpected error while accepting join group request. Try again!']);
+        }
+    }
+
+    public function rejectJoinGroupRequest(Request $request)
+    {
+        $request->validate([
+            'group_id' => 'required|integer',
+            'sender_id' => 'required|integer'
+        ]);
+
+        $group = Group::find($request->input('group_id'));
+        $sender_id = $request->input('sender_id');
+        $sender = User::find($sender_id);
+
+        if ($group == null) {
+            return json_encode(['success' => false, 'error' => 'Group not found']);
+        }
+
+        if ($sender == null) {
+            return json_encode(['success' => false, 'error' => 'User not found']);
+        }
+
+        $this->authorize('rejectJoinGroupRequest', [Group::class, $sender, $group]);
+
+        try {
+            DB::beginTransaction();
+            
+            //find every notification that has the sender_id and the group_id
+            
+            $notifications = Notification::join('group_notifications', 'notifications.id', '=', 'group_notifications.notification_id')
+                        ->where('notifications.sender_id', $sender_id)
+                        ->where('group_notifications.group_id', $group->id)
+                        ->where('group_notifications.notification_type', 'join_request')
+                        ->get();
+                        
+            foreach ($notifications as $notification) {
+                    
+                    //find the notification in the notification table and delete it
+                    $real_notification = Notification::find($notification->id);
+                    $notification_id = $real_notification->id;
+                    $real_notification->delete();
+                }
+
+            DB::commit();
+            return json_encode(['success' => true,  'notification_id' => $notification_id]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return json_encode(['success' => false, 'error' => 'Unexpected error while rejecting join group request. Try again!']);
+        }
+    }
+
+    public function leaveGroup(Request $request) {
+        $request->validate([
+            'group_id' => 'required|integer'
+        ]);
+
+        $group = Group::find($request->group_id);
+
+        if ($group == null) {
+            return json_encode(['success' => false, 'error' => 'Group not found']);
+        }
+         
+        $this->authorize('leaveGroup', $group);
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('is_member')
+                ->where('user_id', Auth::user()->id)
+                ->where('group_id', $group->id)
+                ->delete();
+
+            //also, if the user is an owner, delete him from the owners table
+            DB::table('owns')
+                ->where('user_id', Auth::user()->id)
+                ->where('group_id', $group->id)
+                ->delete();
+
+            DB::commit();
+
+            return json_encode(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return json_encode(['success' => false, 'error' => 'Unexpected error while leaving group. Try again!']);
         }
     }
 
@@ -301,11 +392,13 @@ class GroupController extends Model
         ]);
 
         $group = Group::find($request->group_id);
-        
-        if (!$group->is_owner(Auth::user())) {
-            return redirect()->back()->withErrors(['add_member' => 'You are not authorized to add members to this group']);
+
+        if ($group == null) {
+            return redirect()->back()->withErrors(['add_member' => 'Group not found']);
         }
         
+        $this->authorize('addMember', $group);
+
         if (filter_var($request->user, FILTER_VALIDATE_EMAIL)) {
             $user = User::where('email', $request->user)->first();
         } else {
@@ -316,7 +409,7 @@ class GroupController extends Model
             return redirect()->back()->withErrors(['add_member' => 'User not found']);
         }
 
-        if ($group->is_member($user)) {
+        if ($group->isMember($user)) {
             return redirect()->back()->withErrors(['add_member' => 'User is already a member of this group']);
         }
 
@@ -338,33 +431,135 @@ class GroupController extends Model
         }
     }
 
-    public function leaveGroup(Request $request) {
+    public function removeMember(Request $request) {
+        $request->validate([
+            'group_id' => 'required|integer',
+            'user_id' => 'required|integer'
+        ]);
 
         $group = Group::find($request->group_id);
-
-        if (!$group->is_member(Auth::user())) {
-            return redirect()->back()->withErrors(['leave_group' => 'You are not a member of this group']);
+        $user = User::find($request->user_id);
+        
+        if ($group == null) {
+            return json_encode(['success' => false, 'error' => 'Group not found']);
         }
+
+        if ($user == null) {
+            return json_encode(['success' => false, 'error' => 'User not found']);
+        }
+
+        $this->authorize('removeMember', $group);
+
         try {
             DB::beginTransaction();
 
             DB::table('is_member')
-                ->where('user_id', Auth::user()->id)
+                ->where('user_id', $user->id)
                 ->where('group_id', $group->id)
                 ->delete();
 
             //also, if the user is an owner, delete him from the owners table
             DB::table('owns')
-                ->where('user_id', Auth::user()->id)
+                ->where('user_id', $user->id)
                 ->where('group_id', $group->id)
                 ->delete();
 
             DB::commit();
 
-            return json_encode(['success' => true]);
+            return json_encode(['success' => true, 'user_id' => $user->id]);
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(['leave_group' => 'Unexpected error while leaving group. Try again!']);
+            return json_encode(['success' => false, 'error' => 'Unexpected error while removing member from group. Try again!']);
+        }
+    }
+
+    public function addOwner(Request $request) {
+        $request->validate([
+            'group_id' => 'required|integer',
+            'user' => 'required'
+        ]);
+
+        $group = Group::find($request->group_id);
+        if ($group == null) {
+            return redirect()->back()->withErrors(['add_owner' => 'Group not found']);
+        }
+
+
+        $this->authorize('addOwner', $group);
+
+        if (filter_var($request->user, FILTER_VALIDATE_EMAIL)) {
+            $user = User::where('email', $request->user)->first();
+        } else {
+            $user = User::where('username', $request->user)->first();
+        }
+
+        if ($user == null) {
+            return redirect()->back()->withErrors(['add_owner' => 'User not found']);
+        }
+
+        if ($group->isOwner($user)) {
+            return redirect()->back()->withErrors(['add_owner' => 'User is already an owner of this group']);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $owner = new GroupOwner();
+            $owner->user_id = $user->id;
+            $owner->group_id = $group->id;
+            $owner->date = date('Y-m-d H:i:s');
+            $owner->save();
+    
+            if (!$group->isMember($user)) {
+                $member = new Member();
+                $member->user_id = $user->id;
+                $member->group_id = $group->id;
+                $member->date = date('Y-m-d H:i:s');
+                $member->save();
+            }
+
+            DB::commit();
+
+            return redirect()->back()->withSuccess('Owner added successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(['add_owner' => 'Unexpected error while adding owner to group. Try again!']);
+        }
+    }   
+
+    public function removeOwner(Request $request) {
+        $request->validate([
+            'group_id' => 'required|integer',
+            'user_id' => 'required|integer'
+        ]);
+
+        $group = Group::find($request->group_id);
+        $user = User::find($request->user_id);
+        
+        if ($group == null) {
+            return json_encode(['success' => false, 'error' => 'Group not found']);
+        }
+
+        if ($user == null) {
+            return json_encode(['success' => false, 'error' => 'User not found']);
+        }
+
+        $this->authorize('removeOwner', $group);
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('owns')
+                ->where('user_id', $user->id)
+                ->where('group_id', $group->id)
+                ->delete();
+
+            DB::commit();
+
+            return json_encode(['success' => true, 'user_id' => $user->id]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return json_encode(['success' => false, 'error' => 'Unexpected error while removing owner from group. Try again!']);
         }
     }
 }

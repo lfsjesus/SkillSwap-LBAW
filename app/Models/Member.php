@@ -32,7 +32,7 @@ class Member extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function is_member($user, $group)
+    public function isMember($user, $group)
     {
         return $this->group()->members()->where('user_id', $user->id)->where('group_id', $group->id)->exists();
     }

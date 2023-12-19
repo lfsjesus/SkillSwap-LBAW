@@ -12,17 +12,33 @@ class NotificationController extends Controller
 {
 
     public function markAsRead(Request $request) {
+        $request->validate([
+            'notification_id' => 'required|integer'
+        ]);
+
         $notification_id = $request->input('notification_id');
+        $notification = Notification::find($notification_id);
+
+        if ($notification == null) {
+            return json_encode([
+                'success' => false,
+                'id' => $notification_id,
+                'error' => 'Notification not found'
+            ]);
+        }
+
+        if ($notification->viewed) {
+            return json_encode([
+                'success' => false,
+                'id' => $notification_id,
+                'error' => 'Notification already viewed'
+            ]);
+        }
+
+        $this->authorize('markAsRead', $notification);
 
         try {
             DB::beginTransaction();
-
-
-            $notification = Notification::find($notification_id);
-
-            if ($notification == null) {
-                throw new \Exception('Notification not found');
-            }
             
             $notification->viewed = true;
 
@@ -49,6 +65,8 @@ class NotificationController extends Controller
     }
 
     public function markAllAsRead() {
+        $this->authorize('markAllAsRead', Notification::class);
+        
         try {
             DB::beginTransaction();
 
