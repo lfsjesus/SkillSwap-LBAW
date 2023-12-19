@@ -116,6 +116,10 @@ class GroupPolicy
         return Auth::check();
     }
 
+    public function rejectJoinGroupRequest(User $user, Group $group) : bool {
+        return Auth::check();
+    }
+
     public function addMember(User $user, Group $group) : bool {
         if (Auth::check()) {
             if ($group->isOwner($user)) {
