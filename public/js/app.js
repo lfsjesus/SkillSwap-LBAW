@@ -418,7 +418,7 @@ if (postLikeButtons != null) {
 function likeCommentHandler() {
   // set class active to .post-actions .post-action:first-child
   let item = JSON.parse(this.responseText);
-  if (item == null) return;
+  if (item == null || item.success == false) return;
 
   let element = document.querySelector('.comment[data-id="' + item.comment_id + '"]');
   let button = element.querySelector('.comment-stat');
