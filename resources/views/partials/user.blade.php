@@ -16,4 +16,15 @@
         </span>
     </a>
 
+
+    @if(isset($group) && $group->is_owner(Auth::user()))
+        <div class="remove-icon">
+            <input type="hidden" name="group_id" value="{{ $group->id }}">
+            <input type="hidden" name="user_id" value="{{ $user->id }}">
+            <span class="material-symbols-outlined">
+                remove_circle
+            </span>
+        </div>
+    @endif
+
 </div>
