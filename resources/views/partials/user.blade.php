@@ -17,7 +17,7 @@
     </a>
 
 
-    @if(isset($group) && $group->is_owner(Auth::user()))
+    @if(isset($group) && $group->isOwner(Auth::user()))
         <div class="remove-member">
             <input type="hidden" name="group_id" value="{{ $group->id }}">
             <input type="hidden" name="user_id" value="{{ $user->id }}">
