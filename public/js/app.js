@@ -23,7 +23,7 @@ function sendAjaxRequest(method, url, data, handler) {
 
 function postDeletedHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let element = document.querySelector('.post[data-id="' + response.id + '"]');
   element.remove();
