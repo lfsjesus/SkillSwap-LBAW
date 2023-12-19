@@ -12,7 +12,7 @@ class PostPolicy
 {
     use HandlesAuthorization;
 
-    public function show(Authenticatable $user, Post $post): bool
+    public function show(Authenticatable|null $user, Post $post): bool
     {
         if ($post->public_post) {
             return true;
