@@ -81,16 +81,16 @@ class User extends Authenticatable
     }
 
     public function visiblePosts() {
-        $myPosts = $this->posts()->get();
+        $myPosts = $this->posts()->select('posts.*');
     
-        $friendsPosts = $this->friendsPosts()->get();
+        $friendsPosts = $this->friendsPosts()->select('posts.*');
     
-        $groupsIamMember = $this->groups()->with('posts')->get();
+        $groupsIamMember = $this->groups()->join('posts', 'posts.group_id', '=', 'groups.id')->select('posts.*');
     
-        $publicPosts = Post::publicPosts()->get();
-
-        $posts = $myPosts->merge($friendsPosts)->merge($groupsIamMember)->merge($publicPosts)->sortByDesc('date');
-
+        $publicPosts = Post::publicPosts()->select('posts.*');
+    
+        $posts = $myPosts->union($friendsPosts)->union($publicPosts)->union($groupsIamMember)->orderBy('date', 'desc');
+    
         return $posts;
     }
     
@@ -98,7 +98,7 @@ class User extends Authenticatable
     public function visibleComments() { // Can see comments on posts that are visible to me
         $visiblePosts = $this->visiblePosts()->pluck('id');
 
-        return Comment::whereIn('post_id', $visiblePosts)->get();
+        return Comment::whereIn('post_id', $visiblePosts);
     }
 
     public function friendsPosts()
@@ -114,9 +114,8 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, Friend::class, 'user_id', 'friend_id')->get();
     }
 
-    public function isFriendWith($userId): bool
-    {
-        return $this->friends()->where('friend_id', $userId)->exists();
+    public function isFriendWith(User $user): bool {
+        return $this->friends()->where('friend_id', $user->id)->exists();
     }
 
     /**
@@ -144,11 +143,6 @@ class User extends Authenticatable
     public function get_friends_helper()
     {
         return $this->belongsToMany(User::class, Friend::class, 'user_id', 'friend_id');
-    }
-
-    public function is_friend($user)
-    {
-        return $this->friends()->where('friend_id', $user->id)->exists();
     }
 
     public function friends()

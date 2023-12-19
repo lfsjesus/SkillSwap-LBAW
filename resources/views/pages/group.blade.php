@@ -35,7 +35,7 @@
 
             <div class="group-buttons">
                 @if(Auth::user())
-                    @if($group->is_owner(Auth::user()))
+                    @if($group->isOwner(Auth::user()))
                         <!-- User is the owner of the group -->
                         <a href="{{ route('edit_group_form', ['id' => $group->id]) }}" class="button edit-group">
                             <span class='material-symbols-outlined'>
@@ -51,7 +51,7 @@
                             Leave Group
                         </a>
 
-                    @elseif($group->is_member(Auth::user()))
+                    @elseif($group->isMember(Auth::user()))
                         <!-- User is a member of the group, but not the owner -->
                         <a class="button leave-group">
                             <input type="hidden" name="group_id" value="{{ $group->id }}">
@@ -61,29 +61,29 @@
                             Leave Group
                         </a>
 
-                    @else
+                    @elseif($group->userHasSentJoinRequest(Auth::user()))
+                        <!-- User has sent a join request -->
+                        <a class="button cancel-join-request">
+                            <input type="hidden" name="group_id" value="{{ $group->id }}">
+                            <span class="material-symbols-outlined">
+                            done
+                            </span>
+                            Request Sent
+                        </a> 
 
-                        @if($group->userHasSentJoinRequest(Auth::user()))
-                            <!-- User has sent a join request -->
-                            <a class="button cancel-join-request">
-                                <input type="hidden" name="group_id" value="{{ $group->id }}">
-                                <span class="material-symbols-outlined">
-                                done
-                                </span>
-                                Request Sent
-                            </a>
-                        @else 
-                            
-                            <!-- User is not a member of the group -->
-                            <a class="button join-group">
-                                <input type="hidden" name="group_id" value="{{ $group->id }}">
-                                <span class="material-symbols-outlined">
-                                    group_add
-                                </span>
-                                Join Group
-                            </a>
+                        
+                    @else 
+                        
+                        <!-- User is not a member of the group -->
+                        <a class="button join-group">
+                            <input type="hidden" name="group_id" value="{{ $group->id }}">
+                            <span class="material-symbols-outlined">
+                                group_add
+                            </span>
+                            Join Group
+                        </a>
 
-                        @endif
+                    
 
                     @endif
                 @endif
@@ -94,6 +94,7 @@
 
 <!-- Group Content Grid -->
 <div class="group-content">
+    @if($group->isPublic() || (Auth::user() && ($group->isMember(Auth::user()) || $group->isOwner(Auth::user()))))
     <!-- Members and Groups Grid -->
     <div class="members-owners-grid">
         <!-- Members Box -->
@@ -124,12 +125,23 @@
             @endif
         </div>
     </div>
+    @else
+    <div class="private-group">
+        <span class="material-symbols-outlined">lock</span> 
+        <p> This group is private </p>
+        <p> You must be member of this group to see all the information </p>
+    </div>
+    @endif
 
     <!-- Posts Section -->
     <section id="posts">
         <h2>Posts</h2>
         @if(Auth::user())
-        @include('partials.create-post', ['group' => $group])
+            @if($group->posts->isEmpty())
+                <p> There are no posts to show </p>
+            @else
+                @include('partials.create-post', ['group' => $group])
+            @endif
         @endif    
         @each('partials.post', $group->posts, 'post')
     </section>

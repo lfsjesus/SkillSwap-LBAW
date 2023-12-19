@@ -16,7 +16,7 @@
         </p>
     @endif
     @if(Auth::user())
-    <button><a href="{{route('create_group_form')}}"><span class='material-symbols-outlined'>add_circle</span> group</a></button>
+    <a href="{{route('create_group_form')}}" class="button"><span class='material-symbols-outlined'>add_circle</span> group</a>
     @endif
     <div class="users">
         @each('partials.group', $groups, 'group')

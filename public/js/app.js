@@ -23,7 +23,7 @@ function sendAjaxRequest(method, url, data, handler) {
 
 function postDeletedHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let element = document.querySelector('.post[data-id="' + response.id + '"]');
   element.remove();
@@ -418,7 +418,7 @@ if (postLikeButtons != null) {
 function likeCommentHandler() {
   // set class active to .post-actions .post-action:first-child
   let item = JSON.parse(this.responseText);
-  if (item == null) return;
+  if (item == null || item.success == false) return;
 
   let element = document.querySelector('.comment[data-id="' + item.comment_id + '"]');
   let button = element.querySelector('.comment-stat');
@@ -521,8 +521,7 @@ if (replyButtons != null) {
 
 function commentPostHandler() {
   let response = JSON.parse(this.responseText);
-
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let comment = createComment(response.id, response.post_id, response.author_name, response.content, response.replyTo_id);
 
@@ -620,7 +619,7 @@ if (deleteCommentButtons != null) {
 
 function deleteCommentHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let comment = document.querySelector('.comment[data-id="' + response.id + '"]');
   let commentCount = comment.closest('article.post').querySelector('.post-stats .post-stat:nth-child(2) p');
@@ -873,7 +872,7 @@ function createCommentBox(post_id, author_url, profile_picture, value, type, edi
 
 function editCommentHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let comment = createComment(response.id, response.post_id, response.author_name, response.content, response.replyTo_id);
 
@@ -976,7 +975,7 @@ function handleRejectFriendRequestNotificationClick(e) {
 
 function addFriendHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let button = document.querySelector('.add-friend');
   button.classList.remove('add-friend');
@@ -995,7 +994,7 @@ function addFriendHandler() {
 
 function cancelFriendRequestHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let button = document.querySelector('.cancel-friend-request');
   button.classList.remove('cancel-friend-request');
@@ -1015,7 +1014,7 @@ function cancelFriendRequestHandler() {
 
 function acceptFriendRequestHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let button = document.querySelector('.accept-friend-request');
   button.classList.remove('accept-friend-request');
@@ -1040,7 +1039,7 @@ function acceptFriendRequestHandler() {
 
 function removeFriendHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let button = document.querySelector('.remove-friend');
   button.classList.remove('remove-friend');
@@ -1059,7 +1058,7 @@ function removeFriendHandler() {
 
 function acceptFriendRequestNotificationHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let notification_id = response.notification_id;
   let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
@@ -1080,7 +1079,7 @@ function acceptFriendRequestNotificationHandler() {
 
 function rejectFriendRequestNotificationHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let notification_id = response.notification_id;
   let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
@@ -1134,6 +1133,36 @@ if (acceptJoinGroupRequestNotification != null) {
   );
 }
 
+let rejectJoinGroupRequestNotification = document.querySelector('.reject-join-request-notification');
+if (rejectJoinGroupRequestNotification != null) {
+  rejectJoinGroupRequestNotification.addEventListener('click', function(e) {
+    e.preventDefault();
+    handleRejectJoinGroupRequestNotificationClick(e);
+  }
+  );
+}
+
+let leaveGroup = document.querySelector('.leave-group');
+if (leaveGroup != null) {
+  leaveGroup.addEventListener('click', handleLeaveGroupClick);
+}
+
+let removeMember = document.querySelectorAll('.remove-member');
+if (removeMember != null) {
+  removeMember.forEach(function(button) {
+    button.addEventListener('click', handleRemoveMemberClick);
+  }
+  );
+}
+
+let removeOwner = document.querySelectorAll('.remove-owner');
+if (removeOwner != null) {
+  removeOwner.forEach(function(button) {
+    button.addEventListener('click', handleRemoveOwnerClick);
+  }
+  );
+}
+
 function handleJoinGroupRequestClick(e) {
   let group_id = e.target.closest('.join-group').querySelector('input[name="group_id"]').value;
   let data = { group_id: group_id };
@@ -1153,10 +1182,36 @@ function handleAcceptJoinGroupRequestNotificationClick(e) {
   sendAjaxRequest('POST', '/group/accept-join-request', data, acceptJoinGroupRequestNotificationHandler);
 }
 
+function handleRejectJoinGroupRequestNotificationClick(e) {
+  let sender_id = e.target.closest('.reject-join-request-notification').querySelector('input[name="sender_id"]').value;
+  let group_id = e.target.closest('.reject-join-request-notification').querySelector('input[name="group_id"]').value;
+  let data = { sender_id: sender_id , group_id: group_id};
+  sendAjaxRequest('DELETE', '/group/reject-join-request', data, rejectJoinGroupRequestNotificationHandler);
+}
+
+function handleLeaveGroupClick(e) {
+  let group_id = e.target.closest('.leave-group').querySelector('input[name="group_id"]').value;
+  let data = { group_id: group_id };
+  sendAjaxRequest('DELETE', '/group/leave', data, leaveGroupHandler);
+}
+
+function handleRemoveMemberClick(e) {
+  let user_id = e.target.closest('.remove-member').querySelector('input[name="user_id"]').value;
+  let group_id = e.target.closest('.remove-member').querySelector('input[name="group_id"]').value;
+  let data = { user_id: user_id, group_id: group_id };
+  sendAjaxRequest('DELETE', '/group/removeMember', data, removeMemberHandler);
+}
+
+function handleRemoveOwnerClick(e) {
+  let user_id = e.target.closest('.remove-owner').querySelector('input[name="user_id"]').value;
+  let group_id = e.target.closest('.remove-owner').querySelector('input[name="group_id"]').value;
+  let data = { user_id: user_id, group_id: group_id };
+  sendAjaxRequest('DELETE', '/group/removeOwner', data, removeOwnerHandler);
+}
 
 function joinGroupRequestHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let button = document.querySelector('.join-group');
   button.classList.remove('join-group');
@@ -1175,7 +1230,7 @@ function joinGroupRequestHandler() {
 
 function cancelJoinGroupRequestHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let button = document.querySelector('.cancel-join-request');
   button.classList.remove('cancel-join-request');
@@ -1194,12 +1249,73 @@ function cancelJoinGroupRequestHandler() {
 
 function acceptJoinGroupRequestNotificationHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let notification_id = response.notification_id;
   let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
   if (notification) {
     notification.remove();
+  }
+}
+
+function rejectJoinGroupRequestNotificationHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null || response.success == false) return;
+
+  let notification_id = response.notification_id;
+  let notification = document.querySelector('.notification[data-id="' + notification_id + '"]');
+  if (notification) {
+    notification.remove();
+  }
+}
+
+function leaveGroupHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null || response.success == false) return;
+
+  let button = document.querySelector('.leave-group');
+  button.classList.remove('leave-group');
+  button.classList.add('join-group');
+  let iconSpan = button.querySelector('span');
+  iconSpan.innerHTML = 'person_add';
+  let input2 = button.querySelector('input[name="group_id"]');
+  button.innerHTML = '';
+  button.appendChild(input2);
+  button.appendChild(iconSpan);
+  button.innerHTML += 'Join Group';
+
+  //also find the edit-group button and remove it
+  let editGroupButton = document.querySelector('.edit-group');
+  if (editGroupButton) {
+    editGroupButton.remove();
+  }
+
+  button.removeEventListener('click', handleLeaveGroupClick);
+  button.addEventListener('click', handleJoinGroupRequestClick);
+}
+
+
+function removeMemberHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null || response.success == false) return;
+
+  //remove the user-card
+  let user_id = response.user_id;
+  let userCard = document.querySelector('.user-card[data-id="' + user_id + '"]');
+  if (userCard) {
+    userCard.remove();
+  }
+}
+
+function removeOwnerHandler() {
+  let response = JSON.parse(this.responseText);
+  if (response == null || response.success == false) return;
+
+  //remove the user-card
+  let user_id = response.user_id;
+  let userCard = document.querySelector('.user-card[data-id="' + user_id + '"]');
+  if (userCard) {
+    userCard.remove();
   }
 }
 

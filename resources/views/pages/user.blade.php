@@ -34,7 +34,7 @@
                     <span class="username"> &#64{{$user->username}} </span>
                     
                 </div>
-                @if($user->isPublic() || (Auth::user() && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()->id))))
+                @if($user->isPublic() || (Auth::user() && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()))))
                 <p class="user-email">
                     <span class="material-symbols-outlined">
                     mail
@@ -57,7 +57,7 @@
                     
                 @else
                     
-                    @if(Auth::user()->isFriendWith($user->id))
+                    @if(Auth::user()->isFriendWith($user))
                         <!-- Button for removing a friend -->
                         <a class="button remove-friend">
                             <input type="hidden" name="friend_id" value="{{ $user->id }}">
@@ -107,7 +107,7 @@
     </div>
 
     <div class="profile-content">
-        @if($user->isPublic() || (Auth::user() && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()->id))))
+        @if($user->isPublic() || (Auth::user() && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()))))
         <!-- Friends and Groups Grid -->
         <div class="friends-groups-grid">
             <!-- Friends Box -->
@@ -152,7 +152,7 @@
             @else
             @each('partials.post', (($user->isPublic() || 
                                     (Auth::user() && (Auth::user()->id == $user->id || 
-                                    $user->isFriendWith(Auth::user()->id)))) ? $user->posts : $user->publicPosts), 'post')
+                                    $user->isFriendWith(Auth::user())))) ? $user->posts : $user->publicPosts), 'post')
             @endif
         </section>
 

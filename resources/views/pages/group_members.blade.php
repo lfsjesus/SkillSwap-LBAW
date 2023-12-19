@@ -1,4 +1,4 @@
-@extends('layouts.appLogged')
+@extends(Auth::guard('webadmin')->check() ? 'layouts.appLoggedAdmin' : 'layouts.appLogged')
 
 @section('title', 'User')
 
@@ -15,7 +15,7 @@
     </div>
 @endif
 <div class="users">
-    @if(Auth::user() && $group->is_owner(Auth::user()))
+    @if(Auth::user() && $group->isOwner(Auth::user()))
         <form action="{{ route('add_member') }}" class="add-user-group user-card" method="POST">
             <p> Add user to group </p>
             {{ csrf_field() }}
@@ -26,7 +26,12 @@
             </div>
         </form>
     @endif
-    @each('partials.user', $group->get_members(), 'user')
+    
+    @foreach ($group->get_members() as $user)
+        @include('partials.user', ['user' => $user, 'group' => $group, 'owners' => false])
+    @endforeach
+
+    
 </div>
 
 @endsection

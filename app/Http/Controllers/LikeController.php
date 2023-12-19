@@ -16,13 +16,20 @@ use App\Models\Comment;
 class LikeController extends Controller
 {
     public function likePost(Request $request) {
+        $request->validate([
+            'post_id' => 'required',
+        ]);
+
         $post_id = $request->input('post_id');
         $post = Post::find($post_id);
         $user_id = Auth::user()->id;
 
-        if (!isset($post_id)) {
-            return redirect()->back()->withError('Unexpected error while liking post. Try again!');
+        if ($post == null) {
+            return json_encode(['success' => false, 'error' => 'Post not found!']);
         }
+
+        $this->authorize('likePost', [Like::class, $post]);
+
         try {
             DB::beginTransaction();
             $like = Like::where('user_id', $user_id)->where('post_id', $post_id)->first();
@@ -70,6 +77,7 @@ class LikeController extends Controller
             DB::commit();
 
             $response = array(
+                'success' => true,
                 'post_id' => $post_id,
                 'liked' => $liked
             );
@@ -77,18 +85,24 @@ class LikeController extends Controller
             return json_encode($response);
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withError('Unexpected error while liking post. Try again!');
+            return json_encode(['success' => false, 'error' => 'Unexpected error while liking post. Try again!']);
         }
     }
 
     public function likeComment(Request $request) {
+        $request->validate([
+            'comment_id' => 'required',
+        ]);
+
         $comment_id = $request->input('comment_id');
         $comment = Comment::find($comment_id);
         $user_id = Auth::user()->id;
 
-        if (!isset($comment_id)) {
-            return redirect()->back()->withError('Unexpected error while liking comment. Try again!');
+        if ($comment == null) {
+            return json_encode(['success' => false, 'error' => 'Comment not found!']);
         }
+
+        $this->authorize('likeComment', [Like::class, $comment]);
 
         try {
             DB::beginTransaction();
@@ -135,6 +149,7 @@ class LikeController extends Controller
             DB::commit();
 
             $response = array(
+                'success' => true,
                 'comment_id' => $comment_id,
                 'liked' => $liked
             );
@@ -143,7 +158,7 @@ class LikeController extends Controller
             
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withError('Unexpected error while liking comment. Try again!');
+            return json_encode(['success' => false, 'error' => 'Unexpected error while liking comment. Try again!']);
         }
     }
 }

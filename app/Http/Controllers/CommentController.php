@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Post;
 use App\Models\Comment;
 use App\Models\Notification;
 use App\Models\CommentNotification;
@@ -21,6 +22,21 @@ class CommentController extends Controller
         $post_id = $request->input('post_id');
         $replyTo_id = $request->input('comment_id') ?? null;
         $content = $request->input('content');
+
+        $post = Post::find($post_id);
+
+        if ($post == null) {
+            return json_encode(['success' => false, 'error' => 'Post not found!']);
+        }    
+
+        if ($replyTo_id != null) {
+            $replyTo = Comment::find($replyTo_id);
+            if ($replyTo == null) {
+                return json_encode(['success' => false, 'error' => 'Comment not found!']);
+            }
+        }
+
+        $this->authorize('createComment', Comment::class);
 
         try {
             DB::beginTransaction();
@@ -49,6 +65,7 @@ class CommentController extends Controller
             DB::commit();
 
             $response = array(
+                'success' => true,
                 'id' => $comment->id,
                 'post_id' => $post_id,
                 'replyTo_id' => $replyTo_id,
@@ -59,40 +76,41 @@ class CommentController extends Controller
             return json_encode($response);
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withError('Unexpected error while creating comment. Try again!');
+            return json_encode(['success' => false, 'error' => 'Unexpected error while creating comment. Try again!']);
         }
     }
 
     public function deleteComment(Request $request) {
-        $id = $request->input('id');
+        $request->validate([
+            'id' => 'required'
+        ]);
 
-        if (!isset($id)) {
-            return redirect()->back()->withError('Unexpected error while deleting comment. Try again!');
+        $comment = Comment::find($request->input('id'));
+
+        if ($comment == null) {
+            return json_encode(['success' => false, 'error' => 'Comment not found!']);
         }
 
-        $comment = Comment::find($id);
+        $this->authorize('deleteComment', $comment);
 
         try {
             DB::beginTransaction();
 
-            if (!(Auth::guard('webadmin')->check() || $comment->user_id == Auth::user()->id)) {
-                return redirect()->back()->withError('You are not authorized to delete this comment!');
-            }
-            
             $comment->delete();
             
-            // There is a trigger that removes notification.
+            // Database trigger deletes all notifications
 
             DB::commit();
 
             $response = array(
-                'id' => $id
+                'success' => true,
+                'id' => $comment->id,
             );
 
             return json_encode($response);
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withError('Unexpected error while deleting comment. Try again!');
+            return json_encode(['success' => false, 'error' => 'Unexpected error while deleting comment. Try again!']);
         }
     }
 
@@ -105,19 +123,23 @@ class CommentController extends Controller
         $id = $request->input('id');
         $content = $request->input('content');
 
+        $comment = Comment::find($id);
+
+        if ($comment == null) {
+            return json_encode(['success' => false, 'error' => 'Comment not found!']);
+        }
+
+        $this->authorize('editComment', $comment);
+
         try {
             DB::beginTransaction();
-            $comment = Comment::find($id);
-
-            if (!(Auth::guard('webadmin')->check() || $comment->user_id == Auth::user()->id)) {
-                return redirect()->back()->withError('You are not authorized to edit this comment!');
-            }
 
             $comment->content = nl2br($content);
             $comment->save();
             DB::commit();
 
             $response = array(
+                'success' => true,
                 'id' => $id,
                 'post_id' => $comment->post_id,
                 'replyTo_id' => $comment->comment_id,
@@ -128,7 +150,7 @@ class CommentController extends Controller
             return json_encode($response);
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withError('Unexpected error while editing comment. Try again!');
+            return json_encode(['success' => false, 'error' => 'Unexpected error while editing comment. Try again!']);
         }
     }
 }

@@ -11,46 +11,27 @@ use App\Models\File;
 
 class PostController extends Controller
 {
-
     public function show($id) {
-        $post = Post::find($id);
-        if ($post == null) {
-            return redirect()->back()->with('error', 'Post not found');
-        }
+        $post = Post::where('id', $id)->firstOrFail();
 
-        if (!Auth::check()) {
-            if (!$post->public_post) {
-                return redirect()->back()->with('error', 'You are not authorized to view this post');
-            }
-        }
-
-        else if (Auth::guard('webadmin')->check()) {
-            return view('pages.post', ['post' => $post]);
-        }
-
-        else if ($post->user_id != Auth::user()->id && 
-                !$post->public_post && 
-                !Auth::user()->isFriendWith($post->user_id)) {
-            return redirect()->back()->with('error', 'You are not authorized to view this post');
-        }
+        $this->authorize('show', $post);
 
         return view('pages.post', ['post' => $post]);
     }
     
     public function list() {
-        if (!Auth::check()) {
-            $posts = Post::publicPosts()->get()->sortByDesc('date');
+        if (Auth::check()) {
+            $posts = Auth::user()->visiblePosts()->get();
             return view('pages.home', ['posts' => $posts]);
         }
 
-        /*Else if user is logged in, show public posts + friends posts + own user posts */
-        $posts = Auth::user()->visiblePosts();
-
+        $posts = Post::publicPosts()->get()->sortByDesc('date');
         return view('pages.home', ['posts' => $posts]);
-
     }
 
     public function create(Request $request) {
+        $this->authorize('create', Post::class);
+
         $request->validate([
             'description' => 'required',
             'files.*' => 'nullable|mimes:jpg,jpeg,png,gif,doc,docx,pdf,txt|max:10240'
@@ -79,22 +60,19 @@ class PostController extends Controller
     }
 
     public function delete(Request $request) {
-        $post_id = $request->input('post_id');
-        $post = Post::find($post_id);
+        $post = Post::find($request->input('post_id'));
 
-        if (!(Auth::guard('webadmin')->check() || $post->user_id == Auth::user()->id)) {
-            return redirect()->back()->with('error', 'You are not authorized to delete this post');
+        if ($post == null) {
+            return json_encode(['success' => false, 'error' => 'Post not found']);
         }
 
-        if (!isset($post_id)) {
-            return redirect()->back()->with('error', 'Post not found');
-        }
+        $this->authorize('delete', $post);
 
         try {
             DB::beginTransaction();
 
             $files = $post->files();
-
+            
             $post->delete();
             
             FileController::deleteFilesFromStorage($files);
@@ -103,33 +81,32 @@ class PostController extends Controller
 
             $response = [
                 'success' => true,
-                'id' => $post_id
+                'id' => $post->id
             ];
+
             return json_encode($response);
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Error in deleting post');
+            return json_encode(['success' => false, 'error' => 'Unexpected error while deleting post. Try again!']);
         }
     }
 
     public function edit(Request $request) {
+        $request->validate([
+            'description' => 'required',
+            'files.*' => 'nullable|mimes:jpg,jpeg,png,gif,doc,docx,pdf,txt|max:10240'
+        ]);
 
         $post_id = $request->input('post_id');
         $content = $request->input('description');
+
         $post = Post::find($post_id);
 
-        if (!(Auth::guard('webadmin')->check() || $post->user_id == Auth::user()->id)) {
-            return redirect()->back()->with('error', 'You are not authorized to edit this post');
-        }
-
-        
-        if (!isset($post_id)) {
+        if ($post == null) {
             return redirect()->back()->with('error', 'Post not found');
         }
 
-        if (!isset($content)) {
-            return redirect()->back()->with('error', 'The post cannot be empty');
-        }
+        $this->authorize('edit', $post);
 
         try {
             DB::beginTransaction();
