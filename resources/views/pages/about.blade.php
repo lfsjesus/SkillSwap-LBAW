@@ -4,7 +4,7 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="/">Home</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Main Features</li>
+      <li class="breadcrumb-item active" aria-current="page">About Us</li>
     </ol>
 </nav>
 
@@ -32,7 +32,7 @@
         <h2>Join SkillSwap Today!</h2>
         <p>Ready to embark on a journey of knowledge exchange and collaboration? Join SkillSwap today and become part of a dynamic community passionate about skills and innovation.</p>
     </section>
-    
+
     <p>Thank you for being a part of SkillSwap!</p>
 </div>
 @endsection

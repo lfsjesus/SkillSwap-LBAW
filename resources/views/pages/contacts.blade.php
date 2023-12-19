@@ -4,7 +4,7 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="/">Home</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Main Features</li>
+      <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
     </ol>
 </nav>
 
@@ -16,7 +16,7 @@
     <h2>Get in Touch with the Developers</h2>
     <div class="developers">
         <div class="developer">
-            <img src="{{ url('assets/skillswap.png') }}" alt="SkillSwap Logo" />
+            <img src="{{ url('assets/luisj.jpg') }}" alt="SkillSwap Logo" />
             <h3>Luís Jesus</h3>
             <p><strong>Email:</strong> luis.jesus@skillswap.com</p>
             <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/luis-jesus" target="_blank">Luís Jesus on LinkedIn</a></p>
@@ -25,16 +25,16 @@
         </div>
 
         <div class="developer">
-            <img src="{{ url('assets/skillswap.png') }}" alt="SkillSwap Logo" />
+            <img src="{{ url('assets/miguelp.jpg') }}" alt="SkillSwap Logo" />
             <h3>Miguel Pedrosa</h3>
             <p><strong>Email:</strong> miguel.pedrosa@skillswap.com</p>
             <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/miguel-pedrosa" target="_blank">Miguel Pedrosa on LinkedIn</a></p>
-            <p><strong>GitHub:</strong> <a href="https://github.com/miguelpedrosa" target="_blank">Miguel Pedrosa on GitHub</a></p>
+            <p><strong>GitHub:</strong> <a href="https://github.com/migueljcpedrosa" target="_blank">Miguel Pedrosa on GitHub</a></p>
             <p>Miguel is an enthusiastic developer with a passion for building innovative solutions. Reach out to him for technical inquiries, collaboration opportunities, or to discuss the latest trends in the tech industry!</p>
         </div>
 
         <div class="developer">
-            <img src="{{ url('assets/skillswap.png') }}" alt="SkillSwap Logo" />
+            <img src="{{ url('assets/miguelr.jpg') }}" alt="SkillSwap Logo" />
             <h3>Miguel Rocha</h3>
             <p><strong>Email:</strong> miguel.rocha@skillswap.com</p>
             <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/miguel-rocha" target="_blank">Miguel Rocha on LinkedIn</a></p>
