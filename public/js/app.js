@@ -521,8 +521,7 @@ if (replyButtons != null) {
 
 function commentPostHandler() {
   let response = JSON.parse(this.responseText);
-
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let comment = createComment(response.id, response.post_id, response.author_name, response.content, response.replyTo_id);
 
@@ -620,7 +619,7 @@ if (deleteCommentButtons != null) {
 
 function deleteCommentHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let comment = document.querySelector('.comment[data-id="' + response.id + '"]');
   let commentCount = comment.closest('article.post').querySelector('.post-stats .post-stat:nth-child(2) p');
@@ -873,7 +872,7 @@ function createCommentBox(post_id, author_url, profile_picture, value, type, edi
 
 function editCommentHandler() {
   let response = JSON.parse(this.responseText);
-  if (response == null) return;
+  if (response == null || response.success == false) return;
 
   let comment = createComment(response.id, response.post_id, response.author_name, response.content, response.replyTo_id);
 
