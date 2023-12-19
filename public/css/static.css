@@ -65,11 +65,12 @@ text-decoration: underline;
         padding: 0 0 1em 0;
     }
 
-    #content > .static-page > h2 {
-        font-size: 2em;
-        font-weight: bold;
-        padding: 1em 0;
-    }
+    #content > .static-page > .feature > h2 {
+      font-size: 2em;
+      font-weight: bold;
+      padding: 1em 0;
+  }
+  
 
     #content > .static-page > p {
         font-size: 1em;
@@ -99,6 +100,47 @@ text-decoration: underline;
     object-fit:cover;
 }
     
+.breadcrumb {
+  display: flex; /* Aligns the breadcrumb items in a row */
+  align-items: center; /* Centers the items vertically */
+  list-style: none; /* Removes the default list styling */
+  padding: 0; /* Removes the default padding */
+  margin-left: 18em; /* Removes the default margin */
+  background: none; /* Optional: Removes any background styling if you have it */
+  color: #FFC0CB; /* Adjust the color to fit your design */
+  font-size: 1em;
+}
+
+.breadcrumb li {
+  margin-right: 0.5rem; /* Adds some spacing to the right of each breadcrumb item */
+}
+
+.breadcrumb li::after {
+  content: '>'; /* The separator character */
+  margin-left: 0.5rem; /* Adds some spacing to the left of the separator */
+  color: #FFC0CB; /* Adjust the color to fit your design */
+}
+
+.breadcrumb li:last-child::after {
+  content: none; /* Removes the separator after the last breadcrumb item */
+}
+
+.breadcrumb a {
+  color: #FFC0CB; /* Adjust the link color to fit your design */
+  text-decoration: none; /* Optional: Removes the underline from links */
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline; /* Optional: Adds an underline on hover for links */
+}
+
+/* Adjust the styling for the current page, which is not a link */
+.breadcrumb .breadcrumb-item.active {
+  color: #CCCCCC; /* A lighter color to indicate the current page */
+  pointer-events: none; /* Disables the link so it's not clickable */
+  cursor: default;
+}
+
 
 
 
