@@ -118,6 +118,7 @@ Route::controller(GroupController::class)->group(function () {
     Route::post('/group/add', 'addMember')->name('add_member');
     Route::delete('/group/cancel-join-request', 'cancelJoinGroupRequest')->name('cancel_join_group_request');
     Route::post('/group/accept-join-request', 'acceptJoinGroupRequest')->name('accept_join_group_request');
+    Route::delete('/group/leave', 'leaveGroup')->name('leave_group');
 });
 
 // Like

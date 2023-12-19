@@ -79,12 +79,9 @@ class SearchController extends Controller {
         }
 
         else if (Auth::user()) {
-            $fstPosts = Post::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                    ->get();
-
-            $visiblePosts = Auth::user()->visiblePosts();
-
-            $posts = $visiblePosts->intersect($fstPosts);          
+            $posts = Post::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                            ->WhereIn('id', Auth::user()->visiblePosts()->pluck('id'))
+                            ->get();
                                 
         }
         else {
@@ -132,13 +129,10 @@ class SearchController extends Controller {
                     ->get();
         }
 
-        else if (Auth::user()) {
-            $fstComments = Comment::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                    ->get();
-            
-            $visibleComments = Auth::user()->visibleComments();
-
-            $comments = $visibleComments->intersect($fstComments);
+        else if (Auth::user()) {            
+            $comments = Comment::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                            ->WhereIn('id', Auth::user()->visibleComments()->pluck('id'))
+                            ->get();
         }
         else {
             $comments = Comment::publicComments()
