@@ -61,29 +61,29 @@
                             Leave Group
                         </a>
 
-                    @else
+                    @elseif($group->userHasSentJoinRequest(Auth::user()))
+                        <!-- User has sent a join request -->
+                        <a class="button cancel-join-request">
+                            <input type="hidden" name="group_id" value="{{ $group->id }}">
+                            <span class="material-symbols-outlined">
+                            done
+                            </span>
+                            Request Sent
+                        </a> 
 
-                        @if($group->userHasSentJoinRequest(Auth::user()))
-                            <!-- User has sent a join request -->
-                            <a class="button cancel-join-request">
-                                <input type="hidden" name="group_id" value="{{ $group->id }}">
-                                <span class="material-symbols-outlined">
-                                done
-                                </span>
-                                Request Sent
-                            </a>
-                        @else 
-                            
-                            <!-- User is not a member of the group -->
-                            <a class="button join-group">
-                                <input type="hidden" name="group_id" value="{{ $group->id }}">
-                                <span class="material-symbols-outlined">
-                                    group_add
-                                </span>
-                                Join Group
-                            </a>
+                        
+                    @else 
+                        
+                        <!-- User is not a member of the group -->
+                        <a class="button join-group">
+                            <input type="hidden" name="group_id" value="{{ $group->id }}">
+                            <span class="material-symbols-outlined">
+                                group_add
+                            </span>
+                            Join Group
+                        </a>
 
-                        @endif
+                    
 
                     @endif
                 @endif

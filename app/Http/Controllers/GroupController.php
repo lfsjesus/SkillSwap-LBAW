@@ -278,12 +278,7 @@ class GroupController extends Controller
 
                 //find the notification in the notification table and delete it
                 $real_notification = Notification::find($notification->id);
-
-                //if the receiver is the auth()->user() then store the notification_id
-                if($real_notification->receiver_id == Auth::user()->id){
-                    $notification_id = $real_notification->id;
-                }
-
+                $notification_id = $real_notification->id;
                 $real_notification->delete();
             }
             
@@ -298,6 +293,49 @@ class GroupController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return json_encode(['success' => false, 'error' => 'Unexpected error while accepting join group request. Try again!']);
+        }
+    }
+
+    public function rejectJoinGroupRequest(Request $request)
+    {
+        $request->validate([
+            'group_id' => 'required|integer',
+            'sender_id' => 'required|integer'
+        ]);
+
+        $group = Group::find($request->input('group_id'));
+        $sender_id = $request->input('sender_id');
+
+        if ($group == null) {
+            return json_encode(['success' => false, 'error' => 'Group not found']);
+        }
+
+        $this->authorize('rejectJoinGroupRequest', $group);
+
+        try {
+            DB::beginTransaction();
+            
+            //find every notification that has the sender_id and the group_id
+            
+            $notifications = Notification::join('group_notifications', 'notifications.id', '=', 'group_notifications.notification_id')
+                        ->where('notifications.sender_id', $sender_id)
+                        ->where('group_notifications.group_id', $group->id)
+                        ->where('group_notifications.notification_type', 'join_request')
+                        ->get();
+                        
+            foreach ($notifications as $notification) {
+                    
+                    //find the notification in the notification table and delete it
+                    $real_notification = Notification::find($notification->id);
+                    $notification_id = $real_notification->id;
+                    $real_notification->delete();
+                }
+
+            DB::commit();
+            return json_encode(['success' => true,  'notification_id' => $notification_id]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return json_encode(['success' => false, 'error' => 'Unexpected error while rejecting join group request. Try again!']);
         }
     }
 
