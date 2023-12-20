@@ -731,6 +731,7 @@ if (editCommentButtons != null) {
 
 function editComment(id) {
   let comment = document.querySelector('.comment[data-id="' + id + '"]');
+  let originalComment = comment.cloneNode(true); //clone the comment in case the user cancels the edit
   let post_id = comment.closest('.post').getAttribute('data-id');
   let profile_picture = comment.querySelector('a img').src;
   let author_url = comment.querySelector('.comment-header a').getAttribute('href');
@@ -738,9 +739,24 @@ function editComment(id) {
 
   let commentBox = createCommentBox(post_id, author_url, profile_picture, content, 'edit', id);
 
+
+  let cancelEditButton = document.createElement('button');
+  cancelEditButton.className = 'cancel-button';
+  cancelEditButton.classList.add('btn-cancel');
+  cancelEditButton.innerHTML = 'Cancel';
+  cancelEditButton.setAttribute('type', 'button');
+  cancelEditButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    commentBox.replaceWith(originalComment);
+    //commentSetAllEventListeners(originalComment);
+  }
+  );  
+
+  commentBox.appendChild(cancelEditButton);
+
   comment.replaceWith(commentBox);
 
-  commentBox.style.display = 'flex';  
+  commentBox.style.display = 'block';  
 }
 
 function createComment(id, post_id, author_name, content, replyTo_id) {
