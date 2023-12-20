@@ -137,6 +137,7 @@ function filterContent(content) {
 
 async function editPost(id) {
   let post = document.querySelector('.post[data-id="' + id + '"]');
+  let originalPost = post.cloneNode(true); //clone the post in case the user cancels the edit
   let profile_picture = post.querySelector('.post-header-left img');
   let files = post.querySelectorAll('.post-body a img'); // TO CHANGE AFTER MODIFYING IMAGES VIEW
   let public_post = post.getAttribute('data-public');
@@ -223,7 +224,25 @@ async function editPost(id) {
   button.setAttribute('type', 'submit');
   form.innerHTML += '<input type="hidden" name="_token" value="' + document.querySelector('meta[name="csrf-token"]').content + '">';
   
-  createPostFooter.appendChild(button);
+
+  let cancelButton = document.createElement('button');
+  cancelButton.className = 'cancel-button';
+  cancelButton.classList.add('btn-cancel');
+  cancelButton.innerHTML = 'Cancel';
+  cancelButton.setAttribute('type', 'button');
+  cancelButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    create_post.replaceWith(originalPost);
+  }
+  );
+  
+  let buttonsDiv = document.createElement('div');
+  buttonsDiv.className = 'buttons-div';
+
+  buttonsDiv.appendChild(cancelButton);
+  buttonsDiv.appendChild(button);
+
+  createPostFooter.appendChild(buttonsDiv);
   createPostFooter.appendChild(checkboxDiv);
 
   form.appendChild(textarea);
