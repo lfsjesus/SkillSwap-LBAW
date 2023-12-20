@@ -1757,6 +1757,9 @@ if (nextPostsButton != null) {
 
           loading.style.display = 'none';
           posts.forEach(function(post) {
+            // Don't add duplicate posts due to pagination bug
+            let duplicate = postsContainer.querySelector('.post[data-id="' + post.getAttribute('data-id') + '"]');
+            if (duplicate) return;
             postSetAllEventListeners(post);
             postsContainer.appendChild(post);
           }

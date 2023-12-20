@@ -89,7 +89,8 @@ class User extends Authenticatable
     
         $publicPosts = Post::publicPosts()->select('posts.*');
     
-        $posts = $myPosts->union($friendsPosts)->union($publicPosts)->union($groupsIamMember);
+        $posts = $myPosts->union($friendsPosts)->union($publicPosts)->union($groupsIamMember)->distinct();
+        
         $posts = $posts->orderBy('date', 'desc');
     
         return $posts;
