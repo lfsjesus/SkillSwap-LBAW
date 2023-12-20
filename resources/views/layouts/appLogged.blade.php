@@ -105,7 +105,7 @@
                         <li>
                             <a id="notifications" href="javascript:void(0)">
                                 <span class="material-symbols-outlined">
-                                    arrow_drop_down
+                                arrow_right
                                 </span>
                                 Notifications
                                 @if(Auth::user() && Auth::user()->hasUnreadNotifications())
@@ -118,7 +118,7 @@
                         </li>
                     </ul>
 
-                    <div class="notifications">
+                    <div class="notifications" style="display: none;">
                         @if (Auth::check())
                             @if(Auth::user()->notifications->isEmpty())
                                 <p>You have no notifications</p>

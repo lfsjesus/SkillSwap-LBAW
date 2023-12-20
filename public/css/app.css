@@ -1325,7 +1325,6 @@ form #form-group textarea {
 }
 
 .notifications {
-  display: flex;
   flex-direction: column;
   gap: 0.5em;
   height: calc(100vh - 15em);
