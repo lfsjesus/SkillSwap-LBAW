@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CardController;
-use App\Http\Controllers\ItemController;
-
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\PostController;
@@ -39,13 +36,8 @@ Route::view('/contacts', 'pages.contacts')->name('contacts');
 Route::view('/mainFeatures', 'pages.mainFeatures')->name('mainFeatures');
 Route::view('/settings', 'pages.settings')->name('settings');
 
-Route::get('/home', [PostController::class, 'list'])->name('home');
-
-// Admin
-Route::get('/admin/home', [AdminController::class, 'show'])->name('admin');
-
-
 Route::controller(PostController::class)->group(function () {
+    Route::get('/home',  'list')->name('home');
     Route::post('/posts/create', 'create')->name('create_post');
     Route::put('/posts/edit', 'edit')->name('edit_post');
     Route::delete('/posts/delete', 'delete')->name('delete_post');
@@ -67,12 +59,13 @@ Route::controller(AdminLoginController::class)->group(function () {
     Route::get('/admin/logout', 'logout')->name('admin.logout');
 });
 
+// Registration
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
 
-
+// User
 Route::controller(UserController::class)->group(function () {
     Route::get('/user/{username}', 'show')->name('user');
     Route::get('/user/{username}/edit', 'showEditForm')->name('edit_profile');
@@ -88,7 +81,9 @@ Route::controller(UserController::class)->group(function () {
 
 });
 
+// Admin
 Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin/home', 'show')->name('admin');
     Route::get('/admin/{username}', 'showUser')->name('view-user-admin');  
     Route::post('/admin/{username}/ban', 'banUser')->name('ban-user-admin');
     Route::post('/admin/{username}/unban', 'unbanUser')->name('unban-user-admin');
@@ -102,6 +97,7 @@ Route::controller(AdminController::class)->group(function () {
     Route::get('/admin/groups/{id}', 'showGroup')->where('id', '[0-9]+')->name('view-group-admin');
 });
 
+// Group
 Route::controller(GroupController::class)->group(function () {
     Route::get('/groups', 'list')->name('groups');
     Route::get('/group/{id}', 'show')->where('id', '[0-9]+')->name('group');
@@ -129,24 +125,25 @@ Route::controller(LikeController::class)->group(function () {
     Route::post('/comments/like', 'likeComment')->name('like_comment');
 });
 
+// Comment
 Route::controller(CommentController::class)->group(function () {
     Route::post('/posts/comment', 'createComment')->name('create_comment');
     Route::delete('/posts/comment/delete', 'deleteComment')->name('delete_comment');
     Route::put('/posts/comment/edit', 'editComment')->name('edit_comment');
 });
 
-
+// Notification
 Route::controller(NotificationController::class)->group(function () {
     Route::put('/notifications/markAsRead', 'markAsRead')->name('mark_as_read');
     Route::put('/notifications/markAllAsRead', 'markAllAsRead')->name('mark_all_as_read');
 });
 
-
+// Search
 Route::controller(SearchController::class)->group(function () {
     Route::get('/search', 'search')->name('search');
 });
 
-
+// Mail
 Route::controller(MailController::class)->group(function () {
     Route::get('/contact', 'showContactForm')->name('contact.show');
     Route::post('/send', 'send')->name('send');

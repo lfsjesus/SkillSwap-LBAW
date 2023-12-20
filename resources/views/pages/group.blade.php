@@ -136,10 +136,11 @@
     <!-- Posts Section -->
     <section id="posts">
         <h2>Posts</h2>
-        @if(Auth::user())
+        @if(Auth::user() instanceof App\Models\User)
             @if($group->posts->isEmpty())
                 <p> There are no posts to show </p>
-            @else
+            @endif
+            @if($group->isMember(Auth::user()))
                 @include('partials.create-post', ['group' => $group])
             @endif
         @endif    

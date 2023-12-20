@@ -17,6 +17,7 @@
         </script>
         <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     
     <body>
@@ -36,13 +37,6 @@
                                 <span class="material-symbols-outlined">
                                     account_circle
                                     </span>Users
-                            </a>
-                        </li>
-                        <li>
-                            <a>
-                                <span class="material-symbols-outlined">
-                                settings
-                                </span>Settings
                             </a>
                         </li>
                         <li>

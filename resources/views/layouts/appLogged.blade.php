@@ -17,6 +17,7 @@
         </script>
         <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     
     <body>
@@ -67,7 +68,7 @@
                             <div class="dropdown-content">
                                 <a href="{{ route('mainFeatures') }}">Main Features</a>
                                 <a href="{{ route('about') }}">About Us</a>
-                                <a href="{{ route('about') }}">Contact Us</a>
+                                <a href="{{ route('contacts') }}">Contact Us</a>
                             </div>
                         </li>
                         

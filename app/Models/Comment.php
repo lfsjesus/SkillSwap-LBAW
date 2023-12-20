@@ -72,7 +72,7 @@ class Comment extends Model
             $descendants = $descendants->merge($reply->descendants());   
         }
     
-        return $descendants;
+        return $descendants->sortBy('date');
     }
     
     public function calculatePopularity() {

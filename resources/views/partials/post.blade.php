@@ -67,7 +67,7 @@
     @include('partials.post-actions')
     <div class="post-comments">
         @if($post->getCommentsCount() > 0)
-            @foreach($post->directComments as $comment)
+            @foreach($post->directComments->sortByDesc('date') as $comment)
                 @include('partials.comment')
             @endforeach
         @endif

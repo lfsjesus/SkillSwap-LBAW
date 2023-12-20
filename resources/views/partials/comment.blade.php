@@ -29,7 +29,7 @@
             </div>
             <div class="comment-actions">
                 <p> {{Carbon\Carbon::parse($comment->date)->diffForHumans()}} </p>
-                @if(Auth::user())
+                @if(Auth::user() instanceof App\Models\User)
                 <p class="reply-comment"> Reply </p>
                 @endif
                 @if (Auth::guard('webadmin')->check() || Auth::check())
