@@ -32,7 +32,7 @@ class MailModel extends Mailable
     {
         return $this->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
                     ->subject('Reset Password')
-                    ->view('emails.email') 
+                    ->view('emails.email')
                     ->with('data', $this->mailData);
     }
 }
