@@ -795,16 +795,12 @@ form #form-group textarea {
 }
 
 .user-card, .group-card{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
   width: 100%;
   max-width: 20em;
   border-radius: 10px;
   color: white;
   background: linear-gradient(145deg, #232a37, #1b2029);
-  padding: 1.1em 1em;
+
   border: 1px solid #2e3541;
   transition: 0.2s ease;
 }
@@ -875,6 +871,7 @@ form #form-group textarea {
   font-size: 1.7rem;
   width: 100%;
   height: 100%;
+  padding: 1.1em 1em;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -1064,7 +1061,7 @@ form #form-group textarea {
   margin-left: 1rem;
 }
 
-.private-profile, .private-group{
+.private-profile{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1076,16 +1073,16 @@ form #form-group textarea {
   padding-bottom: 1em;
 }
 
-.private-profile p, .private-group p{
+.private-profile p {
   margin: 0;
 }
 
-.private-profile p:nth-child(3), .private-group p:nth-child(3){
+.private-profile p:nth-child(3) {
   font-size: 0.8em;
   font-weight: 500;
 }
 
-.private-profile .material-symbols-outlined, .private-group .material-symbols-outlined{
+.private-profile .material-symbols-outlined{
   font-variation-settings:
   'FILL' 1,
   'wght' 400,
