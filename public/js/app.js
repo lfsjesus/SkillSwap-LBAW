@@ -21,9 +21,11 @@ if (btnDanger != null) {
       color: '#fff',
       showCancelButton: true,
       confirmButtonText: 'Proceed',
-      cancelButtonText: 'Cancel'
+      confirmButtonColor: '#663FA4',
+      cancelButtonText: 'Cancel',
+      cancelButtonColor: '#151b26'
     }).then((result) => {
-      if (result.value) {
+      if (result.isConfirmed) {
         let formName = btnDanger.getAttribute('form');
         let form = document.querySelector('#' + formName);
         form.submit();
@@ -98,9 +100,11 @@ document.addEventListener('DOMContentLoaded', function() {
           color: '#fff',
           showCancelButton: true,
           confirmButtonText: 'Proceed',
-          cancelButtonText: 'Cancel'
+          confirmButtonColor: '#663FA4',
+          cancelButtonText: 'Cancel',
+          cancelButtonColor: '#151b26'
         }).then((result) => {
-          if (result.value) {
+          if (result.isConfirmed) {
             sendAjaxRequest('DELETE', '/posts/delete', data, postDeletedHandler);
           }});
         }
@@ -652,9 +656,11 @@ function deleteCommentClickHandler(e) {
     color: '#fff',
     showCancelButton: true,
     confirmButtonText: 'Proceed',
-    cancelButtonText: 'Cancel'
+    confirmButtonColor: '#663FA4',
+    cancelButtonText: 'Cancel',
+    cancelButtonColor: '#151b26'
   }).then((result) => {
-    if (result.value) {
+    if (result.isConfirmed) {
     sendAjaxRequest('DELETE', '/posts/comment/delete', data, deleteCommentHandler);
     }
   })}
@@ -1015,9 +1021,11 @@ function handleRemoveFriendClick(e) {
     color: '#fff',
     showCancelButton: true,
     confirmButtonText: 'Proceed',
-    cancelButtonText: 'Cancel'
+    confirmButtonColor: '#663FA4',
+    cancelButtonText: 'Cancel',
+    cancelButtonColor: '#151b26'
   }).then((result) => {
-    if (result.value) {
+    if (result.isConfirmed) {
       sendAjaxRequest('DELETE', '/friend/remove', data, removeFriendHandler);
     }});
 }
@@ -1262,9 +1270,11 @@ function handleLeaveGroupClick(e) {
     color: '#fff',
     showCancelButton: true,
     confirmButtonText: 'Proceed',
-    cancelButtonText: 'Cancel'
+    confirmButtonColor: '#663FA4',
+    cancelButtonText: 'Cancel',
+    cancelButtonColor: '#151b26'
   }).then((result) => {
-    if (result.value) {
+    if (result.isConfirmed) {
     sendAjaxRequest('DELETE', '/group/leave', data, leaveGroupHandler);
     }
   })}
@@ -1282,9 +1292,11 @@ function handleRemoveMemberClick(e) {
     color: '#fff',
     showCancelButton: true,
     confirmButtonText: 'Proceed',
-    cancelButtonText: 'Cancel'
+    confirmButtonColor: '#663FA4',
+    cancelButtonText: 'Cancel',
+    cancelButtonColor: '#151b26'
   }).then((result) => {
-    if (result.value) {
+    if (result.isConfirmed) {
     sendAjaxRequest('DELETE', '/group/removeMember', data, removeMemberHandler);
     }
   })}
@@ -1302,9 +1314,11 @@ function handleRemoveOwnerClick(e) {
     color: '#fff',
     showCancelButton: true,
     confirmButtonText: 'Proceed',
-    cancelButtonText: 'Cancel'
+    confirmButtonColor: '#663FA4',
+    cancelButtonText: 'Cancel',
+    cancelButtonColor: '#151b26'
   }).then((result) => {
-    if (result.value) {
+    if (result.isConfirmed) {
     sendAjaxRequest('DELETE', '/group/removeOwner', data, removeOwnerHandler);
     }
   })}
