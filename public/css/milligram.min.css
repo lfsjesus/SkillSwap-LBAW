@@ -9,6 +9,10 @@ font-style: normal;
 src: url('/fonts/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].woff2') format('woff2');
 }
 
+.swal2-actions button {
+	line-height: 0;
+}
+
 .material-symbols-outlined {
 font-family: 'Material Symbols Outlined';
 font-weight: normal;

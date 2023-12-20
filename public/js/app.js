@@ -9,6 +9,29 @@ function encodeForAjax(data) {
   }).join('&');
 }
 
+let btnDanger = document.querySelector('#content .btn-danger');
+if (btnDanger != null) {
+  btnDanger.addEventListener('click', function(e) {
+    e.preventDefault();
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      background: '#232a37',
+      color: '#fff',
+      showCancelButton: true,
+      confirmButtonText: 'Proceed',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.value) {
+        let formName = btnDanger.getAttribute('form');
+        let form = document.querySelector('#' + formName);
+        form.submit();
+      }});
+    }
+  );
+}
+
 
 function sendAjaxRequest(method, url, data, handler) {
   let request = new XMLHttpRequest();
@@ -73,7 +96,9 @@ document.addEventListener('DOMContentLoaded', function() {
           icon: 'warning',
           background: '#232a37',
           color: '#fff',
-          showCancelButton: true
+          showCancelButton: true,
+          confirmButtonText: 'Proceed',
+          cancelButtonText: 'Cancel'
         }).then((result) => {
           if (result.value) {
             sendAjaxRequest('DELETE', '/posts/delete', data, postDeletedHandler);
@@ -624,7 +649,9 @@ function deleteCommentClickHandler(e) {
     icon: 'warning',
     background: '#232a37',
     color: '#fff',
-    showCancelButton: true
+    showCancelButton: true,
+    confirmButtonText: 'Proceed',
+    cancelButtonText: 'Cancel'
   }).then((result) => {
     if (result.value) {
     sendAjaxRequest('DELETE', '/posts/comment/delete', data, deleteCommentHandler);
@@ -979,7 +1006,19 @@ function handleAcceptFriendRequestClick(e) {
 function handleRemoveFriendClick(e) {
   let friend_id = e.target.closest('.remove-friend').querySelector('input[name="friend_id"]').value;
   let data = { friend_id: friend_id };
-  sendAjaxRequest('DELETE', '/friend/remove', data, removeFriendHandler);
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    background: '#232a37',
+    color: '#fff',
+    showCancelButton: true,
+    confirmButtonText: 'Proceed',
+    cancelButtonText: 'Cancel'
+  }).then((result) => {
+    if (result.value) {
+      sendAjaxRequest('DELETE', '/friend/remove', data, removeFriendHandler);
+    }});
 }
 
 function handleAcceptFriendRequestNotificationClick(e) {
@@ -1220,7 +1259,9 @@ function handleLeaveGroupClick(e) {
     icon: 'warning',
     background: '#232a37',
     color: '#fff',
-    showCancelButton: true
+    showCancelButton: true,
+    confirmButtonText: 'Proceed',
+    cancelButtonText: 'Cancel'
   }).then((result) => {
     if (result.value) {
     sendAjaxRequest('DELETE', '/group/leave', data, leaveGroupHandler);
@@ -1238,7 +1279,9 @@ function handleRemoveMemberClick(e) {
     icon: 'warning',
     background: '#232a37',
     color: '#fff',
-    showCancelButton: true
+    showCancelButton: true,
+    confirmButtonText: 'Proceed',
+    cancelButtonText: 'Cancel'
   }).then((result) => {
     if (result.value) {
     sendAjaxRequest('DELETE', '/group/removeMember', data, removeMemberHandler);
@@ -1256,7 +1299,9 @@ function handleRemoveOwnerClick(e) {
     icon: 'warning',
     background: '#232a37',
     color: '#fff',
-    showCancelButton: true
+    showCancelButton: true,
+    confirmButtonText: 'Proceed',
+    cancelButtonText: 'Cancel'
   }).then((result) => {
     if (result.value) {
     sendAjaxRequest('DELETE', '/group/removeOwner', data, removeOwnerHandler);

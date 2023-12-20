@@ -1,6 +1,6 @@
 
 <div class="post-actions">
-    @if (Auth::check())
+    @if (Auth::user() instanceof App\Models\User)
         <div class="post-action @if(Auth::user() && $post->isLikedBy(auth()->user()->id))active @endif">
             <span class="material-symbols-outlined">
                 thumb_up
