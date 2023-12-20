@@ -748,7 +748,7 @@ function editComment(id) {
   cancelEditButton.addEventListener('click', function(e) {
     e.preventDefault();
     commentBox.replaceWith(originalComment);
-    //commentSetAllEventListeners(originalComment);
+    commentSetAllEventListeners(originalComment);
   }
   );  
 
@@ -1845,6 +1845,29 @@ function postSetAllEventListeners(post) {
     }
     );
   }
+}
+
+function commentSetAllEventListeners(comment) {
+  let likeButton = comment.querySelector('.comment-stat');
+  let editButton = comment.querySelector('.comment-actions .edit-comment');
+  let deleteButton = comment.querySelector('.comment-actions .delete-comment');
+  let replyButton = comment.querySelector('.comment-actions .reply-comment');
+  let replyForm = comment.querySelector('.comment-box');
+
+  likeButton.addEventListener('click', commentLikeClickHandler);
+
+  editButton.addEventListener('click', function(e) {
+    let id = e.target.closest('.comment').getAttribute('data-id');
+    editComment(id);
+    }
+  );
+
+  deleteButton.addEventListener('click', deleteCommentClickHandler);
+
+  replyButton.addEventListener('click', replyCommentClickHandler);
+
+  replyForm.addEventListener('submit', replyCommentFormHandler);
+  
 }
 
 
