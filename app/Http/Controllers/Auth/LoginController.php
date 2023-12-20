@@ -21,12 +21,13 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        Artisan::call('storage:link');
+        if (Auth::guard('webadmin')->check()) {
+            return redirect('/admin/login');
+        } 
         if (Auth::check()) {
             return redirect('/home');
-        } else {
-            return view('auth.login');
-        }
+        } 
+        return view('auth.login');    
     }
 
     /**
