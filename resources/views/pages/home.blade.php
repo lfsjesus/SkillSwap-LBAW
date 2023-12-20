@@ -19,6 +19,9 @@
 </section>
 <div class="posts-pagination">
 {{ $posts->links()}}
+<!--Loader-->
+<div class="loader"></div>
 </div>
+
 
 @endsection

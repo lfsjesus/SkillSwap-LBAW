@@ -1522,3 +1522,24 @@ main > aside#right-bar .notifications-bar {
   font-variation-settings: 'FILL' 1;
   color: wheat;
 }
+
+
+.loader {
+  display: none;
+  margin: auto;
+  border: 0.2em solid #EAF0F6;
+  border-radius: 50%;
+  border-top: 0.2em solid #8d73eb;
+  width: 2em;
+  height: 2em;
+  animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.posts-pagination nav {
+  display: none;
+}

@@ -1719,25 +1719,26 @@ let helpIcons = document.querySelectorAll('.help-icon');
 
 
 
-
-// Infinite scroll: fetch page on the <a> tag 'next'
 let nextPostsButton = document.querySelector('.posts-pagination nav :nth-child(2)');
 
 if (nextPostsButton != null) {
   let pageHref = nextPostsButton.href;
   let scrollContainer = document.querySelector('#posts');
+  let loading = document.querySelector('.loader');
   if (pageHref != null) {
     scrollContainer.addEventListener('scroll', function() {
-      // use fetch to get the next page
-      //console.log(scrollContainer.scrollTop + scrollContainer.clientHeight);
       if (scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight && pageHref != null) {
+        loading.style.display = 'block';
+        setTimeout(function() {
         fetch(pageHref)
         .then(response => response.text())
         .then(data => {
           let parser = new DOMParser();
-          let doc = parser.parseFromString(data, 'text/html');
+          let doc = parser.parseFromString(data, 'text/html');  
           let posts = doc.querySelectorAll('#posts article.post');
           let postsContainer = document.querySelector('#posts');
+
+          loading.style.display = 'none';
           posts.forEach(function(post) {
             postSetAllEventListeners(post);
             postsContainer.appendChild(post);
@@ -1750,6 +1751,7 @@ if (nextPostsButton != null) {
             pageHref = null;
           }
         });
+      }, 600);
       }
     });
   }
