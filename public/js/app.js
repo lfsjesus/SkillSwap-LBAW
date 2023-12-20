@@ -569,7 +569,8 @@ function commentPostHandler() {
   }
   else {
     let comments = document.querySelector('article.post[data-id="' + response.post_id + '"] .post-comments');
-    comments.appendChild(comment);
+    // append in the beginning
+    comments.insertBefore(comment, comments.firstChild);
   }
 
   // Reset Textarea
