@@ -1061,7 +1061,7 @@ form #form-group textarea {
   margin-left: 1rem;
 }
 
-.private-profile{
+.private-profile, .private-group {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1073,16 +1073,16 @@ form #form-group textarea {
   padding-bottom: 1em;
 }
 
-.private-profile p {
+.private-profile p, .private-group p{
   margin: 0;
 }
 
-.private-profile p:nth-child(3) {
+.private-profile p:nth-child(3), .private-group p:nth-child(3){
   font-size: 0.8em;
   font-weight: 500;
 }
 
-.private-profile .material-symbols-outlined{
+.private-profile .material-symbols-outlined, .private-group .material-symbols-outlined{
   font-variation-settings:
   'FILL' 1,
   'wght' 400,
