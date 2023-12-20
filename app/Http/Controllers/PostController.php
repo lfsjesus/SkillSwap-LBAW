@@ -25,9 +25,7 @@ class PostController extends Controller
             return view('pages.home', ['posts' => $posts]);
         }
 
-        $posts = Post::publicPosts()->sortByDesc('date')->simplePaginate(10);
-
-        dd($posts);
+        $posts = Post::publicPosts()->orderBy('date','desc')->simplePaginate(10);
         return view('pages.home', ['posts' => $posts]);
     }
 
