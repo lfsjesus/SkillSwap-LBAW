@@ -21,11 +21,13 @@ class PostController extends Controller
     
     public function list() {
         if (Auth::check()) {
-            $posts = Auth::user()->visiblePosts()->get();
+            $posts = Auth::user()->visiblePosts()->simplePaginate(10);
             return view('pages.home', ['posts' => $posts]);
         }
 
-        $posts = Post::publicPosts()->get()->sortByDesc('date');
+        $posts = Post::publicPosts()->sortByDesc('date')->simplePaginate(10);
+
+        dd($posts);
         return view('pages.home', ['posts' => $posts]);
     }
 

@@ -88,31 +88,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   if (postDeleteButtons != null) {
     postDeleteButtons.forEach(function(button) {
-      event.preventDefault();
-      button.addEventListener('click', function(e) {
-        let id = e.target.parentNode.parentNode.parentNode.getAttribute('data-id');
-        let data = {post_id: id};
-        Swal.fire({
-          title: 'Are you sure?',
-          text: "You won't be able to revert this!",
-          icon: 'warning',
-          background: '#232a37',
-          color: '#fff',
-          showCancelButton: true,
-          confirmButtonText: 'Proceed',
-          confirmButtonColor: '#663FA4',
-          cancelButtonText: 'Cancel',
-          cancelButtonColor: '#151b26'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            sendAjaxRequest('DELETE', '/posts/delete', data, postDeletedHandler);
-          }});
-        }
-      );
-    }
-    );
+      button.addEventListener('click', postDeleteClickHandler);
+    });
   }
-
 
   // when user clicks on edit button, replace article with create_post div
   let postEditButtons = document.querySelectorAll('.post-header-right span:first-child');
@@ -131,6 +109,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 }
 );
+
+function postDeleteClickHandler(e) {
+  e.preventDefault();
+  let id = e.target.parentNode.parentNode.parentNode.getAttribute('data-id');
+  let data = {post_id: id};
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    background: '#232a37',
+    color: '#fff',
+    showCancelButton: true,
+    confirmButtonText: 'Proceed',
+    confirmButtonColor: '#663FA4',
+    cancelButtonText: 'Cancel',
+    cancelButtonColor: '#151b26'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      sendAjaxRequest('DELETE', '/posts/delete', data, postDeletedHandler);
+    }});
+}
 
 function filterContent(content) {
   return content.replace(/(<([^>]+)>)/ig, ''); // remove html tags
@@ -485,16 +484,16 @@ let commentLikeButtons = document.querySelectorAll('article.post .comment .comme
 
 if (commentLikeButtons != null) {
   commentLikeButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      let id = e.target.closest('.comment').getAttribute('data-id');
-      let data = {comment_id: id};
-      sendAjaxRequest('POST', '/comments/like', data, likeCommentHandler);
-      }
-    );
+    button.addEventListener('click', commentLikeClickHandler);
   }
   );
 }
 
+function commentLikeClickHandler() {
+  let id = this.closest('.comment').getAttribute('data-id');
+  let data = {comment_id: id};
+  sendAjaxRequest('POST', '/comments/like', data, likeCommentHandler);
+}
 
 // show comment box when user clicks on comment button
 
@@ -538,25 +537,27 @@ function commentButtonHandler() {
 let replyButtons = document.querySelectorAll('article.post .comment .comment-actions .reply-comment');
 if (replyButtons != null) {
   replyButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      let id = e.target.closest('.comment').getAttribute('data-id');
-      let commentBox = document.querySelector('.comment[data-id="' + id + '"]').querySelector('.comment-box');
-
-      if (commentBox == null) {
-        commentBox = document.querySelector('.comment[data-id="' + id + '"]').parentNode.parentNode.querySelector('.comment-box');
-      }
-    
-      if (commentBox.style.display == 'none') {
-        commentBox.style.display = 'flex';
-      }
-      else {
-        commentBox.style.display = 'none';
-      }  
-      }
-    );
+    button.addEventListener('click', replyCommentClickHandler);
   }
   );
 }
+
+function replyCommentClickHandler() {
+  let id = this.closest('.comment').getAttribute('data-id');
+  let commentBox = document.querySelector('.comment[data-id="' + id + '"]').querySelector('.comment-box');
+  
+  if (commentBox == null) {
+    commentBox = document.querySelector('.comment[data-id="' + id + '"]').parentNode.parentNode.querySelector('.comment-box');
+  }
+
+  if (commentBox.style.display == 'none') {
+    commentBox.style.display = 'flex';
+  }
+  else {
+    commentBox.style.display = 'none';
+  }
+}
+
 
 function commentPostHandler() {
   let response = JSON.parse(this.responseText);
@@ -601,18 +602,20 @@ let postCommentForms = document.querySelectorAll('article.post > form.comment-bo
 if (postCommentForms != null) {
   postCommentForms.forEach(function(form) {
     form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      let post_id = e.target.querySelector('input[name="post_id"]').value;
-      let content = e.target.querySelector('textarea[name="content"]').value;
-      let data = {post_id: post_id, content: content};
-
-      sendAjaxRequest('POST', '/posts/comment', data, commentPostHandler);
+      commentPostClickHandler(e);
       }
     );
   }
   );
 }
 
+function commentPostClickHandler(e) {
+  e.preventDefault();
+  let post_id = e.target.closest('article.post').getAttribute('data-id');
+  let content = e.target.closest('form').querySelector('textarea[name="content"]').value;
+  let data = {post_id: post_id, content: content};
+  sendAjaxRequest('POST', '/posts/comment', data, commentPostHandler);
+}
 
 // comment on comment
 let replyCommentForms = document.querySelectorAll('article.post .comment .comment-box');
@@ -624,8 +627,8 @@ if (replyCommentForms != null) {
   );
 }
 
-function replyCommentFormHandler(event) {
-  event.preventDefault();
+function replyCommentFormHandler(e) {
+  e.preventDefault();
   let post_id = this.closest('.post').querySelector('input[name="post_id"]').value;
   let comment_id = this.closest('.comment').getAttribute('data-id');
   let content = this.querySelector('textarea[name="content"]').value;
@@ -638,7 +641,6 @@ function editCommentFormHandler(event) {
   let id = this.getAttribute('data-id');
   let content = this.querySelector('textarea[name="content"]').value;
   let data = {id: id, content: content};
-  console.log(data);
   sendAjaxRequest('PUT', '/posts/comment/edit', data, editCommentHandler);
 }
 
@@ -668,9 +670,7 @@ function deleteCommentClickHandler(e) {
 
 if (deleteCommentButtons != null) {
   deleteCommentButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      deleteCommentClickHandler(e);
-    });
+    button.addEventListener('click', deleteCommentClickHandler);
   }
   );
 }
@@ -1697,3 +1697,118 @@ let helpIcons = document.querySelectorAll('.help-icon');
     }
   );
 }
+
+
+
+
+// Infinite scroll: fetch page on the <a> tag 'next'
+let nextPostsButton = document.querySelector('.posts-pagination nav :nth-child(2)');
+
+if (nextPostsButton != null) {
+  let pageHref = nextPostsButton.href;
+  let scrollContainer = document.querySelector('#posts');
+  if (pageHref != null) {
+    scrollContainer.addEventListener('scroll', function() {
+      // use fetch to get the next page
+      //console.log(scrollContainer.scrollTop + scrollContainer.clientHeight);
+      if (scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight && pageHref != null) {
+        fetch(pageHref)
+        .then(response => response.text())
+        .then(data => {
+          let parser = new DOMParser();
+          let doc = parser.parseFromString(data, 'text/html');
+          let posts = doc.querySelectorAll('#posts article.post');
+          let postsContainer = document.querySelector('#posts');
+          posts.forEach(function(post) {
+            postSetAllEventListeners(post);
+            postsContainer.appendChild(post);
+          }
+          );
+          let newPageHref = doc.querySelector('.posts-pagination nav :nth-child(2)').href;
+          if (newPageHref) {
+            pageHref = newPageHref;
+          } else {
+            pageHref = null;
+          }
+        });
+      }
+    });
+  }
+}
+
+function postSetAllEventListeners(post) {
+  let likeButton = post.querySelector('.post-actions .post-action:first-child');
+  let commentButton = post.querySelector('.post-actions .post-action:nth-child(2)');
+  let postCommentForm = post.querySelector('form.comment-box');
+  let deletePost = post.querySelector('.post-header-right span:last-child');
+  let editPostButton = post.querySelector('.post-header-right span:first-child');
+  let comments = post.querySelectorAll('.comment');
+
+  likeButton.addEventListener('click', function(e) {
+    let id = e.target.closest('.post').getAttribute('data-id');
+    let data = {post_id: id};
+    sendAjaxRequest('POST', '/posts/like', data, likePostHandler);
+    }
+  );
+
+  commentButton.addEventListener('click', commentButtonHandler);
+
+  postCommentForm.addEventListener('submit', commentPostClickHandler);
+
+  if (deletePost != null) {
+    deletePost.addEventListener('click', postDeleteClickHandler);
+  }
+
+  if (editPostButton != null) {
+    editPostButton.addEventListener('click', function(e) {
+      let id = e.target.parentNode.parentNode.parentNode.getAttribute('data-id');
+      editPost(id);
+      }
+    );
+  }
+
+  // Comment related event listeners (like, edit, delete, reply)
+  let likeCommentButtons = post.querySelectorAll('.comment .comment-stat');
+  let editCommentButtons = post.querySelectorAll('.comment .comment-actions .edit-comment');
+  let deleteCommentButtons = post.querySelectorAll('.comment .comment-actions .delete-comment');
+  let replyCommentForms = post.querySelectorAll('.comment .comment-box');
+  let replyCommentButtons = post.querySelectorAll('.comment .comment-actions .reply-comment');
+
+  likeCommentButtons.forEach(function(button) {
+    button.addEventListener('click', commentLikeClickHandler);
+  }
+  );
+
+  editCommentButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      let id = e.target.closest('.comment').getAttribute('data-id');
+      editComment(id);
+      }
+    );
+  });
+
+  if (deleteCommentButtons != null) {
+    deleteCommentButtons.forEach(function(button) {
+      button.addEventListener('click', deleteCommentClickHandler);
+    }
+    );
+  }
+
+  if (replyCommentForms != null) {
+    replyCommentForms.forEach(function(form) {
+      form.addEventListener('submit', replyCommentFormHandler);
+    }
+    );
+  }
+
+  if (replyCommentButtons != null) {
+    replyCommentButtons.forEach(function(button) {
+      button.addEventListener('click', replyCommentClickHandler);
+    }
+    );
+  }
+}
+
+
+
+
