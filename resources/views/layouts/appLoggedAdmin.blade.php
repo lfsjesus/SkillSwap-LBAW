@@ -40,13 +40,6 @@
                             </a>
                         </li>
                         <li>
-                            <a>
-                                <span class="material-symbols-outlined">
-                                settings
-                                </span>Settings
-                            </a>
-                        </li>
-                        <li>
                             <a href="{{ route('admin-groups') }}">
                                 <span class="material-symbols-outlined">
                                 groups
