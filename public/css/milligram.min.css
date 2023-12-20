@@ -90,6 +90,11 @@ input[type='submit'] {
 	border-color: rgb(108, 15, 15);
 }
 
+.btn-cancel{
+	background-color: rgb(108, 15, 15);
+	border-color: rgb(108, 15, 15);
+}
+
 .button:focus,
 .button:hover,
 button:focus,

@@ -228,6 +228,7 @@ async function editPost(id) {
 
   let cancelButton = document.createElement('button');
   cancelButton.className = 'cancel-button';
+  cancelButton.classList.add('btn-cancel');
   cancelButton.innerHTML = 'Cancel';
   cancelButton.setAttribute('type', 'button');
   cancelButton.addEventListener('click', function(e) {
@@ -235,9 +236,14 @@ async function editPost(id) {
     create_post.replaceWith(originalPost);
   }
   );
+  
+  let buttonsDiv = document.createElement('div');
+  buttonsDiv.className = 'buttons-div';
 
-  createPostFooter.appendChild(cancelButton);
-  createPostFooter.appendChild(button);
+  buttonsDiv.appendChild(cancelButton);
+  buttonsDiv.appendChild(button);
+
+  createPostFooter.appendChild(buttonsDiv);
   createPostFooter.appendChild(checkboxDiv);
 
   form.appendChild(textarea);
