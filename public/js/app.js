@@ -67,7 +67,17 @@ document.addEventListener('DOMContentLoaded', function() {
       button.addEventListener('click', function(e) {
         let id = e.target.parentNode.parentNode.parentNode.getAttribute('data-id');
         let data = {post_id: id};
-        sendAjaxRequest('DELETE', '/posts/delete', data, postDeletedHandler);
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          background: '#232a37',
+          color: '#fff',
+          showCancelButton: true
+        }).then((result) => {
+          if (result.value) {
+            sendAjaxRequest('DELETE', '/posts/delete', data, postDeletedHandler);
+          }});
         }
       );
     }
@@ -605,14 +615,28 @@ function editCommentFormHandler(event) {
 // delete comment
 let deleteCommentButtons = document.querySelectorAll('article.post .comment .comment-actions .delete-comment');
 
+function deleteCommentClickHandler(e) {
+  let id = e.target.closest('.comment').getAttribute('data-id');
+  let data = {id: id};
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    background: '#232a37',
+    color: '#fff',
+    showCancelButton: true
+  }).then((result) => {
+    if (result.value) {
+    sendAjaxRequest('DELETE', '/posts/comment/delete', data, deleteCommentHandler);
+    }
+  })}
+;
+
 if (deleteCommentButtons != null) {
   deleteCommentButtons.forEach(function(button) {
     button.addEventListener('click', function(e) {
-      let id = e.target.closest('.comment').getAttribute('data-id');
-      let data = {id: id};
-      sendAjaxRequest('DELETE', '/posts/comment/delete', data, deleteCommentHandler);
-      }
-    );
+      deleteCommentClickHandler(e);
+    });
   }
   );
 }
@@ -762,9 +786,7 @@ function createComment(id, post_id, author_name, content, replyTo_id) {
   commentActionsP4.className = 'delete-comment';
   commentActionsP4.innerHTML = 'Delete';
   commentActionsP4.addEventListener('click', function(e) {
-    let id = e.target.closest('.comment').getAttribute('data-id');
-    let data = {id: id};
-    sendAjaxRequest('DELETE', '/posts/comment/delete', data, deleteCommentHandler);
+    deleteCommentClickHandler(e);
     }
   );
 
@@ -1192,22 +1214,55 @@ function handleRejectJoinGroupRequestNotificationClick(e) {
 function handleLeaveGroupClick(e) {
   let group_id = e.target.closest('.leave-group').querySelector('input[name="group_id"]').value;
   let data = { group_id: group_id };
-  sendAjaxRequest('DELETE', '/group/leave', data, leaveGroupHandler);
-}
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    background: '#232a37',
+    color: '#fff',
+    showCancelButton: true
+  }).then((result) => {
+    if (result.value) {
+    sendAjaxRequest('DELETE', '/group/leave', data, leaveGroupHandler);
+    }
+  })}
+;
 
 function handleRemoveMemberClick(e) {
   let user_id = e.target.closest('.remove-member').querySelector('input[name="user_id"]').value;
   let group_id = e.target.closest('.remove-member').querySelector('input[name="group_id"]').value;
   let data = { user_id: user_id, group_id: group_id };
-  sendAjaxRequest('DELETE', '/group/removeMember', data, removeMemberHandler);
-}
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    background: '#232a37',
+    color: '#fff',
+    showCancelButton: true
+  }).then((result) => {
+    if (result.value) {
+    sendAjaxRequest('DELETE', '/group/removeMember', data, removeMemberHandler);
+    }
+  })}
+;
 
 function handleRemoveOwnerClick(e) {
   let user_id = e.target.closest('.remove-owner').querySelector('input[name="user_id"]').value;
   let group_id = e.target.closest('.remove-owner').querySelector('input[name="group_id"]').value;
   let data = { user_id: user_id, group_id: group_id };
-  sendAjaxRequest('DELETE', '/group/removeOwner', data, removeOwnerHandler);
-}
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    background: '#232a37',
+    color: '#fff',
+    showCancelButton: true
+  }).then((result) => {
+    if (result.value) {
+    sendAjaxRequest('DELETE', '/group/removeOwner', data, removeOwnerHandler);
+    }
+  })}
+;
 
 function joinGroupRequestHandler() {
   let response = JSON.parse(this.responseText);
