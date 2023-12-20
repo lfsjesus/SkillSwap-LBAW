@@ -138,6 +138,7 @@ function filterContent(content) {
 
 async function editPost(id) {
   let post = document.querySelector('.post[data-id="' + id + '"]');
+  let originalPost = post.cloneNode(true); //clone the post in case the user cancels the edit
   let profile_picture = post.querySelector('.post-header-left img');
   let files = post.querySelectorAll('.post-body a img'); // TO CHANGE AFTER MODIFYING IMAGES VIEW
   let public_post = post.getAttribute('data-public');
@@ -226,6 +227,18 @@ async function editPost(id) {
   
   createPostFooter.appendChild(button);
   createPostFooter.appendChild(checkboxDiv);
+
+  let cancelButton = document.createElement('button');
+  cancelButton.className = 'cancel-button';
+  cancelButton.innerHTML = 'Cancel';
+  cancelButton.addEventListener('click', function() {
+    e.preventDefault();
+    create_post.replaceWith(originalPost);
+  }
+  );
+
+  createPostFooter.appendChild(cancelButton);
+
 
   form.appendChild(textarea);
   form.appendChild(createPostFooter);
