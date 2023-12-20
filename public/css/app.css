@@ -1325,7 +1325,6 @@ form #form-group textarea {
 }
 
 .notifications {
-  display: flex;
   flex-direction: column;
   gap: 0.5em;
   height: calc(100vh - 15em);
@@ -1521,4 +1520,25 @@ main > aside#right-bar .notifications-bar {
 .field-title span {
   font-variation-settings: 'FILL' 1;
   color: wheat;
+}
+
+
+.loader {
+  display: none;
+  margin: auto;
+  border: 0.2em solid #EAF0F6;
+  border-radius: 50%;
+  border-top: 0.2em solid #8d73eb;
+  width: 2em;
+  height: 2em;
+  animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.posts-pagination nav {
+  display: none;
 }

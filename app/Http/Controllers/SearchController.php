@@ -75,20 +75,21 @@ class SearchController extends Controller {
 
         if (Auth::guard('webadmin')->check()) {
             $posts = Post::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                    ->get();
+                            ->orWhere('description', '=', $request->input('q'))
+                            ->get();
         }
 
         else if (Auth::user()) {
             $posts = Post::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
                             ->WhereIn('id', Auth::user()->visiblePosts()->pluck('id'))
+                            ->orWhere('description', '=', $request->input('q'))
                             ->get();
                                 
         }
         else {
             $posts = Post::publicPosts()
-                            ->where (function($query) use ($request) {
-                                    $query->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')]);
-                            })
+                            ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                            ->orWhere('description', '=', $request->input('q'))
                             ->get(); 
         }
 
@@ -115,6 +116,9 @@ class SearchController extends Controller {
         $query = $request->input('q');
 
         $groups = Group::whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                    ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')])
+                    ->orWhere('description', '=', $request->input('q'))
+                    ->orWhere('name', '=', $request->input('q'))
                     ->get();
 
         return $groups;
@@ -126,17 +130,20 @@ class SearchController extends Controller {
 
         if (Auth::guard('webadmin')->check()) {
             $comments = Comment::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                                ->orWhere('content', '=', $request->input('q'))
                     ->get();
         }
 
         else if (Auth::user()) {            
             $comments = Comment::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
                             ->WhereIn('id', Auth::user()->visibleComments()->pluck('id'))
+                            ->orWhere('content', '=', $request->input('q'))
                             ->get();
         }
         else {
             $comments = Comment::publicComments()
                     ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                    ->orWhere('content', '=', $request->input('q'))
                     ->get();
         }
                     

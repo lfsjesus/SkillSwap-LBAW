@@ -1445,6 +1445,7 @@ insert into is_member (user_id, group_id, date) values (601, 2, CURRENT_TIMESTAM
 insert into owns (user_id, group_id, date) values (601, 1, '11/30/2022');
 
 /*Posts*/
+INSERT INTO posts (user_id, group_id, date, description, public_post) VALUES (601, NULL, '2023-01-01', 'Post by user 23.', true);
 
 INSERT INTO posts (user_id, group_id, date, description, public_post) VALUES (23, NULL, CURRENT_TIMESTAMP, 'Post by user 23.', true);
 INSERT INTO posts (user_id, group_id, date, description, public_post) VALUES (142, NULL, CURRENT_TIMESTAMP, 'Post by user 142.', true);
