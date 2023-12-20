@@ -225,20 +225,20 @@ async function editPost(id) {
   button.setAttribute('type', 'submit');
   form.innerHTML += '<input type="hidden" name="_token" value="' + document.querySelector('meta[name="csrf-token"]').content + '">';
   
-  createPostFooter.appendChild(button);
-  createPostFooter.appendChild(checkboxDiv);
 
   let cancelButton = document.createElement('button');
   cancelButton.className = 'cancel-button';
   cancelButton.innerHTML = 'Cancel';
-  cancelButton.addEventListener('click', function() {
+  cancelButton.setAttribute('type', 'button');
+  cancelButton.addEventListener('click', function(e) {
     e.preventDefault();
     create_post.replaceWith(originalPost);
   }
   );
 
   createPostFooter.appendChild(cancelButton);
-
+  createPostFooter.appendChild(button);
+  createPostFooter.appendChild(checkboxDiv);
 
   form.appendChild(textarea);
   form.appendChild(createPostFooter);
