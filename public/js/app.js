@@ -233,6 +233,7 @@ async function editPost(id) {
   cancelButton.addEventListener('click', function(e) {
     e.preventDefault();
     create_post.replaceWith(originalPost);
+    postSetAllEventListeners(originalPost);
   }
   );
   
