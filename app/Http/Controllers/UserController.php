@@ -18,7 +18,7 @@ class UserController extends Controller
     public function show(string $username) {
         $user = User::where('username', $username)->firstOrFail();
 
-        if (Auth::guard('webadmin')) {
+        if (Auth::guard('webadmin')->check()) {
             return redirect()->route('view-user-admin', ['username' => $user->username]);
         }
 

@@ -44,7 +44,7 @@
                 @endif        
             </div>
             
-            @if(Auth::user() instanceof App\Models\User)
+            @if(Auth::user() instanceof App\Models\User && !$user->deleted)
 
                 @if(Auth::user()->id == $user->id)
 
@@ -139,9 +139,15 @@
         </div>
         @else
         <div class="private-profile">
+            @if ($user->deleted)
+                <span class="material-symbols-outlined">person</span>
+                <p> This user no longer exists </p>
+                <p> You can only see his public posts </p>
+            @else
             <span class="material-symbols-outlined">lock</span> 
             <p> This user's profile is private </p>
             <p> You must be friend of this user to see all the information </p>
+            @endif
         </div>
         @endif
         <!-- Posts Section -->
