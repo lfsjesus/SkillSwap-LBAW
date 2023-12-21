@@ -1,0 +1,109 @@
+@media only screen and (max-width: 780px) {
+    main {
+        grid-template-columns: 1fr;
+        height: calc(100vh - 1rem);
+    }
+    
+     
+    main > #content {
+        grid-column: 1;
+        padding: 0 1rem;
+        padding-bottom: 1rem;
+        margin: 0;
+    }
+
+    main > aside{
+        display: flex;
+        position: fixed;
+        top: 0;
+        width: 100vw; 
+        height: calc(100vh);
+        margin: 0;
+        transition: transform 0.3s ease;
+        z-index: 1000;
+    }
+
+    main > aside#left-bar {
+        left: 0;
+        transform: translateX(-100%);
+    }
+
+    main > aside#right-bar {
+        right: 0;
+        transform: translateX(100%);
+    }
+
+    main > aside#left-bar.active-menu {
+        transform: translateX(0%);
+
+    }
+
+    main > aside#right-bar.active-menu {
+        transform: translateX(0%);
+    }
+
+    .responsive-buttons{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 0rem 1rem;
+        padding-top: 1.5rem ;
+        color: white;
+        cursor: pointer;
+    }
+
+    /* Style for hamburger menus */
+  .hamburger-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    color: white;
+    cursor: pointer;
+    background-color: #151b26;
+  }
+
+
+  .close-btn {
+    display: block;
+    position: absolute;
+    top: 1.5rem;
+    right: 0.5rem; 
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 4rem; 
+    font-weight: 100;
+    cursor: pointer;
+    }
+
+
+    #right-bar .close-btn {
+     right: 0.5rem; 
+    }
+
+
+    /* hide scroll bar in textareas first in google chrome*/
+    textarea::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* hide scroll bar in textareas first in firefox*/
+    textarea {
+        scrollbar-width: none;
+    }
+
+    /* hide scroll bar in textareas first in Edge*/
+    textarea {
+        -ms-overflow-style: none;
+    }
+
+}
+  
+
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+    /* Styles for small tablets like smaller iPads */
+  }
+  

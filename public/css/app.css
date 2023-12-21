@@ -536,6 +536,12 @@ aside .logo img {
   border-radius: 10px;
   background-color: #1b2029;
   padding: 1em;
+  overflow-y: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.profile-section::-webkit-scrollbar {
+  display: none;
 }
 
 .profile-header, .group-header {
@@ -1571,4 +1577,12 @@ main > aside#right-bar .notifications-bar {
 
 .show-more-comments a:hover {
   text-decoration: underline;
+}
+
+.hamburger-menu {
+  display: none;
+}
+
+.close-btn {
+  display: none;
 }
