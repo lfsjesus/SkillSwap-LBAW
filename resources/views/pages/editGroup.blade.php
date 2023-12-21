@@ -49,7 +49,7 @@
             <!-- Description -->
             <div id="form-group">
                 <div class="field-title">
-                    <label for="name">Description</label>
+                    <label for="description">Description</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Write a brief description about the group. Max 255 characters.

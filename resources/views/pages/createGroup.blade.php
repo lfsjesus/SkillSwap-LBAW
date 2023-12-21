@@ -19,7 +19,6 @@
                         Accepted formats: jpg, jpeg, png. Max size: 5MB.
                     </div>
                 </div>
-                <label for="banner">Banner</label>
                 <input type="file" name="banner" id="banner" class="form-control">
                 @if ($errors->has('banner'))
                 <span class="error">
@@ -37,7 +36,6 @@
                         Write the group's name here. Max 50 characters.
                     </div>
                 </div>
-                <label for="name">Name</label>
                 <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
                 @if ($errors->has('name'))
                 <span class="error">
@@ -49,13 +47,12 @@
             <!-- Description -->
             <div id="form-group">
                 <div class="field-title">
-                    <label for="name">Description</label>
+                    <label for="description">Description</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Write a brief description about the group. Max 255 characters.
                     </div>
                 </div>
-                <label for="description">Description</label>
                 <textarea name="description" id="description" class="form-control">{{ old('description') }}</textarea>
                 @if ($errors->has('description'))
                 <span class="error">
@@ -73,7 +70,6 @@
                         Select 'Public' for everyone to view your details, or 'Private' for limited access.
                     </div>
                 </div>
-                <label for="visibility">Visibility</label>
                 <select name="visibility" id="visibility" class="form-control">
                     <option value="1">Public</option>
                     <option value="0">Private</option>

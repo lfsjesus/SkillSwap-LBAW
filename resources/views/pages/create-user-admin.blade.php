@@ -23,7 +23,6 @@
                         Accepted formats: jpg, jpeg, png. Max size: 5MB.
                     </div>
                 </div>
-                <label for="profile_picture">Profile Picture</label>
                 <input type="file" name="profile_picture" id="profile_picture" class="form-control" value="{{ old('profile_picture') }}">
                 @if ($errors->has('profile_picture'))
                 <span class="error">
@@ -41,7 +40,6 @@
                         Write your full name here. Max 50 characters.
                     </div>
                 </div>
-                <label for="name">Name</label>
                 <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
                 @if ($errors->has('name'))
                 <span class="error">
@@ -59,7 +57,6 @@
                         Provide a valid email address.
                     </div>
                 </div>
-                <label for="email">Email</label>
                 <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}">
                 @if ($errors->has('email'))
                 <span class="error">
@@ -77,7 +74,6 @@
                         Choose a unique username for your profile. Max 50 characters.
                     </div>
                 </div>
-                <label for="username">Username</label>
                 <input type="text" name="username" id="username" class="form-control" value="{{ old('username') }}">
                 @if ($errors->has('username'))
                 <span class="error">
@@ -112,7 +108,6 @@
                         Format: +[Country Code (optional)][Number (8-15 characters)]. You can use '-'.
                     </div>
                 </div>
-                <label for="phone_number">Phone Number</label>
                 <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ old('phone_number') }}">
                 @if ($errors->has('phone_number'))
                 <span class="error">
@@ -130,7 +125,6 @@
                         "Enter your birthdate in the format DD-MM-YYYY.
                     </div>
                 </div>
-                <label for="birthdate">Birthdate</label>
                 <input type="date" name="birth_date" id="birthdate" class="form-control" value="{{ old('birthdate') }}">
                 @if ($errors->has('birth_date'))
                 <span class="error">
@@ -148,7 +142,6 @@
                         Write a brief description about yourself. Max 500 characters.
                     </div>
                 </div>
-                <label for="description">Description</label>
                 <textarea name="description" id="description" class="form-control">{{ old('description') }}</textarea>
                 @if ($errors->has('description'))
                 <span class="error">
