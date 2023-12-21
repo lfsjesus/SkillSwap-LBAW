@@ -22,7 +22,7 @@ SkillSwap has been conceived with the primary objective of fostering a thriving 
 
 The final version was available in `https://lbaw23111.lbaw.fe.up.pt/`.
 ```code
-docker run -it -p 8000:80 --name=lbaw23111 -e DB_DATABASE="lbaw23111" -e DB_SCHEMA="lbaw23111" -e DB_USERNAME="lbaw23111" -e DB_PASSWORD="oeUTuuDs" git.fe.up.pt:5050/lbaw/lbaw2324/lbaw23111
+docker run -it -p 8000:80 --name=lbaw23111 -e DB_DATABASE="lbaw23111" -e DB_SCHEMA="lbaw23111" -e DB_USERNAME="lbaw23111" -e DB_PASSWORD="_" git.fe.up.pt:5050/lbaw/lbaw2324/lbaw23111
 ```
 
 ### Credentials
