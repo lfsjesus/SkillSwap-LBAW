@@ -121,7 +121,7 @@
         display: flex;
         position: fixed;
         top: 0;
-        width: 100vw; 
+        width: 100vw!important; 
         height: calc(100vh);
         margin: 0;
         transition: transform 0.3s ease;
