@@ -31,8 +31,8 @@ class MailModel extends Mailable
     public function build()
     {
         return $this->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
-                    ->subject('Your Subject Here')
-                    ->view('emails.email') 
+                    ->subject('Reset Password')
+                    ->view('emails.email')
                     ->with('data', $this->mailData);
     }
 }
