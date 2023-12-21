@@ -1747,7 +1747,7 @@ if (nextPostsButton != null) {
 
   if (pageHref.startsWith('http://')) {
     // Replace 'http://' with '//'
-    pageHref = pageHref.replace('http://', 'https://');
+    pageHref = pageHref.replace('http://', '//');
   }
   // Update the href attribute
   nextPostsButton.href = pageHref;
@@ -1780,7 +1780,7 @@ if (nextPostsButton != null) {
           if (newPageHref) {
             if (newPageHref.startsWith('http://')) {
               // Replace 'http://' with '//'
-              newPageHref = newPageHref.replace('http://', 'https://');
+              newPageHref = newPageHref.replace('http://', '//');
             }
             pageHref = newPageHref;
           } else {
