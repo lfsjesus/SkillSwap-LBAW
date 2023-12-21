@@ -34,7 +34,7 @@
                     <span class="username"> &#64{{$user->username}} </span>
                     
                 </div>
-                @if($user->isPublic() || (Auth::user() && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()))))
+                @if($user->isPublic() || (Auth::user() instanceof App\Models\User && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()))))
                 <p class="user-email">
                     <span class="material-symbols-outlined">
                     mail
@@ -44,7 +44,7 @@
                 @endif        
             </div>
             
-            @if(Auth::user())
+            @if(Auth::user() instanceof App\Models\User)
 
                 @if(Auth::user()->id == $user->id)
 
@@ -107,7 +107,7 @@
     </div>
 
     <div class="profile-content">
-        @if($user->isPublic() || (Auth::user() && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()))))
+        @if($user->isPublic() || (Auth::user() instanceof App\Models\User && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()))))
         <!-- Friends and Groups Grid -->
         <div class="friends-groups-grid">
             <!-- Friends Box -->
@@ -152,10 +152,10 @@
             @else
             @php
             $userPosts = ($user->isPublic() || 
-                        (Auth::user() && (Auth::user()->id == $user->id || 
+                        (Auth::user() instanceof App\Models\User && (Auth::user()->id == $user->id || 
                         $user->isFriendWith(Auth::user())))) ? $user->posts : $user->publicPosts;
         
-            $visiblePosts = Auth::user() ? Auth::user()->visiblePosts()->pluck('id')->toArray() : [];
+            $visiblePosts = (Auth::user() instanceof App\Models\User) ? Auth::user()->visiblePosts()->pluck('id')->toArray() : [];
         
             $posts = $userPosts->whereIn('id', $visiblePosts);
             @endphp
