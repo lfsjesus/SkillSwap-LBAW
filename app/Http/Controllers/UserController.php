@@ -130,6 +130,11 @@ class UserController extends Controller
             // Delete all group memberships
             Member::where('user_id', $user->id)
                             ->delete();
+
+            // Delete all group ownerships
+            DB::table('owns')
+                ->where('user_id', $user->id)
+                ->delete();
             
             DB::commit();
         } catch (\Exception $e) {
