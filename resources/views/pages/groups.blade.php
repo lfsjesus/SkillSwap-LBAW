@@ -15,7 +15,7 @@
             {{ session('error') }}
         </p>
     @endif
-    @if(Auth::user())
+    @if(Auth::user() instanceof App\Models\User)
     <a href="{{route('create_group_form')}}" class="button"><span class='material-symbols-outlined'>add_circle</span> group</a>
     @endif
     <div class="users">
