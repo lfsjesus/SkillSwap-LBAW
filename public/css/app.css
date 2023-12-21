@@ -957,7 +957,7 @@ form #form-group textarea {
   flex-direction: column;
   gap: 1em;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .search-results::-webkit-scrollbar {
@@ -1594,3 +1594,19 @@ main > aside#right-bar .notifications-bar {
 .close-btn {
   display: none;
 }
+
+
+    /* hide scroll bar in textareas first in google chrome*/
+    textarea::-webkit-scrollbar {
+      display: none;
+  }
+
+  /* hide scroll bar in textareas first in firefox*/
+  textarea {
+      scrollbar-width: none;
+  }
+
+  /* hide scroll bar in textareas first in Edge*/
+  textarea {
+      -ms-overflow-style: none;
+  }
