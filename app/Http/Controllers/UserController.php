@@ -18,6 +18,10 @@ class UserController extends Controller
     public function show(string $username) {
         $user = User::where('username', $username)->firstOrFail();
 
+        if (Auth::guard('webadmin')->check()) {
+            return redirect()->route('view-user-admin', ['username' => $user->username]);
+        }
+
         $this->authorize('show', User::class);
 
         return view('pages.user', ['user' => $user]);
@@ -130,6 +134,11 @@ class UserController extends Controller
             // Delete all group memberships
             Member::where('user_id', $user->id)
                             ->delete();
+
+            // Delete all group ownerships
+            DB::table('owns')
+                ->where('user_id', $user->id)
+                ->delete();
             
             DB::commit();
         } catch (\Exception $e) {
@@ -146,6 +155,10 @@ class UserController extends Controller
         
         if ($user == null) {
             return json_encode(['success' => false, 'error' => 'User not found']);
+        }
+
+        if ($user->deleted) {
+            return json_encode(['success' => false, 'error' => 'User has been deleted']);
         }
 
         $this->authorize('sendFriendRequest', $user);

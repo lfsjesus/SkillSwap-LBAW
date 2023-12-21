@@ -34,7 +34,7 @@
                     <span class="username"> &#64{{$user->username}} </span>
                     
                 </div>
-                @if($user->isPublic() || (Auth::user() && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()))))
+                @if($user->isPublic() || (Auth::user() instanceof App\Models\User && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()))))
                 <p class="user-email">
                     <span class="material-symbols-outlined">
                     mail
@@ -44,7 +44,7 @@
                 @endif        
             </div>
             
-            @if(Auth::user())
+            @if(Auth::user() instanceof App\Models\User && !$user->deleted)
 
                 @if(Auth::user()->id == $user->id)
 
@@ -107,7 +107,7 @@
     </div>
 
     <div class="profile-content">
-        @if($user->isPublic() || (Auth::user() && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()))))
+        @if($user->isPublic() || (Auth::user() instanceof App\Models\User && (Auth::user()->id == $user->id || $user->isFriendWith(Auth::user()))))
         <!-- Friends and Groups Grid -->
         <div class="friends-groups-grid">
             <!-- Friends Box -->
@@ -139,9 +139,15 @@
         </div>
         @else
         <div class="private-profile">
+            @if ($user->deleted)
+                <span class="material-symbols-outlined">person</span>
+                <p> This user no longer exists </p>
+                <p> You can only see his public posts </p>
+            @else
             <span class="material-symbols-outlined">lock</span> 
             <p> This user's profile is private </p>
             <p> You must be friend of this user to see all the information </p>
+            @endif
         </div>
         @endif
         <!-- Posts Section -->
@@ -152,11 +158,11 @@
             @else
             @php
             $userPosts = ($user->isPublic() || 
-                        (Auth::user() && (Auth::user()->id == $user->id || 
+                        (Auth::user() instanceof App\Models\User && (Auth::user()->id == $user->id || 
                         $user->isFriendWith(Auth::user())))) ? $user->posts : $user->publicPosts;
         
-            $visiblePosts = Auth::user() ? Auth::user()->visiblePosts()->pluck('id')->toArray() : [];
-        
+            $visiblePosts = (Auth::user() instanceof App\Models\User) ? Auth::user()->visiblePosts()->pluck('id')->toArray() : $user->publicPosts()->pluck('id')->toArray();
+
             $posts = $userPosts->whereIn('id', $visiblePosts);
             @endphp
             @foreach($posts as $post)

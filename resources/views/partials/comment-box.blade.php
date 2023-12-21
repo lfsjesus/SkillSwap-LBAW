@@ -15,7 +15,7 @@
             </a>
         </div>
         <div class="comment-box-header-right">
-            <textarea placeholder="Write a comment..." name="content"></textarea>
+            <textarea placeholder="Write a comment..." name="content" required></textarea>
             <span class="material-symbols-outlined">
                 attach_file
             </span>
