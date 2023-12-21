@@ -133,6 +133,7 @@
 
     .search-sort{
         width: 80%;
+        justify-content: center;
     }
 
     /* hide scroll bar in textareas first in google chrome*/
