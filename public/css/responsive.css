@@ -85,6 +85,15 @@
     }
 
 
+    .friends-groups-grid, .members-owners-grid {  
+        flex-wrap: wrap;
+    }
+
+    .group-information{
+        display: flex;
+        flex-direction: column;
+    }
+
     /* hide scroll bar in textareas first in google chrome*/
     textarea::-webkit-scrollbar {
         display: none;
