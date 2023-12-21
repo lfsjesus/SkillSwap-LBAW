@@ -50,7 +50,7 @@ class GroupController extends Controller
             'name' => 'required|string|max:50',
             'description' => 'required|string|max:255',
             'visibility' => 'required|boolean',
-            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120'
         ]);
 
         $this->authorize('create', Group::class);
@@ -98,7 +98,7 @@ class GroupController extends Controller
             'name' => 'required|string|max:50',
             'description' => 'required|string|max:255',
             'visibility' => 'required|boolean',
-            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120'
         ]);
         
         $group = Group::find($request->id);

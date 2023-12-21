@@ -18,7 +18,7 @@
                     <label for="banner">Banner</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
-                        Accepted formats: jpg, png. Max size: 2MB.
+                        Accepted formats: jpg, jpeg, png. Max size: 5MB.
                     </div>
                 </div>
                 <input type="file" name="banner" id="banner" class="form-control">
@@ -35,7 +35,7 @@
                     <label for="name">Name</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
-                        Write the group's name here.
+                        Write the group's name here. Max 50 characters.
                     </div>
                 </div>
                 <input type="text" name="name" id="name" class="form-control" value="{{ $group->name }}" required>
@@ -52,7 +52,7 @@
                     <label for="name">Description</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
-                        Write a brief description about the group.
+                        Write a brief description about the group. Max 255 characters.
                     </div>
                 </div>
                 <textarea name="description" id="description" class="form-control">{{ $group->description }}</textarea>

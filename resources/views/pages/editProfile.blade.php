@@ -23,7 +23,7 @@
                     <label for="profile_picture">Profile Picture</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
-                        Accepted formats: jpg, png. Max size: 2MB.
+                        Accepted formats: jpg, jpeg, png. Max size: 5MB.
                     </div>
                 </div>
 
@@ -41,7 +41,7 @@
                     <label for="name">Name</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
-                        Write your full name here.
+                        Write your full name here. Max 50 characters.
                     </div>
                 </div>
                 <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}">
@@ -76,7 +76,7 @@
                     <label for="username">Username</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
-                        Choose a unique username for your profile.
+                        Choose a unique username for your profile. Max 50 characters.
                     </div>
                 </div>
                 
@@ -94,7 +94,7 @@
                     <label for="phone_number">Phone Number</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
-                        Format: +[Country Code (optional)][Number (8-15 characters)].
+                        Format: +[Country Code (optional)][Number (8-15 characters)]. You can use '-'.
                     </div>
                 </div>
                 
@@ -130,7 +130,7 @@
                     <label for="description">Description</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
-                        Write a brief description about yourself.
+                        Write a brief description about yourself. Max 500 characters.
                     </div>
                 </div>
     
