@@ -1572,3 +1572,11 @@ main > aside#right-bar .notifications-bar {
 .show-more-comments a:hover {
   text-decoration: underline;
 }
+
+.hamburger-menu {
+  display: none;
+}
+
+.close-btn {
+  display: none;
+}

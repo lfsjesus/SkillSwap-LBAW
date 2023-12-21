@@ -11,6 +11,7 @@
         <!-- Styles -->
         <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
         <link href="{{ url('css/app.css') }}" rel="stylesheet">
+        <link href="{{ url('css/responsive.css') }}" rel="stylesheet">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
@@ -22,7 +23,18 @@
     
     <body>
         <main>
+            <!-- Hamburger menus for mobile -->
+            <section class="responsive-buttons">
+                <span class="material-symbols-outlined hamburger-menu left-hamburger" onclick="toggleMenu('left')">
+                    menu
+                </span>
+                <span class="material-symbols-outlined hamburger-menu right-hamburger" onclick="toggleMenu('right')">
+                    mark_chat_unread
+                </span>
+            </section>
+
             <aside id="left-bar">
+                <button class="close-btn" onclick="toggleMenu('left')">×</button>
                 <div class="upper-bar">
                     <div class="logo">
                         <!-- image is one public/assets/skillswap_white_grey.svg -->
@@ -100,6 +112,7 @@
             </section>
             
             <aside id="right-bar">
+                <button class="close-btn" onclick="toggleMenu('right')">×</button>
                 <div class="notifications-bar">
                     <ul>
                         <li>
@@ -135,4 +148,10 @@
             </aside>
         </main>
     </body>
+    <script>
+        function toggleMenu(side) {
+          const sideBar = document.getElementById(side + '-bar');
+          sideBar.classList.toggle('active-menu');
+        }
+    </script>
 </html>
