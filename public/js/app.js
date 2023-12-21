@@ -1744,6 +1744,18 @@ let nextPostsButton = document.querySelector('.posts-pagination nav :nth-child(2
 
 if (nextPostsButton != null) {
   let pageHref = nextPostsButton.href;
+  
+  if (nextPostsButton != null) {
+    let pageHref = nextPostsButton.href;
+    if (pageHref.startsWith('http://')) {
+      // Replace 'http://' with '//'
+      pageHref = pageHref.replace('http://', '//');
+      
+      // Update the href attribute
+      nextPostsButton.href = pageHref;
+    }
+  }
+
   let scrollContainer = document.querySelector('#posts');
   let loading = document.querySelector('.loader');
   if (pageHref != null) {
