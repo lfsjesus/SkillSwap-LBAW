@@ -72,27 +72,51 @@ class SearchController extends Controller {
 
     protected function posts(Request $request) {
         $query = $request->input('q');
+        $betweenDoubleQuotes = preg_match('/^".*"$/', $query);
 
         if (Auth::guard('webadmin')->check()) {
-            $posts = Post::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+            if ($betweenDoubleQuotes) {
+                $query = substr($query, 1, -1);
+                $posts = Post::Where('description', 'ilike', '%' . substr($request->input('q'), 1, -1) . '%')
+                            ->get();
+            }
+            else {
+                $posts = Post::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
                             ->orWhere('description', '=', $request->input('q'))
                             ->get();
+            }
         }
 
         else if (Auth::user()) {
-            $posts = Post::Where(function ($query) use ($request) {
+            if ($betweenDoubleQuotes) {
+                $query = substr($query, 1, -1);
+                $posts = Post::Where('description', 'ilike', '%' . substr($request->input('q'), 1, -1) . '%')
+                            ->whereIn('id', Auth::user()->visiblePosts()->pluck('id'))
+                            ->get();
+            }
+            else {
+                $posts = Post::Where(function ($query) use ($request) {
                             $query->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
                                   ->orWhere('description', '=', $request->input('q'));
                         })
                         ->whereIn('id', Auth::user()->visiblePosts()->pluck('id'))
                         ->get();
+            }
         }
         
         else {
-            $posts = Post::publicPosts()
-                            ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                            ->orWhere('description', '=', $request->input('q'))
-                            ->get(); 
+            if ($betweenDoubleQuotes) {
+                $query = substr($query, 1, -1);
+                $posts = Post::publicPosts()
+                            ->Where('description', 'ilike', '%' . substr($request->input('q'), 1, -1) . '%')
+                            ->get();
+            }
+            else {
+                $posts = Post::publicPosts()
+                                ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                                ->orWhere('description', '=', $request->input('q'))
+                                ->get(); 
+            }   
         }
 
         return $posts;
@@ -101,27 +125,52 @@ class SearchController extends Controller {
     protected function users(Request $request) {
         $query = $request->input('q');
 
-        $users = User::activeUsers()
-                    ->where(function($query) use ($request) {
-                        $query->Where('username', '=', $request->input('q'))
-                                ->orWhere('email', '=', $request->input('q'))
-                                ->orWhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                                ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')]);
+        $betweenDoubleQuotes = preg_match('/^".*"$/', $query);
+        
+        if ($betweenDoubleQuotes) {
+            $query = substr($query, 1, -1);
+            $users = User::activeUsers()
+                        ->where(function($query) use ($request) {
+                            $query->Where('username', 'ilike', '%' . substr($request->input('q'), 1, -1) . '%')
+                                    ->orWhere('email', 'ilike', '%' . substr($request->input('q'), 1, -1) . '%')
+                                    ->orWhere('name', 'ilike', '%' . substr($request->input('q'), 1, -1) . '%');
+                        })
+                        ->get();              
+        }
+        else {
+            $users = User::activeUsers()
+                        ->where(function($query) use ($request) {
+                            $query->Where('username', '=', $request->input('q'))
+                                    ->orWhere('email', '=', $request->input('q'))
+                                    ->orWhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                                    ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')]);
 
-                    })
-                    ->get();
+                        })
+                        ->get();
+        }
 
         return $users;
     }
 
     protected function groups(Request $request) {
         $query = $request->input('q');
+        $betweenDoubleQuotes = preg_match('/^".*"$/', $query);
 
-        $groups = Group::whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                    ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')])
-                    ->orWhere('description', '=', $request->input('q'))
-                    ->orWhere('name', '=', $request->input('q'))
-                    ->get();
+        if ($betweenDoubleQuotes) {
+            $query = substr($query, 1, -1);
+            $groups = Group::where(function($query) use ($request) {
+                            $query->Where('name', 'ilike', '%' . substr($request->input('q'), 1, -1) . '%')
+                                    ->orWhere('description', 'ilike', '%' . substr($request->input('q'), 1, -1) . '%');
+                        })
+                        ->get();
+        }
+        else {
+            $groups = Group::whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                        ->orderByRaw("ts_rank(tsvectors, plainto_tsquery('english', ?)) DESC", [$request->input('q')])
+                        ->orWhere('description', '=', $request->input('q'))
+                        ->orWhere('name', '=', $request->input('q'))
+                        ->get();
+        }
 
         return $groups;
     }
@@ -129,26 +178,50 @@ class SearchController extends Controller {
 
     protected function comments(Request $request) {
         $query = $request->input('q');
-
+        $betweenDoubleQuotes = preg_match('/^".*"$/', $query);
         if (Auth::guard('webadmin')->check()) {
-            $comments = Comment::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+            if ($betweenDoubleQuotes) {
+                $query = substr($query, 1, -1);
+                $comments = Comment::Where('content', 'ilike', '%' . substr($request->input('q'), 1, -1) . '%')
+                                ->get();
+            }
+            else {
+                $comments = Comment::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
                                 ->orWhere('content', '=', $request->input('q'))
-                    ->get();
+                                ->get();
+            }
         }
 
         else if (Auth::user()) {
+            if ($betweenDoubleQuotes) {
+                $query = substr($query, 1, -1);
+                $comments = Comment::Where('content', 'ilike', '%' . substr($request->input('q'), 1, -1) . '%')
+                                ->whereIn('id', Auth::user()->visibleComments()->pluck('id'))
+                                ->get();
+            }
+
+            else {
             $comments = Comment::Where(function ($query) use ($request) {
                             $query->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
                                   ->orWhere('content', '=', $request->input('q'));
                         })
                         ->whereIn('id', Auth::user()->visibleComments()->pluck('id'))
                         ->get();
+            }
         }        
         else {
-            $comments = Comment::publicComments()
-                    ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                    ->orWhere('content', '=', $request->input('q'))
-                    ->get();
+            if ($betweenDoubleQuotes) {
+                $query = substr($query, 1, -1);
+                $comments = Comment::publicComments()
+                                ->Where('content', 'ilike', '%' . substr($request->input('q'), 1, -1) . '%')
+                                ->get();
+            }
+            else {
+                $comments = Comment::publicComments()
+                        ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                        ->orWhere('content', '=', $request->input('q'))
+                        ->get();
+            }
         }
                     
         return $comments;

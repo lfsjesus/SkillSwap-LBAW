@@ -72,7 +72,7 @@
                         <span class="material-symbols-outlined">
                             search
                         </span>
-                        <input type="text" name="q" placeholder="Search" value="{{ $query ?? '' }}" autofocus>
+                        <input type="text" name="q" placeholder='Search... (e.g., "[term]" for exact match or [term] for full-text search)' value="{{ $query ?? '' }}" autofocus>
                         <input type="hidden" name="type" value="{{ $type ?? 'user' }}">
                         <input type="hidden" name="date" value="{{ $date ?? 'asc' }}">
                         <input type="hidden" name="popularity" value="{{ $popularity ?? 'asc' }}">
