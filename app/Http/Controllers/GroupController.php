@@ -19,6 +19,9 @@ class GroupController extends Controller
     public function show(int $id) {
         $group = Group::where('id', $id)->firstOrFail();
         
+        if (Auth::guard('webadmin')->check()) {
+            return redirect()->route('view-group-admin', ['id' => $id]);
+        }
         $this->authorize('show', Group::class);
 
         return view('pages.group', ['group' => $group]);
@@ -413,6 +416,10 @@ class GroupController extends Controller
             return redirect()->back()->withErrors(['add_member' => 'User is already a member of this group']);
         }
 
+        if ($user->deleted) {
+            return redirect()->back()->withErrors(['add_member' => 'User is deleted']);
+        }
+
         try {
             DB::beginTransaction();
 
@@ -499,6 +506,10 @@ class GroupController extends Controller
 
         if ($group->isOwner($user)) {
             return redirect()->back()->withErrors(['add_owner' => 'User is already an owner of this group']);
+        }
+
+        if ($user->deleted) {
+            return redirect()->back()->withErrors(['add_owner' => 'User is deleted']);
         }
 
         try {
