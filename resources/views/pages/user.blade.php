@@ -20,9 +20,9 @@
         <!-- Profile Picture -->
         <div class="profile-picture">
             @if($user->profile_picture)
-            <img src="{{stream_get_contents($user->profile_picture)}}"/>
+            <img src="{{stream_get_contents($user->profile_picture)}}" alt="profile picture"/>
             @else
-            <img src="{{ url('assets/profile-picture.png') }}"/>
+            <img src="{{ url('assets/profile-picture.png') }}" alt="profile picture"/>
             @endif
         </div>
     
@@ -150,9 +150,18 @@
             @if (count($user->posts) == 0)
             <p> This user does not have posts </p>
             @else
-            @each('partials.post', (($user->isPublic() || 
-                                    (Auth::user() && (Auth::user()->id == $user->id || 
-                                    $user->isFriendWith(Auth::user())))) ? $user->posts : $user->publicPosts), 'post')
+            @php
+            $userPosts = ($user->isPublic() || 
+                        (Auth::user() && (Auth::user()->id == $user->id || 
+                        $user->isFriendWith(Auth::user())))) ? $user->posts : $user->publicPosts;
+        
+            $visiblePosts = Auth::user() ? Auth::user()->visiblePosts()->pluck('id')->toArray() : [];
+        
+            $posts = $userPosts->whereIn('id', $visiblePosts);
+            @endphp
+            @foreach($posts as $post)
+                @include('partials.post', ['post' => $post,  'limit' => true, 'limitCommentReplies' => true])
+            @endforeach
             @endif
         </section>
 

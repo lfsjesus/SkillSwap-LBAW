@@ -26,9 +26,9 @@ if($subNotification instanceof App\Models\GroupNotification) {
     <div class="notification @if(!$notification->viewed) active @endif" data-id="{{ $notification->id }}" data-type="{{ $notificationType }}" 
         data-sender-id="{{ $notification->sender->id }}" data-receiver-id="{{ $notification->receiver->id }}">
         @if($sender->profile_picture) 
-            <img src="{{stream_get_contents($sender->profile_picture)}}"/>
+            <img src="{{stream_get_contents($sender->profile_picture)}}" alt="profile picture"/>
         @else
-            <img src="{{ url('assets/profile-picture.png') }}"/>
+            <img src="{{ url('assets/profile-picture.png') }}" alt="profile picture"/>
         @endif
 
         <div class="notification-inner">
@@ -59,29 +59,29 @@ if($subNotification instanceof App\Models\GroupNotification) {
 
             @if($subNotification->notification_type == 'friend_request')
                 <div class="notification-answer">
-                    <button class="button accept-friend-request-notification">
+                    <span class="button accept-friend-request-notification">
                         <input type="hidden" name="sender_id" value="{{ $sender->id }}">
                         Accept
-                    </button>
-                    <button class="button btn-danger reject-friend-request-notification">
+                    </span>
+                    <span class="button btn-danger reject-friend-request-notification">
                         <input type="hidden" name="sender_id" value="{{ $sender->id }}">
                         Decline
-                    </button>
+                    </span>
                 </div>
             @endif
 
             @if($subNotification->notification_type == 'join_request')
                 <div class="notification-answer">
-                    <button class="button accept-join-request-notification">
+                    <span class="button accept-join-request-notification">
                         <input type="hidden" name="sender_id" value="{{ $sender->id }}">
                         <input type="hidden" name="group_id" value="{{ $subNotification->group_id }}">
                         Accept
-                    </button>
-                    <button class="button btn-danger reject-join-request-notification">
+                    </span>
+                    <span class="button btn-danger reject-join-request-notification">
                         <input type="hidden" name="sender_id" value="{{ $sender->id }}">
                         <input type="hidden" name="group_id" value="{{ $subNotification->group_id }}">
                         Decline
-                    </button>
+                    </span>
                 </div>
             @endif
 

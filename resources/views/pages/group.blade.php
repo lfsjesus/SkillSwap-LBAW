@@ -20,7 +20,7 @@
     <div class="group-header">       
         <div class="header-background">
             @if($group->banner)
-            <img src="{{stream_get_contents($group->banner)}}"/>
+            <img src="{{stream_get_contents($group->banner)}}" alt="Background Picture">
             @else
             <img src="{{url('assets/blob-background.jpg')}}" alt="Background Picture">
             @endif
@@ -144,7 +144,26 @@
                 @include('partials.create-post', ['group' => $group])
             @endif
         @endif    
-        @each('partials.post', $group->posts, 'post')
+        
+        @php
+            if (Auth::user()) {
+                if ($group->isMember(Auth::user())) {
+                    $posts = $group->posts->sortByDesc('date');
+                } else {
+                    $myPosts = $group->posts()->where('user_id', Auth::user()->id)->get();
+                    $publicPosts = $group->publicPosts()->get();
+        
+                    // Merge and sort the posts manually
+                    $posts = $myPosts->merge($publicPosts)->sortByDesc('date');
+                }
+            } else {
+                $posts = $group->publicPosts()->get()->sortByDesc('date');
+            }
+        @endphp
+    
+        @foreach($posts as $post)
+            @include('partials.post', ['post' => $post,  'limit' => true, 'limitCommentReplies' => true])
+        @endforeach
     </section>
 </div>
 </section>

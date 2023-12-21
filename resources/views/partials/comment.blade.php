@@ -1,9 +1,9 @@
 <div class="comment" data-id="{{$comment->id}}">
         <a href="{{ route('user', ['username' => $comment->author->username]) }}">
             @if($comment->author->profile_picture)
-            <img src="{{stream_get_contents($comment->author->profile_picture)}}"/>
+            <img src="{{stream_get_contents($comment->author->profile_picture)}}" alt="profile picture"/>
             @else
-            <img src="{{ url('assets/profile-picture.png') }}"/>
+            <img src="{{ url('assets/profile-picture.png') }}" alt="profile picture"/>
             @endif
         </a>    
         <div class="comment-body">
@@ -42,13 +42,29 @@
             </div>
             <div class="comment-replies">
             @if($comment->isParent() && $comment->getRepliesCount() > 0)
-                @foreach($comment->descendants() as $reply)
+                @php
+                    if(isset($limitCommentReplies) && isset($limit)) {
+                        $descendants = $comment->descendants()->take(3);
+                    }
+                    else {
+                        $descendants = $comment->descendants();
+                    }
+                @endphp
+                @foreach($descendants as $reply)
                     @include('partials.comment', ['comment' => $reply])
                 @endforeach
             @endif
-            </div>
+            </div>            
             @if($comment->isParent())
             @include('partials.comment-box', ['post' => $comment->post])
             @endif
-        </div>   
+            @if (isset($limitCommentReplies) && $loop->last && isset($limit))
+                @if ($post->getCommentsCount() > 3)
+                    <div class="show-more-comments">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <a href="{{ route('post', ['id' => $post->id]) }}">Show more comments...</a>
+                    </div>
+                @endif
+            @endif 
+        </div>  
 </div>

@@ -20,7 +20,7 @@
     <div class="group-header">       
         <div class="header-background">
             @if($group->banner)
-            <img src="{{stream_get_contents($group->banner)}}"/>
+            <img src="{{stream_get_contents($group->banner)}}" alt="Background Picture">
             @else
             <img src="{{url('assets/blob-background.jpg')}}" alt="Background Picture">
             @endif
@@ -85,7 +85,9 @@
         @if($group->posts->isEmpty())
         <p> This group does not have posts </p>
         @else
-        @each('partials.post', $group->posts, 'post')
+        @foreach($group->posts->sortByDesc('date') as $post)
+        @include('partials.post', ['post' => $post,  'limit' => true, 'limitCommentReplies' => true])
+        @endforeach
         @endif
     </section>
 </div>

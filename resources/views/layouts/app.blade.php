@@ -25,7 +25,7 @@
                 <div class="logo">
                     <!-- image is one public/assets/skillswap_white_grey.svg -->
                     <a href="{{ url('/home') }}">
-                            <img src="{{ url('assets/skillswap_white_grey.png') }}"/>
+                            <img src="{{ url('assets/skillswap_white_grey.png') }}" alt="logo">
                     </a>
                 </div>
                 @if (Auth::check())

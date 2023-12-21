@@ -1785,16 +1785,23 @@ function postSetAllEventListeners(post) {
   let editPostButton = post.querySelector('.post-header-right span:first-child');
   let comments = post.querySelectorAll('.comment');
 
-  likeButton.addEventListener('click', function(e) {
-    let id = e.target.closest('.post').getAttribute('data-id');
-    let data = {post_id: id};
-    sendAjaxRequest('POST', '/posts/like', data, likePostHandler);
-    }
-  );
+  if (likeButton != null) {
+    likeButton.addEventListener('click', function(e) {
+      let id = e.target.closest('.post').getAttribute('data-id');
+      let data = {post_id: id};
+      sendAjaxRequest('POST', '/posts/like', data, likePostHandler);
+      }
+    );
+  }
 
-  commentButton.addEventListener('click', commentButtonHandler);
+  if (commentButton != null) {
+    commentButton.addEventListener('click', commentButtonHandler);
+  }
 
-  postCommentForm.addEventListener('submit', commentPostClickHandler);
+
+  if (postCommentForm != null) {
+    postCommentForm.addEventListener('submit', commentPostClickHandler);
+  }
 
   if (deletePost != null) {
     deletePost.addEventListener('click', postDeleteClickHandler);
@@ -1815,18 +1822,23 @@ function postSetAllEventListeners(post) {
   let replyCommentForms = post.querySelectorAll('.comment .comment-box');
   let replyCommentButtons = post.querySelectorAll('.comment .comment-actions .reply-comment');
 
-  likeCommentButtons.forEach(function(button) {
-    button.addEventListener('click', commentLikeClickHandler);
-  }
-  );
-
-  editCommentButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      let id = e.target.closest('.comment').getAttribute('data-id');
-      editComment(id);
-      }
+  if (likeCommentButtons != null) {
+    likeCommentButtons.forEach(function(button) {
+      button.addEventListener('click', commentLikeClickHandler);
+    }
     );
-  });
+  }
+
+  if (editCommentButtons != null) {
+    editCommentButtons.forEach(function(button) {
+      button.addEventListener('click', function(e) {
+        let id = e.target.closest('.comment').getAttribute('data-id');
+        editComment(id);
+        }
+      );
+    }
+    );
+  }
 
   if (deleteCommentButtons != null) {
     deleteCommentButtons.forEach(function(button) {
@@ -1857,20 +1869,29 @@ function commentSetAllEventListeners(comment) {
   let replyButton = comment.querySelector('.comment-actions .reply-comment');
   let replyForm = comment.querySelector('.comment-box');
 
-  likeButton.addEventListener('click', commentLikeClickHandler);
+  if (likeButton != null) {
+    likeButton.addEventListener('click', commentLikeClickHandler);
+  }
 
-  editButton.addEventListener('click', function(e) {
-    let id = e.target.closest('.comment').getAttribute('data-id');
-    editComment(id);
-    }
-  );
-
-  deleteButton.addEventListener('click', deleteCommentClickHandler);
-
-  replyButton.addEventListener('click', replyCommentClickHandler);
-
-  replyForm.addEventListener('submit', replyCommentFormHandler);
+  if (editButton != null) {
+    editButton.addEventListener('click', function(e) {
+      let id = e.target.closest('.comment').getAttribute('data-id');
+      editComment(id);
+      }
+    );
+  }
   
+  if (deleteButton != null) {
+    deleteButton.addEventListener('click', deleteCommentClickHandler);
+  }
+
+  if (replyButton != null) {
+    replyButton.addEventListener('click', replyCommentClickHandler);
+  }
+
+  if (replyForm != null) {
+    replyForm.addEventListener('submit', replyCommentFormHandler);
+  }  
 }
 
 

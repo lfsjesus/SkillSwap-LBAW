@@ -22,9 +22,9 @@
         <!-- Profile Picture -->
         <div class="profile-picture">
             @if($user->profile_picture)
-            <img src="{{stream_get_contents($user->profile_picture)}}"/>
+            <img src="{{stream_get_contents($user->profile_picture)}}" alt="profile picture"/>
             @else
-            <img src="{{ url('assets/profile-picture.png') }}"/>
+            <img src="{{ url('assets/profile-picture.png') }}" alt="profile picture"/>
             @endif
         </div>
 
@@ -112,7 +112,9 @@
             @if (count($posts) == 0)
             <p> This user does not have posts </p>
             @else
-            @each('partials.post', $posts, 'post')
+            @foreach($posts as $post)
+            @include('partials.post', ['post' => $post,  'limit' => true, 'limitCommentReplies' => true])
+            @endforeach
             @endif
         </section>
     </div>
