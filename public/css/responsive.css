@@ -84,6 +84,11 @@
      right: 0.5rem; 
     }
 
+    .profile-section, .group-section{
+        width: 100%;
+        margin: 0 auto;
+
+    }
 
     .friends-groups-grid, .members-owners-grid {  
         flex-wrap: wrap;
@@ -92,6 +97,30 @@
     .group-information{
         display: flex;
         flex-direction: column;
+    }
+
+    .group-buttons{
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #search{
+        padding: 0.5rem 1rem;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .search-filters{
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .search-sort{
+        width: 80%;
     }
 
     /* hide scroll bar in textareas first in google chrome*/
