@@ -21,7 +21,7 @@
         <div class="post-text">
             <form method="POST" action="{{ route('create_post') }}" enctype="multipart/form-data">
                 {{ csrf_field() }}
-                <textarea name="description" placeholder="What project are you thinking about?" cols="25" value="{{ old('description') }}"></textarea>
+                <textarea name="description" placeholder="What project are you thinking about?" cols="25"></textarea>
                 <input type="file" name="files[]" multiple="multiple" style="display: none;"/>
                 @if(isset($group))
                 <input type="hidden" name="group_id" value="{{$group->id}}">

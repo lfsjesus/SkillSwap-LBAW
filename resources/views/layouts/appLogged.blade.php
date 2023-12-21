@@ -27,7 +27,7 @@
                     <div class="logo">
                         <!-- image is one public/assets/skillswap_white_grey.svg -->
                         <a href="{{ url('/home') }}">
-                                <img src="{{ url('assets/skillswap.png') }}"/>
+                                <img src="{{ url('assets/skillswap.png') }}" alt="logo">
                         </a>
                     </div>
                     <nav>

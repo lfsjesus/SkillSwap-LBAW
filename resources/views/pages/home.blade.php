@@ -4,10 +4,10 @@
 @section('content')
 <div class="greeting">
     @if(Auth::user())
-        <h3>Hello, <span class="yellow">{{Auth::user()->name}}</span></h1>
+        <h3>Hello, <span class="yellow">{{Auth::user()->name}}</span></h3>
     
     @else
-        <h3>Hello, <span class="yellow">Guest</span></h1>
+        <h3>Hello, <span class="yellow">Guest</span></h3>
     @endif
 
 </div>

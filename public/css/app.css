@@ -455,7 +455,6 @@ aside .logo img {
   height: 100%;
   object-fit: cover;
   border-radius: 10px;
-  image-rendering: optimizeSpeed;
 }
 
 #content .create-post-footer {

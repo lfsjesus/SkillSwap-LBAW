@@ -20,7 +20,7 @@
     <div class="group-header">       
         <div class="header-background">
             @if($group->banner)
-            <img src="{{stream_get_contents($group->banner)}}"/>
+            <img src="{{stream_get_contents($group->banner)}}" alt="Background Picture">
             @else
             <img src="{{url('assets/blob-background.jpg')}}" alt="Background Picture">
             @endif
