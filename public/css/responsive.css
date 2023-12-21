@@ -110,16 +110,12 @@
 
     .profile-buttons{
         flex-direction: column;
+        align-self: center;
     }
 
     .profile-information{
         display: flex;
         flex-direction: column;
-    }
-
-   ol .breadcrumb{
-        margin-left: 1.5rem!important;
-        background-color: red;
     }
 
     #search{

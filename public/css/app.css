@@ -540,9 +540,11 @@ aside .logo img {
   -ms-overflow-style: none;  /* IE and Edge */
 }
 
-.profile-section::-webkit-scrollbar {
+/* scroll width none*/
+.profile-section::-webkit-scrollbar, .group-section::-webkit-scrollbar {
   display: none;
 }
+
 
 .profile-header, .group-header {
   position: relative;
@@ -946,6 +948,7 @@ form #form-group textarea {
 
 .search-results {
   width: 100%;
+  margin: 0 auto;
   max-height: 35em;
   overflow-y: scroll;
   -ms-overflow-style: none;  /* IE and Edge */
@@ -953,6 +956,7 @@ form #form-group textarea {
   display: flex;
   flex-direction: column;
   gap: 1em;
+  align-items: center;
 }
 
 .search-results::-webkit-scrollbar {
