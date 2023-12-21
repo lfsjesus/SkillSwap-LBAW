@@ -16,7 +16,7 @@
         </span>
     </a>
 
-    @if(isset($group) && !$owners && $group->isOwner(Auth::user()))
+    @if(isset($group) && !$owners && Auth::user() instanceof App\Models\User && $group->isOwner(Auth::user()))
         <div class="remove-member">
             <input type="hidden" name="group_id" value="{{ $group->id }}">
             <input type="hidden" name="user_id" value="{{ $user->id }}">
@@ -24,7 +24,7 @@
                 logout
             </span>
         </div>
-    @elseif (isset($group) && isset($owners) && $owners)
+    @elseif (isset($group) && isset($owners) && $owners && Auth::user() instanceof App\Models\User && $group->isOwner(Auth::user()))
         <div class="remove-owner">
             <input type="hidden" name="group_id" value="{{ $group->id }}">
             <input type="hidden" name="user_id" value="{{ $user->id }}">

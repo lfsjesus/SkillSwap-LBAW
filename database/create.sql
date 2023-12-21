@@ -68,7 +68,7 @@ CREATE TABLE groups (
 
 CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     group_id INTEGER REFERENCES groups(id)  ON DELETE CASCADE,
     date TIMESTAMP NOT NULL,
     CHECK (date <= CURRENT_TIMESTAMP),
@@ -78,7 +78,7 @@ CREATE TABLE posts (
 
 CREATE TABLE comments (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id)  ON DELETE SET NULL, 
+    user_id INTEGER NOT NULL REFERENCES users(id)  ON DELETE CASCADE, 
     post_id INTEGER NOT NULL REFERENCES posts(id)  ON DELETE CASCADE,
     comment_id INTEGER REFERENCES comments(id)  ON DELETE CASCADE,
     content TEXT,
@@ -578,6 +578,24 @@ CREATE TRIGGER delete_parent_notification_after_post
 AFTER DELETE ON post_notifications
 FOR EACH ROW
 EXECUTE FUNCTION delete_parent_notification();
+
+
+
+CREATE OR REPLACE FUNCTION delete_group_if_no_owners()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM owns WHERE group_id = OLD.group_id) THEN
+        DELETE FROM groups WHERE id = OLD.group_id;
+    END IF;
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER after_delete_owns
+AFTER DELETE ON owns
+FOR EACH ROW
+EXECUTE FUNCTION delete_group_if_no_owners();
 
 
 
