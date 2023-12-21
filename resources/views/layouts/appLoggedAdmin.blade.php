@@ -24,7 +24,7 @@
     <body>
         <main>
             <aside id="left-bar">
-                <button class="close-btn" onclick="toggleMenu('left')">×</button>
+                <button class="close-btn left" onclick="toggleMenu('left')">×</button>
                 <div class="upper-bar">
                     <div class="logo">
                         <!-- image is one public/assets/skillswap_white_grey.svg -->
@@ -93,7 +93,7 @@
             </section>
             
             <aside id="right-bar">
-                <button class="close-btn" onclick="toggleMenu('right')">×</button>
+                <button class="close-btn right" onclick="toggleMenu('right')">×</button>
                 <ul>
                     <li><span class="material-symbols-outlined">
                         expand_more

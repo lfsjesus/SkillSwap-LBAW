@@ -820,7 +820,7 @@ form #form-group textarea {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: 20em;
+  max-width: 22em;
   border-radius: 10px;
   color: white;
   background: linear-gradient(145deg, #232a37, #1b2029);
