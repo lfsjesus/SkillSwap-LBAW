@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit&family=Roboto:wght@300&display=swap');
+
+/* Existing styles... */
+
+/* Responsive adjustments */
+@media only screen and (max-width: 1200px) {
+  header {
+    width: 85%; /* More space on smaller screens */
+  }
+
+  .login-page, .recover-password-page {
+    width: 70%; /* Wider form for better readability */
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  header {
+    flex-direction: column;
+    padding: 0.5em;
+  }
+
+  .login-page, .recover-password-page {
+    width: 80%;
+    min-height: 25em;
+    padding: 1em 0;
+  }
+
+  .auth-form {
+    padding: 0 2em;
+  }
+
+  .auth-form > h1 {
+    font-size: 2em;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  header {
+    width: 95%;
+  }
+
+  .login-page, .recover-password-page {
+    width: 90%;
+    flex-direction: column;
+    padding: 1em;
+  }
+
+  .auth-image, .auth-form {
+    flex: 100%;
+    padding: 1em;
+  }
+
+  .logo img {
+    max-width: 70%;
+  }
+
+  #content form {
+    max-width: 100%;
+  }
+
+  footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5em;
+    padding: 1em;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  header {
+    width: 100%;
+  }
+
+  .login-page, .recover-password-page {
+    width: 95%;
+  }
+
+  .auth-form > h1 {
+    font-size: 1.5em;
+  }
+
+  .logo img {
+    max-width: 80%;
+  }
+
+  footer {
+    padding: 1em 0;
+  }
+}
