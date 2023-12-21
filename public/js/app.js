@@ -1781,6 +1781,10 @@ if (nextPostsButton != null) {
           );
           let newPageHref = doc.querySelector('.posts-pagination nav :nth-child(2)').href;
           if (newPageHref) {
+            if (newPageHref.startsWith('http://')) {
+              // Replace 'http://' with '//'
+              newPageHref = newPageHref.replace('http://', '//');
+            }
             pageHref = newPageHref;
           } else {
             pageHref = null;
