@@ -1744,6 +1744,17 @@ let nextPostsButton = document.querySelector('.posts-pagination nav :nth-child(2
 
 if (nextPostsButton != null) {
   let pageHref = nextPostsButton.href;
+  
+  if (nextPostsButton != null) {
+    let pageHref = nextPostsButton.href;
+    if (pageHref.startsWith('http://')) {
+      // Replace 'http://' with '//'
+      pageHref = pageHref.replace('http://', '//');
+    }
+    // Update the href attribute
+    nextPostsButton.href = pageHref;
+  }
+
   let scrollContainer = document.querySelector('#posts');
   let loading = document.querySelector('.loader');
   if (pageHref != null) {
@@ -1770,6 +1781,10 @@ if (nextPostsButton != null) {
           );
           let newPageHref = doc.querySelector('.posts-pagination nav :nth-child(2)').href;
           if (newPageHref) {
+            if (newPageHref.startsWith('http://')) {
+              // Replace 'http://' with '//'
+              newPageHref = newPageHref.replace('http://', '//');
+            }
             pageHref = newPageHref;
           } else {
             pageHref = null;
