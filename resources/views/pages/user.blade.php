@@ -161,8 +161,8 @@
                         (Auth::user() instanceof App\Models\User && (Auth::user()->id == $user->id || 
                         $user->isFriendWith(Auth::user())))) ? $user->posts : $user->publicPosts;
         
-            $visiblePosts = (Auth::user() instanceof App\Models\User) ? Auth::user()->visiblePosts()->pluck('id')->toArray() : [];
-        
+            $visiblePosts = (Auth::user() instanceof App\Models\User) ? Auth::user()->visiblePosts()->pluck('id')->toArray() : $user->publicPosts()->pluck('id')->toArray();
+
             $posts = $userPosts->whereIn('id', $visiblePosts);
             @endphp
             @foreach($posts as $post)
