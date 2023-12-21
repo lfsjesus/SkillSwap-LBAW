@@ -34,6 +34,10 @@ if (btnDanger != null) {
   );
 }
 
+function toggleMenu(side) {
+  let sideBar = document.getElementById(side + '-bar');
+  sideBar.classList.toggle('active-menu');
+}
 
 function sendAjaxRequest(method, url, data, handler) {
   let request = new XMLHttpRequest();

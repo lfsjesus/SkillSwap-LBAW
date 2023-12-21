@@ -124,6 +124,25 @@ footer {
   font-size: 1em;
 }
 
+@media (max-width: 768px) {
+  .breadcrumb {
+    margin-left: 3rem; 
+  }
+
+  aside .logo {
+    padding:0;
+  }
+  
+  .logo {
+    padding: 0;
+  }
+  
+  .logo img {
+    max-width: 100%;
+  }
+  
+}
+
 .breadcrumb li {
   margin-right: 0.5rem; 
 }

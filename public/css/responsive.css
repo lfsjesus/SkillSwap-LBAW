@@ -87,10 +87,12 @@
     .profile-section, .group-section{
         width: 100%;
         margin: 0 auto;
+        padding: 0;
 
     }
 
     .friends-groups-grid, .members-owners-grid {  
+        justify-content: center;
         flex-wrap: wrap;
     }
 
@@ -104,6 +106,20 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
+    }
+
+    .profile-buttons{
+        flex-direction: column;
+    }
+
+    .profile-information{
+        display: flex;
+        flex-direction: column;
+    }
+
+   ol .breadcrumb{
+        margin-left: 1.5rem!important;
+        background-color: red;
     }
 
     #search{

@@ -23,8 +23,6 @@
     
     <body>
         <main>
-            
-
             <aside id="left-bar">
                 <button class="close-btn" onclick="toggleMenu('left')">×</button>
                 <div class="upper-bar">
@@ -149,10 +147,4 @@
             </aside>
         </main>
     </body>
-    <script>
-        function toggleMenu(side) {
-          const sideBar = document.getElementById(side + '-bar');
-          sideBar.classList.toggle('active-menu');
-        }
-    </script>
 </html>
