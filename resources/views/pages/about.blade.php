@@ -32,19 +32,19 @@
         <h2>Meet the Developers</h2>
         <div class = developers>
             <div class="developer">
-                <img src="{{ url('assets/luisj.jpg') }}" alt="SkillSwap Logo" />
+                <img src="{{ url('assets/luisj.jpg') }}" alt="Luis Jesus Profile Pictures" />
                 <h3><strong>Luís Jesus</strong></h3>
                 <p>Luís is passionate about technology and is dedicated to creating a vibrant community on SkillSwap. Connect with him to discuss ideas, report issues, or just chat about the exciting world of skills and collaboration!</p>
             </div>
 
             <div class="developer">
-                <img src="{{ url('assets/miguelp.jpg') }}" alt="SkillSwap Logo" />
+                <img src="{{ url('assets/miguelp.jpg') }}" alt="Miguel Pedrosa Profile Picture" />
                 <h3><strong>Miguel Pedrosa</strong></h3>
                 <p>Miguel is an enthusiastic developer with a passion for building innovative solutions. Reach out to him for technical inquiries, collaboration opportunities, or to discuss the latest trends in the tech industry!</p>
             </div>
 
             <div class="developer">
-                <img src="{{ url('assets/miguelr.jpg') }}" alt="SkillSwap Logo" />
+                <img src="{{ url('assets/miguelr.jpg') }}" alt="Miguel Rocha Profile Picture" />
                 <h3><strong>Miguel Rocha</strong></h3>
                 <p>Miguel is a creative mind with a keen interest in design and user experience. Contact him for design-related inquiries, feedback on the user interface, or to discuss the visual aspects of SkillSwap!</p>
             </div>
