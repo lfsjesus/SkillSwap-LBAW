@@ -17,7 +17,7 @@
         <h2>Get in Touch with the Developers</h2>
         <div class="developers">
             <div class="developer">
-                <img src="{{ url('assets/luisj.jpg') }}" alt="SkillSwap Logo" />
+                <img src="{{ url('assets/luisj.jpg') }}" alt="Luis Jesus Profile Picture" />
                 <h3>Luís Jesus</h3>
                 <p><strong>Email:</strong> luis.jesus@skillswap.com</p>
                 <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/luis-jesus" target="_blank">Luís Jesus on LinkedIn</a></p>
@@ -26,7 +26,7 @@
             </div>
 
             <div class="developer">
-                <img src="{{ url('assets/miguelp.jpg') }}" alt="SkillSwap Logo" />
+                <img src="{{ url('assets/miguelp.jpg') }}" alt="Miguel Pedrosa Profile Picture" />
                 <h3>Miguel Pedrosa</h3>
                 <p><strong>Email:</strong> miguel.pedrosa@skillswap.com</p>
                 <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/miguel-pedrosa" target="_blank">Miguel Pedrosa on LinkedIn</a></p>
@@ -35,7 +35,7 @@
             </div>
 
             <div class="developer">
-                <img src="{{ url('assets/miguelr.jpg') }}" alt="SkillSwap Logo" />
+                <img src="{{ url('assets/miguelr.jpg') }}" alt="Miguel Rocha Profile Picture" />
                 <h3>Miguel Rocha</h3>
                 <p><strong>Email:</strong> miguel.rocha@skillswap.com</p>
                 <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/miguel-rocha" target="_blank">Miguel Rocha on LinkedIn</a></p>
