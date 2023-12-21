@@ -259,6 +259,16 @@ aside .logo img {
   background: linear-gradient(145deg, #232a37, #1b2029);
 }
 
+.post-date-stamp {
+  color: white;
+  font-size: 0.7em;
+}
+
+.post-date-stamp:hover {
+  text-decoration: underline;
+  color: white;
+}
+
 .post .post-body {
   padding: 1em 0;
 }
@@ -1537,4 +1547,28 @@ main > aside#right-bar .notifications-bar {
 
 .posts-pagination nav {
   display: none;
+}
+
+.show-more-comments {
+  font-size: 0.8em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5em;
+  padding: 1em 0;
+}
+
+.show-more-comments a {
+  color: pink;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.show-more-comments span {
+  font-size: inherit;
+  color: pink;
+}
+
+.show-more-comments a:hover {
+  text-decoration: underline;
 }

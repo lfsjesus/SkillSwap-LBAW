@@ -80,12 +80,14 @@ class SearchController extends Controller {
         }
 
         else if (Auth::user()) {
-            $posts = Post::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                            ->WhereIn('id', Auth::user()->visiblePosts()->pluck('id'))
-                            ->orWhere('description', '=', $request->input('q'))
-                            ->get();
-                                
+            $posts = Post::Where(function ($query) use ($request) {
+                            $query->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                                  ->orWhere('description', '=', $request->input('q'));
+                        })
+                        ->whereIn('id', Auth::user()->visiblePosts()->pluck('id'))
+                        ->get();
         }
+        
         else {
             $posts = Post::publicPosts()
                             ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
@@ -134,12 +136,14 @@ class SearchController extends Controller {
                     ->get();
         }
 
-        else if (Auth::user()) {            
-            $comments = Comment::WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
-                            ->WhereIn('id', Auth::user()->visibleComments()->pluck('id'))
-                            ->orWhere('content', '=', $request->input('q'))
-                            ->get();
-        }
+        else if (Auth::user()) {
+            $comments = Comment::Where(function ($query) use ($request) {
+                            $query->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])
+                                  ->orWhere('content', '=', $request->input('q'));
+                        })
+                        ->whereIn('id', Auth::user()->visibleComments()->pluck('id'))
+                        ->get();
+        }        
         else {
             $comments = Comment::publicComments()
                     ->WhereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$request->input('q')])

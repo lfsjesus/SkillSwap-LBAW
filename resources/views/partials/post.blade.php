@@ -25,7 +25,7 @@
                 </a>
                 @endif
                 </div>
-                <p> {{Carbon\Carbon::parse($post->date)->diffForHumans()}} </p>
+                <a href="{{route('post', ['id' => $post->id])}}" class="post-date-stamp"> {{Carbon\Carbon::parse($post->date)->diffForHumans()}} </a>
             </div>
         </div>
         @if(Auth::guard('webadmin')->check() || Auth::check())
@@ -42,8 +42,7 @@
         @if($post->files())
             @foreach($post->files() as $file)
                 <a href="">
-                    <!-- file_path is one storage/public/uploads/name_of_file -->
-                    <img src="{{ url($file->file_path) }}"/>
+                    <img src="{{ url($file->file_path) }}" alt="post file"/>
                 </a>
             @endforeach
         @endif
@@ -67,9 +66,25 @@
     @include('partials.post-actions')
     <div class="post-comments">
         @if($post->getCommentsCount() > 0)
-            @foreach($post->directComments->sortByDesc('date') as $comment)
+            @php
+                if (isset($limit)) {
+                    $directComments = $post->directComments->sortByDesc('date')->take(4);
+                }
+                else {
+                    $directComments = $post->directComments->sortByDesc('date');
+                }
+            @endphp
+            @foreach($directComments as $comment)
                 @include('partials.comment')
             @endforeach
+            @if (isset($limit))
+                @if ($post->getCommentsCount() > 4)
+                    <div class="show-more-comments">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <a href="{{ route('post', ['id' => $post->id]) }}">Show more comments...</a>
+                    </div>
+                @endif
+            @endif
         @endif
     </div>
 

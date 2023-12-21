@@ -42,13 +42,29 @@
             </div>
             <div class="comment-replies">
             @if($comment->isParent() && $comment->getRepliesCount() > 0)
-                @foreach($comment->descendants() as $reply)
+                @php
+                    if(isset($limitCommentReplies) && isset($limit)) {
+                        $descendants = $comment->descendants()->take(3);
+                    }
+                    else {
+                        $descendants = $comment->descendants();
+                    }
+                @endphp
+                @foreach($descendants as $reply)
                     @include('partials.comment', ['comment' => $reply])
                 @endforeach
             @endif
-            </div>
+            </div>            
             @if($comment->isParent())
             @include('partials.comment-box', ['post' => $comment->post])
             @endif
-        </div>   
+            @if (isset($limitCommentReplies) && $loop->last && isset($limit))
+                @if ($post->getCommentsCount() > 3)
+                    <div class="show-more-comments">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <a href="{{ route('post', ['id' => $post->id]) }}">Show more comments...</a>
+                    </div>
+                @endif
+            @endif 
+        </div>  
 </div>

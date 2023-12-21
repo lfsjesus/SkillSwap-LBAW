@@ -112,7 +112,9 @@
             @if (count($posts) == 0)
             <p> This user does not have posts </p>
             @else
-            @each('partials.post', $posts, 'post')
+            @foreach($posts as $post)
+            @include('partials.post', ['post' => $post,  'limit' => true, 'limitCommentReplies' => true])
+            @endforeach
             @endif
         </section>
     </div>

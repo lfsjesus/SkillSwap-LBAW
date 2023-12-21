@@ -82,8 +82,9 @@ class User extends Authenticatable
 
     public function visiblePosts() {
         $myPosts = $this->posts()->select('posts.*');
-    
-        $friendsPosts = $this->friendsPosts()->select('posts.*');
+        
+        // Make sure that private group posts from friends don't show
+        $friendsPosts = $this->friendsPosts()->where('group_id', null)->select('posts.*');
     
         $groupsIamMember = $this->groups()->join('posts', 'posts.group_id', '=', 'groups.id')->select('posts.*');
     
@@ -92,7 +93,7 @@ class User extends Authenticatable
         $posts = $myPosts->union($friendsPosts)->union($publicPosts)->union($groupsIamMember)->distinct();
         
         $posts = $posts->orderBy('date', 'desc');
-    
+
         return $posts;
     }
     

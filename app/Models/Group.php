@@ -31,6 +31,11 @@ class Group extends Model
         return $this->hasMany(Post::class);
     }
 
+    public function publicPosts()
+    {
+        return $this->posts()->where('public_post', true);
+    }
+
     public function members()
     {
         return $this->belongsToMany(User::class, Member::class, 'group_id', 'user_id');

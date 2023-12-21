@@ -85,7 +85,9 @@
         @if($group->posts->isEmpty())
         <p> This group does not have posts </p>
         @else
-        @each('partials.post', $group->posts, 'post')
+        @foreach($group->posts->sortByDesc('date') as $post)
+        @include('partials.post', ['post' => $post,  'limit' => true, 'limitCommentReplies' => true])
+        @endforeach
         @endif
     </section>
 </div>

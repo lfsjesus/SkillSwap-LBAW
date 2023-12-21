@@ -14,8 +14,10 @@
 <section id="posts">
     @if(Auth::user())
         @include('partials.create-post')
-    @endif    
-    @each('partials.post', $posts, 'post')
+    @endif 
+    @foreach($posts as $post)
+        @include('partials.post', ['post' => $post, 'limit' => true, 'limitCommentReplies' => true])
+    @endforeach   
 </section>
 <div class="posts-pagination">
 {{ $posts->links()}}
