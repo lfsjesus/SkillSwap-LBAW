@@ -38,13 +38,13 @@
             <!-- Name -->
             <div id="form-group">
                 <div class="field-title">
-                    <label for="name">Name</label>
+                    <label for="name">Name *</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Write your full name here. Max 50 characters.
                     </div>
                 </div>
-                <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}">
+                <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}" placeholder="Name" required>
                 @if ($errors->has('name'))
                     <span class="error">
                         {{ $errors->first('name') }}
@@ -56,13 +56,13 @@
             <!-- Email -->
             <div id="form-group">
                 <div class="field-title">
-                    <label for="email">Email</label>
+                    <label for="email">Email *</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Provide a valid email address.
                     </div>
                 </div>
-                <input type="email" name="email" id="email" class="form-control" value="{{ $user->email }}">
+                <input type="email" name="email" id="email" class="form-control" value="{{ $user->email }}" placeholder="Email" required>
                 @if ($errors->has('email'))
                     <span class="error">
                         {{ $errors->first('email') }}
@@ -73,14 +73,14 @@
             <!-- Username -->
             <div id="form-group">
                 <div class="field-title">
-                    <label for="username">Username</label>
+                    <label for="username">Username *</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Choose a unique username for your profile. Max 50 characters.
                     </div>
                 </div>
                 
-                <input type="text" name="username" id="username" class="form-control" value="{{ $user->username }}">
+                <input type="text" name="username" id="username" class="form-control" value="{{ $user->username }}" placeholder="Username" required>
                 @if ($errors->has('username'))
                     <span class="error">
                         {{ $errors->first('username') }}
@@ -98,7 +98,7 @@
                     </div>
                 </div>
                 
-                <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ $user->phone_number }}">
+                <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ $user->phone_number }}" placeholder="Phone Number">
                 @if ($errors->has('phone_number'))
                     <span class="error">
                         {{ $errors->first('phone_number') }}
@@ -109,14 +109,14 @@
             <!-- Birthdate -->
             <div id="form-group">
                 <div class="field-title">
-                    <label for="birthdate">Birthdate</label>
+                    <label for="birthdate">Birthdate *</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         "Enter your birthdate in the format DD-MM-YYYY.
                     </div>
                 </div>
 
-                <input type="date" name="birth_date" id="birthdate" class="form-control" value="{{ $user->birth_date->format('Y-m-d') }}">
+                <input type="date" name="birth_date" id="birthdate" class="form-control" value="{{ $user->birth_date->format('Y-m-d') }}" placeholder="Birthdate" required>
                 @if ($errors->has('birth_date'))
                     <span class="error">
                         {{ $errors->first('birth_date') }}
@@ -145,7 +145,7 @@
             <!-- Public Profile -->
             <div id="form-group">
                 <div class="field-title">
-                    <label for="visibility">Visibility</label>
+                    <label for="visibility">Visibility *</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Select 'Public' for everyone to view your details, or 'Private' for limited access.

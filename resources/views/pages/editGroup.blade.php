@@ -32,13 +32,13 @@
             <!-- Name -->
             <div id="form-group">
                 <div class="field-title">
-                    <label for="name">Name</label>
+                    <label for="name">Name *</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Write the group's name here. Max 50 characters.
                     </div>
                 </div>
-                <input type="text" name="name" id="name" class="form-control" value="{{ $group->name }}" required>
+                <input type="text" name="name" id="name" class="form-control" value="{{ $group->name }}" placeholder="Group Name" required>
                 @if ($errors->has('name'))
                 <span class="error">
                     {{ $errors->first('name') }}
@@ -66,7 +66,7 @@
             <!-- Visibility -->
             <div id="form-group">
                 <div class="field-title">
-                    <label for="visibility">Visibility</label>
+                    <label for="visibility">Visibility *</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Select 'Public' for everyone to view your details, or 'Private' for limited access.

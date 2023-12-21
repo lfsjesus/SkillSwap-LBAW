@@ -34,13 +34,13 @@
             <!-- Name -->
             <div id="form-group">
                 <div class="field-title">
-                    <label for="name">Name</label>
+                    <label for="name">Name *</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Write your full name here. Max 50 characters.
                     </div>
                 </div>
-                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
+                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" placeholder="Name" required>
                 @if ($errors->has('name'))
                 <span class="error">
                     {{ $errors->first('name') }}
@@ -51,13 +51,13 @@
             <!-- Email -->
             <div id="form-group">
                 <div class="field-title">
-                    <label for="email">Email</label>
+                    <label for="email">Email *</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Provide a valid email address.
                     </div>
                 </div>
-                <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}">
+                <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" placeholder="Email" required>
                 @if ($errors->has('email'))
                 <span class="error">
                     {{ $errors->first('email') }}
@@ -68,13 +68,13 @@
             <!-- Username -->
             <div id="form-group">
                 <div class="field-title">
-                    <label for="username">Username</label>
+                    <label for="username">Username *</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         Choose a unique username for your profile. Max 50 characters.
                     </div>
                 </div>
-                <input type="text" name="username" id="username" class="form-control" value="{{ old('username') }}">
+                <input type="text" name="username" id="username" class="form-control" value="{{ old('username') }}" placeholder="Username" required>
                 @if ($errors->has('username'))
                 <span class="error">
                     {{ $errors->first('username') }}
@@ -84,14 +84,14 @@
 
             <!-- Password -->
             <div id="form-group">
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" class="form-control" value="{{ old('password') }}">
+                <label for="password">Password *</label>
+                <input type="password" name="password" id="password" class="form-control" value="{{ old('password') }}" placeholder="Password" required>
             </div>
 
             <!-- Password Confirmation -->
             <div id="form-group">
-                <label for="password_confirmation">Password Confirmation</label>
-                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" value="{{ old('password_confirmation') }}">
+                <label for="password_confirmation">Password Confirmation *</label>
+                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" value="{{ old('password_confirmation') }}" placeholder="Password Confirmation" required>
                 @if ($errors->has('password'))
                 <span class="error">
                     {{ $errors->first('password') }}
@@ -108,7 +108,7 @@
                         Format: +[Country Code (optional)][Number (8-15 characters)]. You can use '-'.
                     </div>
                 </div>
-                <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ old('phone_number') }}">
+                <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ old('phone_number') }}" placeholder="Phone Number">
                 @if ($errors->has('phone_number'))
                 <span class="error">
                     {{ $errors->first('phone_number') }}
@@ -119,13 +119,13 @@
             <!-- Birthdate -->
             <div id="form-group">
                 <div class="field-title">
-                    <label for="birthdate">Birthdate</label>
+                    <label for="birthdate">Birthdate *</label>
                     <span class="help-icon material-symbols-outlined"> info </span>
                     <div class="help-tooltip">
                         "Enter your birthdate in the format DD-MM-YYYY.
                     </div>
                 </div>
-                <input type="date" name="birth_date" id="birthdate" class="form-control" value="{{ old('birthdate') }}">
+                <input type="date" name="birth_date" id="birthdate" class="form-control" value="{{ old('birthdate') }}" placeholder="Birthdate" required>
                 @if ($errors->has('birth_date'))
                 <span class="error">
                     {{ $errors->first('birth_date') }}

@@ -48,7 +48,7 @@ class GroupController extends Controller
     public function create(Request $request) {
         $request->validate([
             'name' => 'required|string|max:50',
-            'description' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
             'visibility' => 'required|boolean',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120'
         ]);
@@ -96,7 +96,7 @@ class GroupController extends Controller
         $request->validate([
             'id' => 'required|integer',
             'name' => 'required|string|max:50',
-            'description' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
             'visibility' => 'required|boolean',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120'
         ]);
