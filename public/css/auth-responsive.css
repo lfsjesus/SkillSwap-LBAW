@@ -47,11 +47,17 @@
         display: flex;
         justify-content: center; /* Centers horizontally */
         align-items: center; /* Centers vertically */
-        height: calc(120vh - 60px); /* Adjust the height to account for the footer */
+        height: calc(95vh - 60px); /* Adjust the height to account for the footer */
         margin: 0;
         padding: 0;
       }
     
+      .auth-image{
+        margin:0;
+        padding:0;
+        max-width: 50%;
+      }
+
       .login-page {
         /* If .login-page has a fixed width, you can add max-width to ensure it doesn't overflow on small devices */
         flex-direction: column;
