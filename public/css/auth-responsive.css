@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit&family=Roboto:wght@300&display=swap');
+
+@media only screen and (max-width: 1200px) {
+  header {
+    width: 85%; 
+  }
+
+  .login-page {
+    width: 70%;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  header {
+    flex-direction: column;
+    padding: 0.5em;
+  }
+
+  .login-page, .recover-password-page {
+    width: 80%;
+    min-height: 25em;
+    padding: 1em 0;
+  }
+
+  .auth-form {
+    padding: 0 2em;
+  }
+
+  .auth-form > h1 {
+    font-size: 2em;
+  }
+}
+
+
+@media only screen and (max-width: 768px) {
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+    
+      #content {
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+        height: calc(95vh - 3.75em); 
+        margin: 0;
+        padding: 0;
+      }
+    
+      .auth-image{
+        margin:0;
+        padding:0;
+        max-width: 50%;
+      }
+
+      .login-page {
+        flex-direction: column;
+        width: 100%;
+        max-width: 25em; 
+        box-sizing: border-box; 
+        padding: 0; 
+        margin-bottom: 18.75em; 
+        overflow-y: auto; 
+      }
+  
+    footer {
+      position: fixed; 
+      bottom: 0;
+      left: 0; 
+      right: 0; 
+      height: 5.625em; 
+      padding-left: 3.125em;
+      margin-left: 0.938em;
+      background: #19060e; 
+    }
+  
+    .main-content {
+      flex: 1;
+      margin-bottom: 0; 
+      padding-bottom: 0;
+    }
+  }
+  
+  @media only screen and (min-width: 540px) and (max-width: 720px) {
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding-top: 0.625em;
+        overflow-x: hidden;
+      }
+
+    .auth-image {
+        display: none;
+      }
+    
+    header, .logo-container {
+      display: flex;
+      justify-content: center; 
+      align-items: center; 
+      height: 0;
+      padding: 1em;
+    }
+  
+    .logo {
+      max-width: 100%; 
+      height: auto; 
+    }
+  
+    #content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  
+  
+
+@media only screen and (max-width: 480px) {
+  header {
+    width: 100%;
+  }
+
+  .login-page{
+    width: 95%;
+  }
+
+  .auth-form > h1 {
+    font-size: 1.5em;
+  }
+
+  .logo img {
+    max-width: 80%;
+  }
+
+  footer {
+    padding: 1em 0;
+  }
+}
+
+
+.login-page{
+    padding-bottom: 5em; 
+  }
+
+  .auth-form {
+    padding-top: 2em;
+  }
+
+  footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #19060e; 
+  }
+
+  .main-content {
+    position: relative;
+  }
+
+  @media only screen and (max-width: 480px) {
+    .login-page{
+      position: relative; 
+      overflow-y: auto; 
+      max-height: 100vh; 
+      padding-bottom: 5em; 
+    }
+  
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #19060e; 
+    }
+  
+    .auth-image, .auth-form {
+      max-height: calc(100vh - 5em); 
+      overflow-y: auto;
+    }
+  }
+  
+  @media only screen and (max-width: 375px) {
+    .auth-image {
+      display: none;
+    }
+  
+    .login-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 1em 0;
+    }
+  
+    .auth-form {
+      width: 90%; 
+      max-width: 340px; 
+    }
+
+    footer {
+      padding: 0.5em 1em; 
+      font-size: 0.75em; 
+    }
+  
+    #content {
+      min-height: calc(100vh - 50px); 
+    }
+  }
+  
