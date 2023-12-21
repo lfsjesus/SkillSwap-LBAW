@@ -153,3 +153,34 @@
     }
   }
   
+  @media only screen and (max-width: 375px) {
+    .auth-image {
+      /* Hide the image or make it even smaller on very small screens */
+      display: none; /* or you can set max-height to a smaller value */
+    }
+  
+    .login-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 1em 0; /* Adjust the padding to ensure there's space around the form */
+    }
+  
+    .auth-form {
+      width: 90%; /* Adjust the width to give some space around the form */
+      max-width: 340px; /* Ensure it doesn't stretch too far on the smallest screens */
+    }
+  
+    /* If the footer still takes up too much space, adjust its padding */
+    footer {
+      padding: 0.5em 1em; /* Reduce the padding to decrease its height */
+      font-size: 0.75em; /* Optionally, reduce the font size to make more space */
+    }
+  
+    #content {
+      min-height: calc(100vh - 50px); /* Adjust based on the new footer size */
+    }
+  }
+  
