@@ -17,6 +17,14 @@
         </script>
         <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
+
+        <!-- Open Graph tags -->
+        <meta property="og:title" content="SkillSwap" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.skillswap.com/about-us" />
+        <meta property="og:image" content="https://www.skillswap.com/assets/about-us-og-image.jpg" />
+        <meta property="og:description" content="Connect, inspire, and grow together with experts and enthusiasts from various fields." />
+        <meta property="og:site_name" content="SkillSwap" />
     </head>
     
     <body>
