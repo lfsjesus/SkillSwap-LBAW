@@ -34,38 +34,55 @@
   }
 }
 
+
 @media only screen and (max-width: 768px) {
-  header {
-    width: 95%;
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+    
+      #content {
+        display: flex;
+        justify-content: center; /* Centers horizontally */
+        align-items: center; /* Centers vertically */
+        height: calc(120vh - 60px); /* Adjust the height to account for the footer */
+        margin: 0;
+        padding: 0;
+      }
+    
+      .login-page {
+        /* If .login-page has a fixed width, you can add max-width to ensure it doesn't overflow on small devices */
+        flex-direction: column;
+        width: 100%; /* Make it full width */
+        max-width: 400px; /* Your desired max-width for the .login-page */
+        box-sizing: border-box; /* Ensures padding is included in the width */
+        padding: 0; /* Add padding if needed */
+        margin-bottom: 300px; /* This should match the footer's height */
+        overflow-y: auto; /* Adds scroll to the login form if it overflows vertically */
+      }
+  
+    footer {
+      position: fixed; /* Keep footer at the bottom */
+      bottom: 0; /* Align to the bottom */
+      left: 0; /* Align to the left */
+      right: 0; /* Align to the right */
+      height: 90px; /* Set a fixed height for the footer */
+      padding-left: 50px;
+      margin-left: 15px;
+      background: #19060e; /* Match this with your footer's background color */
+      /* Remove margin if it's not necessary */
+    }
+  
+    .main-content {
+      flex: 1; /* Allows the main content to grow and fill available space */
+      margin-bottom: 0px; /* Provides space for the footer */
+      padding-bottom: 0px;
+    }
   }
-
-  .login-page, .recover-password-page {
-    width: 90%;
-    flex-direction: column;
-    padding: 1em;
-  }
-
-  .auth-image, .auth-form {
-    flex: 100%;
-    padding: 1em;
-  }
-
-  .logo img {
-    max-width: 70%;
-  }
-
-  #content form {
-    max-width: 100%;
-  }
-
-  footer {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 0.5em;
-    padding: 1em;
-  }
-}
+  
+  
 
 @media only screen and (max-width: 480px) {
   header {
@@ -88,3 +105,56 @@
     padding: 1em 0;
   }
 }
+
+
+.login-page, .recover-password-page {
+    /* Add bottom padding to push the content up, above the fixed footer */
+    padding-bottom: 5em; /* Adjust as necessary to fit the height of your footer */
+  }
+
+  .auth-form {
+    /* If necessary, add more top padding to .auth-form to push it up */
+    padding-top: 2em; /* Adjust based on your design needs */
+  }
+
+  footer {
+    /* Set the footer to stick at the bottom */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10; /* Ensure the footer is above the background but below the content */
+    background: #19060e; /* Use the background color of your footer */
+  }
+
+  /* Ensure the main content container has a higher z-index than the footer */
+  .main-content {
+    position: relative;
+    z-index: 20; /* Higher than the footer's z-index */
+  }
+
+  @media only screen and (max-width: 480px) {
+    .login-page, .recover-password-page {
+      position: relative; /* Ensure the page content is scrollable */
+      overflow-y: auto; /* Enable scrolling for the content */
+      max-height: 100vh; /* Limit the height to the size of the viewport */
+      padding-bottom: 5em; /* Add padding to account for the footer */
+    }
+  
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10; /* Keep the footer above other elements */
+      background: #19060e; /* Your footer's background color */
+    }
+  
+    /* You might also need to adjust the height or max-height of other elements */
+    .auth-image, .auth-form {
+      /* Adjust these heights as necessary, or consider making them scrollable too */
+      max-height: calc(100vh - 5em); /* Subtract the footer height */
+      overflow-y: auto; /* If you want the form to be independently scrollable */
+    }
+  }
+  
