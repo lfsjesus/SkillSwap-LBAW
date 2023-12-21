@@ -1750,10 +1750,9 @@ if (nextPostsButton != null) {
     if (pageHref.startsWith('http://')) {
       // Replace 'http://' with '//'
       pageHref = pageHref.replace('http://', '//');
-      
-      // Update the href attribute
-      nextPostsButton.href = pageHref;
     }
+    // Update the href attribute
+    nextPostsButton.href = pageHref;
   }
 
   let scrollContainer = document.querySelector('#posts');
