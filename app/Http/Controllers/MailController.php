@@ -8,7 +8,7 @@ use App\Mail\MailModel;
 use App\Models\User;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-
+use Carbon\Carbon;
 
 class MailController extends Controller
 {
@@ -21,7 +21,9 @@ class MailController extends Controller
         $user = User::where('email', $request->email)->first();
 
         $token = Str::random(100);
-        session(['password_reset_token' => $token, 'password_reset_email' => $request->email]);
+        $expiresAt = Carbon::now()->addMinutes(1);
+
+        session(['password_reset_token' => $token, 'password_reset_email' => $request->email,  'password_reset_expires_at' => $expiresAt->toDateTimeString()]);
 
         if (!$user) {
             // If the user does not exist, redirect back with an error message.
@@ -63,7 +65,13 @@ class MailController extends Controller
         // Retrieve the token and email from the session
         $sessionToken = $request->session()->get('password_reset_token');
         $sessionEmail = $request->session()->get('password_reset_email');
+        $sessionExpiresAt = $request->session()->get('password_reset_expires_at');
     
+        if ($request->token !== $sessionToken || Carbon::now()->isAfter($sessionExpiresAt)) {
+            // Token is invalid or expired
+            return back()->withErrors(['token' => 'This password reset token is invalid or has expired.']);
+        }
+        
         // Verify the token
         if ($request->token === $sessionToken) {
             // Token is valid, so reset the password
