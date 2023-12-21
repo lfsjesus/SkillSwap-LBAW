@@ -23,15 +23,7 @@
     
     <body>
         <main>
-            <!-- Hamburger menus for mobile -->
-            <section class="responsive-buttons">
-                <span class="material-symbols-outlined hamburger-menu left-hamburger" onclick="toggleMenu('left')">
-                    menu
-                </span>
-                <span class="material-symbols-outlined hamburger-menu right-hamburger" onclick="toggleMenu('right')">
-                    mark_chat_unread
-                </span>
-            </section>
+            
 
             <aside id="left-bar">
                 <button class="close-btn" onclick="toggleMenu('left')">×</button>
@@ -96,6 +88,15 @@
             </aside>
 
             <section id="content">
+                <!-- Hamburger menus for mobile -->
+            <section class="responsive-buttons">
+                <span class="material-symbols-outlined hamburger-menu left-hamburger" onclick="toggleMenu('left')">
+                    menu
+                </span>
+                <span class="material-symbols-outlined hamburger-menu right-hamburger" onclick="toggleMenu('right')">
+                    mark_chat_unread
+                </span>
+            </section>
                 <div class="search">
                     <form action="{{ url('/search') }}" method="GET">
                         <span class="material-symbols-outlined">

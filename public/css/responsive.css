@@ -46,11 +46,11 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.5rem 1rem;
-        border-radius: 1rem;
+        width: 100%;
+        padding: 0rem 1rem;
+        padding-top: 1.5rem ;
         color: white;
         cursor: pointer;
-        background-color: #151b26;
     }
 
     /* Style for hamburger menus */
