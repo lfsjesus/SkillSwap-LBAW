@@ -12,7 +12,7 @@ SkillSwap has been conceived with the primary objective of fostering a thriving 
 <p align="center">Group Page</p>
 
 ![Responsive Design](./assets/responsive1.jpg)
-<p align="center">CResponsive Design</p>
+<p align="center">Responsive Design</p>
 
 ![Responsive Design](./assets/responsive2.jpg)
 <p align="center">Responsive Design</p>
